@@ -70,9 +70,14 @@ With a served model, the proposer harness adds the model to the table automatica
 
 ## Open issues
 
-- `value_per_cost` over-rewards cheap items — a low-information, near-free field can outrank a
-  decisive one. Needs a utility floor.
-- Numeric fields with no `value_meaning` render raw, e.g. "How fast did the pain appear? -> 5".
+- ~~`value_per_cost` over-rewards cheap items~~ — fixed 13 Oct. A gap under 0.05 bits now scores
+  zero, and `by_cost_effectiveness` drops anything settling less than a quarter of what the best
+  option settles before ranking by bits per unit cost. In the clinical schema that stops a free
+  history question (0.085 bits, highest bits-per-cost of anything on the table) from outranking an
+  ECG. The page exposes both orderings and labels which one it is showing.
+- ~~Numeric fields render raw~~ — fixed 13 Oct. A contiguous integer range is recognised as a
+  scale, so "How fast did the pain appear? -> 5" now reads "5 of 10". Display only; the join keys
+  are untouched.
 - DDXPlus is rule-based synthetic, so recovering a deleted field may partly mean recovering the
   generator. MedQA is the cross-check and the limitation is stated rather than buried.
 - Module B has 182 contested CIViC groups. That is a demo and a small result, not a headline.

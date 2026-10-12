@@ -1,0 +1,263 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>askfirst — deck</title>
+<style>
+  :root{
+    --bg:#0c0d10; --ink:#eceef2; --dim:#878d99; --line:#23262d;
+    --hot:#ff9f45; --cool:#5fb0ff; --bad:#e35d6a; --good:#5fd49a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .deck{height:100vh;overflow:hidden}
+  section{display:none;height:100vh;padding:5vh 7vw;flex-direction:column;justify-content:center}
+  section.on{display:flex}
+  h1{font-size:clamp(34px,6.5vw,86px);line-height:1.02;margin:0 0 18px;letter-spacing:-.025em}
+  h2{font-size:clamp(22px,3.4vw,44px);line-height:1.1;margin:0 0 22px;letter-spacing:-.02em}
+  p{max-width:62ch;margin:0 0 14px}
+  .lede{font-size:clamp(17px,2.1vw,27px);color:var(--ink);max-width:48ch}
+  .dim{color:var(--dim)}
+  .small{font-size:14px}
+  .tag{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:26px}
+  .huge{font-size:clamp(50px,13vw,170px);line-height:.92;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+  .hot{color:var(--hot)} .cool{color:var(--cool)} .bad{color:var(--bad)} .good{color:var(--good)}
+  table{border-collapse:collapse;font-variant-numeric:tabular-nums;margin:10px 0 16px}
+  th,td{padding:9px 20px 9px 0;text-align:left;border-bottom:1px solid var(--line);font-size:clamp(14px,1.7vw,21px)}
+  th{color:var(--dim);font-weight:500;font-size:13px;letter-spacing:.07em;text-transform:uppercase}
+  tr.key td{color:var(--hot);font-weight:600}
+  ul{margin:0 0 14px;padding-left:1.1em;max-width:62ch} li{margin-bottom:9px}
+  .cols{display:flex;gap:5vw;flex-wrap:wrap;align-items:flex-start}
+  .steps{counter-reset:s;list-style:none;padding:0;max-width:66ch}
+  .steps li{counter-increment:s;position:relative;padding-left:46px;margin-bottom:13px}
+  .steps li:before{content:counter(s);position:absolute;left:0;top:-1px;width:30px;height:30px;
+    border:1px solid var(--line);border-radius:50%;text-align:center;line-height:29px;
+    font-size:14px;color:var(--dim)}
+  .steps li.mark:before{border-color:var(--hot);color:var(--hot)}
+  code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:#15171c;
+    border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+  pre{background:#15171c;border:1px solid var(--line);border-left:2px solid var(--cool);
+    border-radius:5px;padding:14px 16px;overflow:auto;font-size:13px;max-width:70ch}
+  blockquote{margin:18px 0;padding-left:20px;border-left:2px solid var(--hot);
+    font-size:clamp(18px,2.5vw,32px);line-height:1.25;max-width:40ch}
+  .src{margin-top:auto;padding-top:22px;color:var(--dim);font-size:13px}
+  nav{position:fixed;bottom:14px;right:18px;color:var(--dim);font-size:12px;
+    font-variant-numeric:tabular-nums;letter-spacing:.06em}
+  .bar{position:fixed;top:0;left:0;height:2px;background:var(--hot);transition:width .18s}
+  @media print{
+    html,body,.deck{height:auto;overflow:visible}
+    section{display:flex!important;height:100vh;page-break-after:always;padding:7vh 7vw}
+    nav,.bar{display:none}
+  }
+</style>
+
+<div class="bar" id="bar"></div>
+<div class="deck" id="deck">
+
+<section class="on">
+  <div class="tag">AMD Developer Hackathon ACT III · Track 2, Health and Wellbeing</div>
+  <h1>askfirst</h1>
+  <p class="lede">It finds the one missing fact that would change the answer — and refuses
+  to answer until it has it.</p>
+  <div class="src">github.com/shivang-goliyan/askfirst · live demo link on the submission</div>
+</section>
+
+<section>
+  <div class="tag">The failure, not described but measured</div>
+  <h2>We asked a commercial vision model to read 15 photographs of real syringes.<br>
+  We told it <span class="dim">"unknown"</span> was an acceptable answer.</h2>
+  <table>
+    <tr><td>Wrong on</td><td class="bad">9 of 15</td></tr>
+    <tr><td>Times it said unknown</td><td class="bad">0 of 15</td></tr>
+    <tr><td>Read from an <em>empty</em> syringe</td><td class="bad">1.0 mL</td></tr>
+    <tr><td>Answers given to one byte-identical file</td><td class="bad">2 different</td></tr>
+    <tr><td>Worst single error</td><td class="bad">+71%</td></tr>
+  </table>
+  <p>The problem is not that it was wrong. It is that it was <strong>certain</strong> and wrong,
+  and nothing in the output separated that case from a correct one.</p>
+  <div class="src">Our own run, logged, checksums kept. Published corroboration: MeasureBench
+  (arXiv 2510.26865) — a frontier model at 19.8% on measurement reading, 2.0% on composite gauges.</div>
+</section>
+
+<section>
+  <div class="tag">What it is</div>
+  <h2>Not a diagnosis tool. A gate in front of the model that decides.</h2>
+  <p class="lede">It answers a narrower and far more answerable question: <strong>is there enough
+  here?</strong></p>
+  <ol class="steps">
+    <li>Record split into atomic fields.</li>
+    <li class="mark">Open model scores it — the full <strong>distribution</strong> is kept, not a sampled answer.</li>
+    <li>Each present field removed in turn → what the answer rests on.</li>
+    <li>Each absent field ranked by expected information gain, then by cost and minutes.</li>
+    <li class="mark">Unstable under ablation → <strong>refuse</strong>, return the ranked gaps, hand over.</li>
+  </ol>
+</section>
+
+<section>
+  <div class="tag">The measurement · 1,500 held-out patients · 49 conditions · 2% chance</div>
+  <h2>Answer fewer cases. Be right about the ones you answer.</h2>
+  <table>
+    <tr><th>Coverage</th><th>Accuracy</th><th>Confident and wrong</th></tr>
+    <tr><td>100% — answer everything</td><td>21.0%</td><td class="bad">1,185</td></tr>
+    <tr><td>25%</td><td>56.3%</td><td>164</td></tr>
+    <tr class="key"><td>10%</td><td>85.3%</td><td>22</td></tr>
+    <tr><td>5%</td><td>98.7%</td><td>1</td></tr>
+  </table>
+  <p class="lede"><span class="dim">21.0%</span> → <span class="hot">85.3%</span> by answering one
+  case in ten. Margin beats entropy as the confidence signal at every coverage level.</p>
+  <div class="src">DDXPlus, CC BY 4.0, held-out split · docs/results/2026-10-13-the-refusal-works.md
+  · the 98.7% row is 74 of 75 answered cases, so the honest floor is <strong>92.8%</strong>, Wilson 95%</div>
+</section>
+
+<section>
+  <div class="tag">What refusing is worth</div>
+  <h2>"It declines to answer" is a weak claim. Priced, it stops being weak.</h2>
+  <div class="cols">
+    <div>
+      <div class="huge">94<span style="font-size:.45em">%</span></div>
+      <p class="dim">cheaper per case<br>79.00 → 4.82</p>
+    </div>
+    <div>
+      <table>
+        <tr><th>wrong : referral</th><th>best coverage</th><th>saving</th></tr>
+        <tr><td>100 : 5</td><td>5%</td><td>94%</td></tr>
+        <tr><td>100 : 20</td><td>5%</td><td>76%</td></tr>
+        <tr><td>100 : 50</td><td>10%</td><td>41%</td></tr>
+        <tr><td>50 : 5</td><td>5%</td><td>88%</td></tr>
+        <tr><td>20 : 5</td><td>5%</td><td>70%</td></tr>
+        <tr><td>10 : 5</td><td>10%</td><td>41%</td></tr>
+        <tr><td>100 : 1</td><td>5%</td><td>99%</td></tr>
+      </table>
+    </div>
+  </div>
+  <p><strong>We do not need to know a buyer's cost of a confident mistake.</strong> Seven price
+  ratios, saving from 41% to 99%, optimum never leaving 5–10% coverage. The sign of the result does
+  not depend on choosing flattering numbers.</p>
+  <div class="src">74,183 saved per thousand cases at 100:5 · docs/results/2026-10-13-economics.md</div>
+</section>
+
+<section>
+  <div class="tag">Why this needs an open model, on AMD</div>
+  <h2>The product is built on the distribution. A closed API returns text.</h2>
+  <p>Entropy, information gain and a calibrated threshold are all functions of the full posterior.
+  There is no version of this that works behind an API that hands back a sentence.</p>
+  <pre>POST /v1/completions   { "echo": true, "max_tokens": 0, "logprobs": 1 }
+→ token_logprobs + text_offset over the prompt
+   one round trip per label set · vLLM on MI300X, 192 GB HBM3</pre>
+  <blockquote>A better model does not make the answers cheaper. It makes more of them answerable.</blockquote>
+  <p>The CPU baseline bottoms out at 5% coverage because a naive Bayes is 21% accurate overall. A
+  stronger scorer moves that optimum to higher coverage at the same cost — a strictly better
+  product, measured against a baseline that already exists.</p>
+  <div class="src">src/askfirst/model.py — exact label scoring via text_offset, mean-normalised,
+  tested against the documented response shape before any GPU hour was spent</div>
+</section>
+
+<section>
+  <div class="tag">What we got wrong, with dates on it</div>
+  <h2>Four dead ends are in the repo. One of them is ours.</h2>
+  <ul>
+    <li><strong>Our first ranking objective made things worse than guessing.</strong> Following its
+    advice scored <span class="bad">18.8%</span> against <span class="cool">26.0%</span> for asking
+    at random and 28.0% for asking nothing. Flip probability selects for volatility, not
+    information. Replaced with expected information gain → 28.4%, harm gone.</li>
+    <li>A d-dimer shows why: <strong>0.264 bits of information at a flip probability of 0.00.</strong>
+    It settles the question without changing the leading answer, and the old objective could not see it.</li>
+    <li><strong>Cheap-proposes-then-model-ablates caps the system near 32%</strong> — shortlist
+    recall at k=20 is 31.8% and stage two can only re-rank what stage one passes. Inverted.</li>
+    <li><strong>The advice half is neutral, not useful:</strong> 28.4% against 26.0%, intervals
+    overlapping. It ships as a visible aid, not as a claim.</li>
+  </ul>
+  <div class="src">Every failure is dated and committed in docs/results/ — in the order it happened</div>
+</section>
+
+<section>
+  <div class="tag">Behaving badly, on purpose, as the track requires</div>
+  <h2>Five questions, five answers that point at code or at a number.</h2>
+  <table>
+    <tr><td><strong>Incorrect responses</strong></td><td>Measured: 1,185 confident errors → 22. The
+    whole product is this question.</td></tr>
+    <tr><td><strong>Sensitive information</strong></td><td>None enters. Synthetic and CC0 data only.
+    MIMIC-IV deliberately excluded — its DUA forbids redistribution.</td></tr>
+    <tr><td><strong>Uncertain results</strong></td><td>Uncertainty <em>is</em> the output: full
+    distribution, entropy in bits, threshold, sufficiency, per-field influence.</td></tr>
+    <tr><td><strong>High-risk decisions</strong></td><td>Never made. The only decision is
+    answer-or-hand-over, tuned pessimistic — it refuses nine cases in ten.</td></tr>
+    <tr><td><strong>Human review</strong></td><td>Refusal <em>is</em> the handoff, and it carries a
+    ranked, costed work list rather than a shrug.</td></tr>
+  </table>
+  <p class="small dim">Not clinically validated. No clinician has reviewed any output. Not medical advice.</p>
+  <div class="src">docs/SAFETY.md</div>
+</section>
+
+<section>
+  <div class="tag">Prior work — said by us, before it is said to us</div>
+  <h2>MediQ posed the interactive version of this first. We are not claiming the idea.</h2>
+  <ul>
+    <li><strong>MediQ</strong>, NeurIPS 2024, arXiv 2406.00922 — naive prompting to ask questions
+    <strong class="bad">lowered</strong> accuracy by 11.3%. Their self-consistency fix gave
+    <strong>+22.3%</strong>, leaving a 10.3% gap against full information. <span class="dim">That is
+    the number to beat, and it is a real target rather than a vague one.</span></li>
+    <li><strong>Q4Dx</strong>, Nature Scientific Reports 2026 — an evaluation built by systematically
+    removing information from cases. That is our evaluation design, already published.</li>
+    <li><strong>ALFA</strong> (arXiv 2502.14860), <strong>BALAR / MedClarify</strong> — expected
+    information gain over a fixed question set.</li>
+  </ul>
+  <p>What we have not found occupied: ranking the <strong>absent</strong> fields by counterfactual
+  influence over an open model's own logprobs. Absence of search evidence is not proof, and we say
+  so rather than claiming a gap.</p>
+</section>
+
+<section>
+  <div class="tag">The same engine, a second domain</div>
+  <h2>Variant interpretation, where the evidence contradicts itself.</h2>
+  <p>CIViC — public, CC0, 4,940 evidence rows. Grouped by variant and outcome: 585 groups where
+  removing one line of evidence can change the call, of which <strong>182 are contested</strong> —
+  the same knowledge base both supports and does not support the conclusion.</p>
+  <p class="lede">Demo case: <strong>DNMT3A R882 in AML.</strong> Level-B evidence on both sides, at
+  ratings 3 and 4. Most tools average that. This one reports that the case is unresolved and names
+  the evidence doing the damage.</p>
+  <p class="dim">The limit, in the same breath: 182 groups is a demonstration, not a headline.
+  Module A carries the measurement. Computational evidence stays capped at "supporting" strength,
+  which is what ACMG/AMP actually allows.</p>
+  <div class="src">docs/results/2026-10-12-civic-scope.md</div>
+</section>
+
+<section>
+  <div class="tag">Who pays, and what it costs to run</div>
+  <h2>The buyer is anyone already carrying the cost of a model's confident mistakes.</h2>
+  <ul>
+    <li>Triage and teleconsult services deciding what to do with an incomplete intake.</li>
+    <li>Decision-support vendors who need a safety layer they can show a regulator.</li>
+    <li>Lab networks choosing which test to run next, where the ranking is the product.</li>
+  </ul>
+  <p>One assessment is <strong>one generation plus a sweep the CPU does for free.</strong> The
+  expensive design was the obvious one: an exhaustive 223-field sweep with a language model costs
+  about <strong>22 seconds of GPU per case</strong> — a latency wall that does not move with more
+  credits. So the model proposes roughly ten fields in a single pass and the cheap scorer ablates
+  exhaustively at no cost.</p>
+  <blockquote>It knows when it doesn't know. That's the product.</blockquote>
+  <div class="src">Open the live URL and try to make it answer something it should not.</div>
+</section>
+
+</div>
+<nav id="nav"></nav>
+
+<script>
+  const slides = [...document.querySelectorAll('section')];
+  let i = 0;
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('on', k === i));
+    nav.textContent = (i + 1) + ' / ' + slides.length;
+    bar.style.width = ((i + 1) / slides.length * 100) + '%';
+    location.hash = i ? '#' + (i + 1) : '';
+  }
+  addEventListener('keydown', e => {
+    if (['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)) { show(i + 1); e.preventDefault(); }
+    if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { show(i - 1); e.preventDefault(); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(slides.length - 1);
+  });
+  addEventListener('click', e => { if (!e.target.closest('a')) show(i + 1); });
+  show(parseInt(location.hash.slice(1) || '1') - 1);
+</script>

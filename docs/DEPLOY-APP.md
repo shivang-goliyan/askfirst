@@ -21,9 +21,13 @@ to guess where a number came from:
 ## Host: Hugging Face Space, Docker SDK, CPU basic
 
 Free, no payment method, public URL, and it does not cold-start behind a 50-second wall the way
-free Render does. Create the Space in the browser (SDK **Docker**, blank template), then:
+free Render does. One command, which creates the Space if it does not exist yet:
 
     HF_TOKEN=hf_xxx ./scripts/deploy/space.sh <user>/askfirst
+
+**The token must have the write role.** A read-only token fails at the create step with a 401 and
+an unhelpful message, so the script checks for that case and says what is actually wrong. Make one
+at huggingface.co/settings/tokens.
 
 That pushes `src/`, `ui/`, the Dockerfile and `scripts/deploy/space-README.md` as the Space
 README. Front matter in that file sets `app_port: 7860`, which is what the Dockerfile listens on.
@@ -41,7 +45,8 @@ Checked on 13 Oct against the image above:
 | check | result |
 |---|---|
 | `GET /api/health` | `{"ok":true,"model_endpoint":false,"baked_curve":true,"schemas":["clinical","ddxplus","variant"]}` |
-| `GET /` | 200, 9450 bytes |
+| `GET /` | 200, 10257 bytes |
+| `GET /deck.html` | 200, 15138 bytes — the deck ships with the app |
 | `GET /api/curve` | 20 rows, first at 5% coverage |
 | `POST /api/assess` thin record | refuses — confidence 0.25 under threshold 0.3719, asks for troponin at 0.391 bits |
 

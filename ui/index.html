@@ -66,10 +66,18 @@
     <div id="detail"></div>
     <div class="prov" id="prov"></div>
   </div>
+
+  <div class="note" style="margin:22px 0 40px">
+    <a href="deck.html">The deck</a> &middot;
+    <a href="https://github.com/shivang-goliyan/askfirst">Source, every measurement, and the four
+    dead ends</a> &middot; not clinically validated, no clinician has reviewed any output, not
+    medical advice &middot; synthetic data (DDXPlus, CC BY 4.0)
+  </div>
 </div>
 <script>
 const $ = s => document.querySelector(s);
 const pct = x => (x*100).toFixed(1) + '%';
+let ORDER = 'bits', LAST = null, LASTCOV = 0.25;
 let CURVE = null, PICKED = {};
 
 const FIELDS = [
@@ -140,7 +148,11 @@ async function assess(){
       The measured curve above still works; it does not need a GPU.</span></div>`;
     $('#detail').innerHTML = ''; $('#prov').textContent = ''; return;
   }
+  draw(r, cov);
+}
 
+function draw(r, cov){
+  LAST = r; LASTCOV = cov;
   const ok = r.answering;
   $('#verdict').innerHTML = `
     <div class="verdict">
@@ -152,7 +164,7 @@ async function assess(){
       ${r.threshold.toFixed(3)} at ${pct(cov)} coverage &middot;
       ${r.entropy_bits} bits of uncertainty &middot; sufficiency ${r.sufficiency}/100</div>`;
 
-  const gaps = r.go_get.map(g => `<tr>
+  const gaps = (ORDER === 'cost' ? r.go_get_by_cost : r.go_get).map(g => `<tr>
       <td>${g.question}</td>
       <td class="num">${g.info_gain_bits >= 0 ? '+' : ''}${g.info_gain_bits.toFixed(3)}</td>
       <td class="num">${g.cost}</td><td class="num">${g.delay}</td>
@@ -161,13 +173,23 @@ async function assess(){
   const rests = r.rests_on.filter(x=>x.influence>0).map(x => `<tr><td>${x.question}</td>
       <td class="num">${x.influence.toFixed(3)}</td></tr>`).join('');
 
+  const byCost = ORDER === 'cost';
   $('#detail').innerHTML = `
-    <h2 style="margin-top:20px">Go get, best information first</h2>
+    <h2 style="margin-top:20px">Go get
+      <button class="chip${byCost?'':' on'}" id="o-bits">best information first</button>
+      <button class="chip${byCost?' on':''}" id="o-cost">cheapest that still helps</button>
+    </h2>
     <table><tr><th>what to obtain</th><th class="num">bits</th><th class="num">cost</th>
       <th class="num">mins</th><th>and if it comes back</th></tr>${gaps}</table>
+    <div class="note">${byCost
+      ? 'Bits per unit of cost &mdash; after dropping anything that settles less than a quarter of what the best option settles. Cheapness only breaks ties between useful questions.'
+      : 'Ranked by how much each answer would settle the case, in bits, regardless of price.'}</div>
     ${rests ? `<h2 style="margin-top:20px">What the answer currently rests on</h2>
       <table><tr><th>already known</th><th class="num">influence</th></tr>${rests}</table>` : ''}`;
   $('#prov').textContent = `Scored by: ${r.scored_by}`;
+  const set = o => () => { ORDER = o; draw(LAST, LASTCOV); };
+  $('#o-bits').onclick = set('bits');
+  $('#o-cost').onclick = set('cost');
 }
 
 (async () => {

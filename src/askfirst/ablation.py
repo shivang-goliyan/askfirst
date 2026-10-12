@@ -46,13 +46,29 @@ class Gap:
     delay: float
     by_value: list = dc_field(default_factory=list)
 
-    def value_per_cost(self):
+    def value_per_cost(self, floor=0.05):
+        """Bits per unit of cost, but only once the gap clears a floor of usefulness. Without a
+        floor a nearly-free and nearly-useless field outranks a decisive one — a pulse oximeter
+        reading beat an ECG this way, which is bad advice at any price."""
+        if self.info_gain < floor:
+            return 0.0
         return self.info_gain / (self.cost + 1.0)
 
     def most_telling(self):
         """The value worth quoting in a UI: the likeliest one that changes the answer."""
         flipping = [o for o in self.by_value if o.flips]
         return max(flipping, key=lambda o: o.prior) if flipping else None
+
+
+def by_cost_effectiveness(gaps, relative_floor=0.25):
+    """Order gaps by bits per unit of cost, after dropping anything that settles far less than
+    the best option on the table. Primary ranking stays information gain, which is the ordering
+    that measured well; this is the view for someone who has to pay for the test."""
+    if not gaps:
+        return []
+    best = max(g.info_gain for g in gaps)
+    worth_it = [g for g in gaps if g.info_gain >= relative_floor * best]
+    return sorted(worth_it, key=lambda g: (-g.value_per_cost(), -g.info_gain))
 
 
 def total_variation(p, q):

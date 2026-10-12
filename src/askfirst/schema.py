@@ -18,7 +18,21 @@ class Field:
     value_labels: dict = dc_field(default_factory=dict)
 
     def label_for(self, value):
-        return self.value_labels.get(value, str(value))
+        if value in self.value_labels:
+            return self.value_labels[value]
+        if self.is_scale():
+            return f"{value} of {max(self.values)}"
+        return str(value)
+
+    def is_scale(self):
+        """A contiguous run of integers is an intensity scale, not a category. Rendering one as
+        a bare number gives "How fast did the pain appear? -> 5", which reads like a bug."""
+        vals = self.values
+        if len(vals) < 3:
+            return False
+        if any(isinstance(v, bool) or not isinstance(v, int) for v in vals):
+            return False
+        return sorted(vals) == list(range(min(vals), max(vals) + 1))
 
 
 @dataclass

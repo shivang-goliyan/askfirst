@@ -17,7 +17,14 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from .ablation import argmax, entropy, rank_gaps, sensitivity_map, sufficiency
+from .ablation import (
+    argmax,
+    by_cost_effectiveness,
+    entropy,
+    rank_gaps,
+    sensitivity_map,
+    sufficiency,
+)
 from .model import Endpoint, ModelScorer
 from .schema import load_schema
 
@@ -112,6 +119,28 @@ def describe_schema(domain: str):
     }
 
 
+def as_gap(g, schema):
+    """One missing field, described for a human: what to ask, what it settles, what it costs."""
+    spec = schema.fields[g.field]
+    tell = g.most_telling()
+    return {
+        "field": g.field,
+        "question": spec.question or g.field,
+        "info_gain_bits": round(g.info_gain, 4),
+        "flip_prob": round(g.flip_prob, 4),
+        "cost": g.cost,
+        "delay": g.delay,
+        "per_cost": round(g.value_per_cost(), 5),
+        "if_this": (
+            {
+                "value": tell.value,
+                "label": spec.label_for(tell.value),
+                "then": schema.label_for_outcome(tell.verdict),
+            } if tell else None
+        ),
+    }
+
+
 @app.post("/api/assess")
 def assess(case: Case):
     """Score a record, decide whether to answer, and say what to go and get if not."""
@@ -148,25 +177,8 @@ def assess(case: Case):
             {"key": k, "label": schema.label_for_outcome(k), "p": round(v, 4)}
             for k, v in ranked
         ],
-        "go_get": [
-            {
-                "field": g.field,
-                "question": schema.fields[g.field].question or g.field,
-                "info_gain_bits": round(g.info_gain, 4),
-                "flip_prob": round(g.flip_prob, 4),
-                "cost": g.cost,
-                "delay": g.delay,
-                "per_cost": round(g.value_per_cost(), 5),
-                "if_this": (
-                    {
-                        "value": g.most_telling().value,
-                        "label": schema.fields[g.field].label_for(g.most_telling().value),
-                        "then": schema.label_for_outcome(g.most_telling().verdict),
-                    } if g.most_telling() else None
-                ),
-            }
-            for g in gaps[:6]
-        ],
+        "go_get": [as_gap(g, schema) for g in gaps[:6]],
+        "go_get_by_cost": [as_gap(g, schema) for g in by_cost_effectiveness(gaps)[:6]],
         "rests_on": [
             {
                 "field": i.field,

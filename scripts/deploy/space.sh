@@ -21,6 +21,20 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 
+# Create it if it is not there yet. Needs a WRITE token — a read token fails here with 401
+# and the message is unhelpful, so say what is actually wrong.
+code=$(curl -s -o "$work/create.json" -w '%{http_code}' -X POST \
+  https://huggingface.co/api/repos/create \
+  -H "Authorization: Bearer ${HF_TOKEN}" -H 'Content-Type: application/json' \
+  -d "{\"type\":\"space\",\"name\":\"${space#*/}\",\"organization\":\"${space%/*}\",\"sdk\":\"docker\",\"private\":false}")
+
+case "$code" in
+  200|201) echo "created space ${space}" ;;
+  409)     echo "space ${space} already exists, updating it" ;;
+  401|403) echo "that token cannot write. Make one at huggingface.co/settings/tokens with the write role." >&2; exit 1 ;;
+  *)       echo "create failed (HTTP $code): $(cat "$work/create.json")" >&2; exit 1 ;;
+esac
+
 git clone "https://user:${HF_TOKEN}@huggingface.co/spaces/${space}" "$work/space" --quiet
 
 cd "$work/space"

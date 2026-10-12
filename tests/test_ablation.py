@@ -3,7 +3,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from askfirst.ablation import rank_gaps, sensitivity_map, sufficiency, total_variation
+from askfirst.ablation import (
+    by_cost_effectiveness,
+    rank_gaps,
+    sensitivity_map,
+    sufficiency,
+    total_variation,
+)
 from askfirst.metrics import topk_recovery
 from askfirst.schema import load_schema
 from askfirst.stub import make_scorer
@@ -94,3 +100,26 @@ def test_most_telling_picks_likeliest():
     gaps = {g.field: g for g in rank_gaps(CASE, make_scorer(schema), schema)}
     tell = gaps["troponin"].most_telling()
     assert tell is not None and tell.flips
+
+
+def test_cheap_and_useless_drops_out():
+    schema = load_schema("clinical")
+    gaps = rank_gaps(CASE, make_scorer(schema), schema)
+    ranked = by_cost_effectiveness(gaps)
+    best = max(g.info_gain for g in gaps)
+    assert all(g.info_gain >= 0.25 * best for g in ranked)
+    free_but_weak = [g for g in gaps if g.cost == 0 and g.info_gain < 0.25 * best]
+    assert free_but_weak, "clinical schema should have a free low-information field"
+    assert all(g.value_per_cost() == 0.0 for g in free_but_weak)
+
+
+def test_scales_read_as_scales():
+    field = load_schema("ddxplus").fields["E_59"]
+    assert field.is_scale()
+    assert field.label_for(5) == "5 of 10"
+
+
+def test_categories_are_not_scales():
+    schema = load_schema("clinical")
+    assert not schema.fields["heart_rate"].is_scale()
+    assert schema.fields["heart_rate"].label_for("high") == "high"
