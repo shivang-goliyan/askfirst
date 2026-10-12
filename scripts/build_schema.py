@@ -17,10 +17,17 @@ def main(path, conditions_path=None):
     outcomes, english = [], {}
     if conditions_path:
         cond = json.load(open(conditions_path))
-        # the patient CSV's PATHOLOGY column holds condition_name, so that stays the join key.
-        # English is display only — swapping it in here would break the join silently.
-        outcomes = sorted(cond)
-        english = {k: (v.get("cond-name-eng") or k) for k, v in cond.items()}
+        # The join key is cond-name-eng, verified against the data: release_conditions.json is
+        # keyed in French ("Pneumothorax spontane"), while the patient CSV's PATHOLOGY column
+        # holds the English name ("Anemia"). This file previously keyed outcomes on the French
+        # name on the stated assumption that the CSV matched it — it does not, and the overlap
+        # with the labels was 1 of 42. Anything scoring against schema.outcomes was comparing
+        # French predictions to English ground truth.
+        english = {}
+        for french, spec in cond.items():
+            key = spec.get("cond-name-eng") or french
+            english[key] = french
+        outcomes = sorted(english)
     lines = [
         "# Generated from DDXPlus release_evidences.json (CC BY 4.0). Do not hand-edit;",
         "# rerun scripts/build_schema.py instead.",
@@ -31,6 +38,7 @@ def main(path, conditions_path=None):
         "outcomes:",
         *(f"  - {json.dumps(o)}" for o in outcomes),
         "",
+        "# The source file's own French name for each, kept so the provenance is traceable.",
         "outcome_labels:",
         *(f"  {json.dumps(k)}: {json.dumps(v)}" for k, v in sorted(english.items())),
         "",

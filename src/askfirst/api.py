@@ -52,6 +52,9 @@ class Case(BaseModel):
     domain: str = "clinical"
     record: dict = {}
     coverage: float = 0.25
+    # how complete the record is assumed to be. The right amount to refuse depends on it:
+    # measured best coverage runs from 95% on a complete record to 5% on a nearly empty one.
+    kept: str = "0.4"
 
 
 def schema_for(domain):
@@ -154,7 +157,7 @@ def assess(case: Case):
 
     gaps = rank_gaps(case.record, scorer, schema)
     confidence = max(dist.values()) if dist else 0.0
-    threshold = threshold_for(case.coverage)
+    threshold = threshold_for(case.coverage, case.kept)
     answering = confidence >= threshold
 
     ranked = sorted(dist.items(), key=lambda kv: -kv[1])[:5]
@@ -190,12 +193,19 @@ def assess(case: Case):
     }
 
 
-def threshold_for(coverage):
-    """Read the confidence cut-off straight off the baked curve, so the dial in the UI and the
-    decision taken here are the same number rather than two guesses that drift apart."""
+def threshold_for(coverage, kept="0.4"):
+    """Read the confidence cut-off straight off the baked curve, so the dial in the page and the
+    decision taken here are the same number rather than two guesses that drift apart.
+
+    One curve per level of record completeness, because that is what the measurement showed
+    matters — the best policy answers 95% of complete records and 5% of nearly empty ones."""
     if not BAKED.exists():
         return 0.0
-    rows = json.loads(BAKED.read_text())["rows"]
+    baked = json.loads(BAKED.read_text())
+    levels = baked.get("levels") or {}
+    rows = levels.get(str(kept)) or baked.get("rows") or []
+    if not rows:
+        return 0.0
     nearest = min(rows, key=lambda r: abs(r["coverage"] - coverage))
     return float(nearest["threshold"])
 

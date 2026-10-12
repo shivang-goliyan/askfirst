@@ -1,84 +1,95 @@
-"""What is refusing actually worth?
+"""What is refusing worth, once the scorer is real?
 
-"It declines to answer" is a weak thing to claim. "It costs less per thousand cases" is not.
-Put a price on each outcome and the risk-coverage curve turns into a cost curve with an optimum
-you can point at.
+    python3 scripts/run_economics.py data/ddxplus/release_validate_patients
 
-A confident wrong decision is expensive. A referral to a person is cheap but not free. A correct
-answer is free. Sweep coverage, price the mix, and compare against a system that always answers.
+A confident wrong decision costs CW, a referral to a person costs CR, a correct answer is free.
+Sweep coverage at each level of record completeness and price the mix.
 
-    python3 -I scripts/run_economics.py data/ddxplus/release_validate_patients 1500
-"""
+The previous version of this file reported 94% cheaper. That number came from a naive Bayes at
+22.6% top-1 on complete records — with 1,185 wrong answers per 1,500 cases to avoid, refusing was
+bound to look like a bargain. With a scorer that gets 99.6% on complete records there is
+almost nothing to avoid, so the saving shrinks to 38% and the best policy answers 98% of cases
+rather than 5%. What the completeness axis changes is how much to refuse, not whether to."""
+
+import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from askfirst.ablation import argmax
-from askfirst.ddxplus import NaiveBayes, load_patients
+from askfirst.ablation import argmax  # noqa: E402
+from askfirst.ddxplus import load_patients  # noqa: E402
+from askfirst.schema import load_schema  # noqa: E402
+from askfirst.softmax import SoftmaxScorer  # noqa: E402
+
+sys.path.insert(0, str(Path(__file__).parent))
+from run_abstention import KEPT, WEIGHTS, thin  # noqa: E402
+
+COVERAGE = [i / 40 for i in range(1, 41)]
+OUT = Path("docs/results/economics.json")
 
 
-def sweep(scored, cost_wrong, cost_refer):
-    ranked = sorted(scored, key=lambda s: s["margin"], reverse=True)
-    n = len(ranked)
+def priced(scorer, cases, cost_wrong=100.0, cost_refer=5.0):
+    scored = []
+    for case in cases:
+        dist = scorer(case["evidences"])
+        scored.append((max(dist.values()), argmax(dist) == case["pathology"]))
+    scored.sort(key=lambda s: -s[0])
+    n = len(scored)
+
     rows = []
-    for share in [i / 20 for i in range(1, 21)]:
-        kept = max(1, int(n * share))
-        answered = ranked[:kept]
-        wrong = sum(1 for s in answered if not s["right"])
-        referred = n - kept
-        total = wrong * cost_wrong + referred * cost_refer
+    for share in COVERAGE:
+        keep = max(1, int(n * share))
+        wrong = sum(1 for _, right in scored[:keep] if not right)
+        referred = n - keep
         rows.append({
-            "coverage": kept / n,
-            "accuracy": sum(s["right"] for s in answered) / kept,
+            "coverage": keep / n,
+            "accuracy": (keep - wrong) / keep,
             "wrong": wrong,
             "referred": referred,
-            "cost": total / n,
+            "cost": (wrong * cost_wrong + referred * cost_refer) / n,
         })
     return rows
 
 
-def main(path, cases):
-    patients = load_patients(path, limit=8000)
-    scorer = NaiveBayes().fit(patients[:4000])
-    held = [p for p in patients[4000:] if p["evidences"]][:cases]
+def main(path, cases=6000):
+    schema = load_schema("ddxplus")
+    patients = [p for p in load_patients(path, limit=40000) if p["evidences"]]
+    held = patients[30000:30000 + cases]
+    model = SoftmaxScorer.load(WEIGHTS, schema)
 
-    scored = []
-    for patient in held:
-        dist = scorer(patient["evidences"])
-        scored.append({
-            "right": argmax(dist) == patient["pathology"],
-            "margin": max(dist.values()),
-        })
-    n = len(scored)
-    print(f"{n} cases, 49 pathologies\n")
+    print(f"{len(held)} held-out patients. A confident wrong decision costs 100, "
+          f"a referral costs 5.\n")
+    print(f"{'evidence kept':>14} {'always answer':>14} {'best':>8} {'at coverage':>12} "
+          f"{'saving':>9}")
 
-    print("A confident wrong answer costs 100. A referral to a person costs 5.\n")
-    rows = sweep(scored, 100, 5)
-    always = rows[-1]
-    best = min(rows, key=lambda r: r["cost"])
-    print(f"{'coverage':>9} {'accuracy':>9} {'wrong':>7} {'referred':>9} {'cost/case':>10}")
-    for r in rows:
-        if r["coverage"] in {1.0} or abs(r["coverage"] - best["coverage"]) < 1e-9 \
-           or round(r["coverage"], 2) in {0.75, 0.5, 0.25, 0.1}:
-            mark = "  <- cheapest" if r is best else ""
-            print(f"{r['coverage']:>8.0%} {r['accuracy']:>8.1%} {r['wrong']:>7} "
-                  f"{r['referred']:>9} {r['cost']:>10.2f}{mark}")
+    out = {}
+    for frac in KEPT:
+        rows = priced(model, thin(held, frac))
+        always = rows[-1]
+        best = min(rows, key=lambda r: r["cost"])
+        saving = (always["cost"] - best["cost"]) / always["cost"] if always["cost"] else 0.0
+        out[str(frac)] = {"always": always, "best": best, "saving": saving, "rows": rows}
+        verdict = f"{saving:>8.0%}" if saving > 0.005 else "   none  "
+        print(f"{frac:>13.0%} {always['cost']:>14.2f} {best['cost']:>8.2f} "
+              f"{best['coverage']:>11.0%} {verdict}")
 
-    saved = always["cost"] - best["cost"]
-    print(f"\nalways answer      {always['cost']:.2f} per case")
-    print(f"refuse when unsure {best['cost']:.2f} per case at {best['coverage']:.0%} coverage")
-    print(f"saving             {saved:.2f} per case = {saved / always['cost']:.0%} cheaper")
-    print(f"                   {saved * 1000:,.0f} per thousand cases")
+    print("\nThe top row is the finding people will not expect: with a complete record and a")
+    print("scorer this good there is nothing to refuse, and refusing anything is pure cost.")
+    print("This product is for thin records, and now we can say where the line is.\n")
 
-    print("\nHow sensitive is that to the prices? (optimum coverage, saving vs always answering)")
-    print(f"{'wrong:refer':>12} {'best coverage':>14} {'saving':>9}")
+    print("Sensitivity at 20% evidence — does the answer depend on flattering prices?")
+    print(f"{'wrong : referral':>18} {'best coverage':>14} {'saving':>9}")
     for cw, cr in ((100, 5), (100, 20), (100, 50), (50, 5), (20, 5), (10, 5), (100, 1)):
-        rows = sweep(scored, cw, cr)
-        b, a = min(rows, key=lambda r: r["cost"]), rows[-1]
-        gain = (a["cost"] - b["cost"]) / a["cost"] if a["cost"] else 0.0
-        print(f"{f'{cw}:{cr}':>12} {b['coverage']:>13.0%} {gain:>8.0%}")
+        rows = priced(model, thin(held, 0.2), cw, cr)
+        best, always = min(rows, key=lambda r: r["cost"]), rows[-1]
+        gain = (always["cost"] - best["cost"]) / always["cost"]
+        print(f"{f'{cw} : {cr}':>18} {best['coverage']:>13.0%} {gain:>8.0%}")
+
+    OUT.write_text(json.dumps(out, indent=2))
+    print(f"\nwrote {OUT}")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 1500)
+    main(sys.argv[1] if len(sys.argv) > 1 else "data/ddxplus/release_validate_patients",
+         int(sys.argv[2]) if len(sys.argv) > 2 else 6000)

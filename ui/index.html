@@ -42,7 +42,7 @@
   <div class="sub">Finds the one missing fact that would change the answer &mdash; and refuses to answer until it has it.</div>
 
   <div class="panel">
-    <h2>Drag it. Watch what refusing buys you.</h2>
+    <h2>How much of the record is in? That decides how much to refuse.</h2>
     <div class="big">
       <div class="stat"><div class="n" id="cov">&mdash;</div><div class="l">coverage</div>
         <div class="ci" id="answered"></div></div>
@@ -53,7 +53,9 @@
       <div class="stat"><div class="n acc" id="cost">&mdash;</div><div class="l">cost per case</div>
         <div class="ci" id="saving"></div></div>
     </div>
-    <input type="range" id="dial" min="0" max="19" value="4">
+    <div class="chips" id="levels"></div>
+    <div class="note" id="levelNote" style="margin:2px 0 10px"></div>
+    <input type="range" id="dial" min="0" max="39" value="13">
     <div class="ends"><span>answer almost nothing</span><span>answer everything</span></div>
     <svg id="chart" viewBox="0 0 680 170" preserveAspectRatio="none"></svg>
     <div class="note" id="curveNote"></div>
@@ -78,6 +80,7 @@
 const $ = s => document.querySelector(s);
 const pct = x => (x*100).toFixed(1) + '%';
 let ORDER = 'bits', LAST = null, LASTCOV = 0.25;
+let KEPT = '0.4';
 let CURVE = null, PICKED = {};
 
 const FIELDS = [
@@ -87,8 +90,10 @@ const FIELDS = [
   ['ecg','ischaemic','ECG ischaemic'], ['troponin','raised','troponin raised'],
 ];
 
+function curve(){ return (CURVE.levels && CURVE.levels[KEPT]) || CURVE.rows || []; }
+
 function drawChart(active){
-  const rows = CURVE.rows, W = 680, H = 170, pad = 22;
+  const rows = curve(), W = 680, H = 170, pad = 22;
   const x = i => pad + (W - pad*2) * (i/(rows.length-1));
   const y = v => H - pad - (H - pad*2) * v;
   const line = (sel, cls) => rows.map((r,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(sel(r)).toFixed(1)}`).join(' ');
@@ -105,7 +110,7 @@ function drawChart(active){
 }
 
 function render(i){
-  const r = CURVE.rows[i], full = CURVE.rows[CURVE.rows.length-1];
+  const all = curve(), r = all[i], full = all[all.length-1];
   $('#cov').textContent = pct(r.coverage);
   $('#answered').textContent = `${r.answered} of ${CURVE.cases} cases`;
   $('#acc').textContent = pct(r.accuracy);
@@ -119,7 +124,7 @@ function render(i){
   $('#curveNote').innerHTML =
     `${CURVE.cases} held-out cases, ${CURVE.outcomes} possible conditions, chance ${pct(CURVE.chance)}. `
     + `Scored by ${CURVE.scorer}. Prices: a confident wrong answer costs `
-    + `${CURVE.prices.confident_wrong}, handing over costs ${CURVE.prices.referral}. `
+    + `${CURVE.cost_wrong}, handing over costs ${CURVE.cost_refer}. `
     + `<span class="warn">Quote the CI lower bound, not the point estimate.</span>`;
   drawChart(i);
 }
@@ -135,11 +140,11 @@ function chips(){
 }
 
 async function assess(){
-  const cov = CURVE ? CURVE.rows[+$('#dial').value].coverage : 0.25;
+  const cov = CURVE ? curve()[+$('#dial').value].coverage : 0.25;
   let r;
   try {
     const res = await fetch('/api/assess', {method:'POST', headers:{'content-type':'application/json'},
-      body: JSON.stringify({domain:'clinical', record:PICKED, coverage:cov})});
+      body: JSON.stringify({domain:'clinical', record:PICKED, coverage:cov, kept:KEPT})});
     if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
     r = await res.json();
   } catch (e) {
@@ -192,11 +197,38 @@ function draw(r, cov){
   $('#o-cost').onclick = set('cost');
 }
 
+const LEVEL_LABEL = {'1.0':'complete', '0.6':'60% in', '0.4':'40% in', '0.2':'20% in', '0.1':'10% in'};
+
+function levels(){
+  const keys = CURVE.kept_levels || Object.keys(CURVE.levels || {});
+  $('#levels').innerHTML = keys.map(k =>
+    `<button class="chip${k===KEPT?' on':''}" data-k="${k}">${LEVEL_LABEL[k]||k}</button>`).join('');
+  $('#levels').querySelectorAll('button').forEach(b => b.onclick = () => {
+    KEPT = b.dataset.k;
+    levels();
+    const all = curve();
+    const best = all.reduce((a,c) => c.cost_per_case < a.cost_per_case ? c : a, all[0]);
+    const at = all.indexOf(best);
+    $('#dial').value = at;
+    render(at);
+    assess();
+  });
+  const all = curve();
+  const best = all.reduce((a,c) => c.cost_per_case < a.cost_per_case ? c : a, all[0]);
+  $('#levelNote').innerHTML = `At this level the record holds about `
+    + `<strong>${(parseFloat(KEPT)*15.6).toFixed(1)} of 15.6</strong> findings. `
+    + `Answering everything gets <strong>${pct(all[all.length-1].accuracy)}</strong> right; `
+    + `the cheapest policy answers <strong>${pct(best.coverage)}</strong> of cases.`;
+}
+
 (async () => {
   chips();
   try {
     CURVE = await (await fetch('/api/curve')).json();
-    $('#dial').oninput = e => { render(+e.target.value); assess(); };
+    const all = curve();
+    $('#dial').max = all.length - 1;
+    levels();
+    $('#dial').oninput = e => { render(+e.target.value); levels(); assess(); };
     render(+$('#dial').value);
   } catch (e) {
     $('#curveNote').innerHTML = `<span class="bad">Curve unavailable: ${e.message}</span>`;

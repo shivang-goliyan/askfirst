@@ -4,17 +4,30 @@
 
 ## What works, measured
 
-**The refusal.** 1,500 held-out DDXPlus patients, 49 conditions, 2% chance. Answer only the most
-confident share and accuracy on what you answered climbs from **21.0% to 85.3% at 10% coverage**.
-Priced — a confident wrong decision at 100, a referral at 5 — always answering costs 79.00 per
-case against 4.82, which is **94% cheaper**, and the result holds across seven price ratios
-(41% to 99% cheaper, optimum always 5-10% coverage).
+**Re-measured 13 Oct after finding the first version measured our own baseline.** A naive Bayes
+scores 22.6% top-1 on held-out DDXPlus; a softmax regression over the same 972 features, 31 seconds
+on CPU, scores **99.6%**. So the old "21.0% to 85.3% by refusing" was a statement about a weak
+classifier, and on complete records the curve is flat. Details and what it cost us:
+`results/2026-10-13-the-scorer-was-the-bottleneck.md`.
 
-Quote **92.8%**, not 98.7%. The 5%-coverage figure is 74 of 75 cases; Wilson CI [92.8%, 99.8%].
+The honest measurement puts record completeness on the grid, because "is there enough here?" was
+always the question. 6,000 held-out patients, 49 conditions, chance 2.0%, trained on complete
+records and tested on incomplete ones.
 
-Margin beats entropy as the confidence signal at every coverage level.
+| evidence kept | avg findings | answer all | @25% coverage | cheapest policy |
+|---|---|---|---|---|
+| 100% | 15.6 | 99.6% | 100.0% | answer 98%, saves 38% |
+| 60% | 9.0 | 96.2% | 99.9% | answer 80%, saves 46% |
+| 40% | 5.8 | **82.6%** | **98.3%** | answer 35%, saves 77% |
+| 20% | 2.7 | **39.9%** | **73.5%** | answer 2%, saves 91% |
+| 10% | 1.2 | 17.1% | 44.9% | answer 2%, saves 93% |
 
-Full numbers in `results/`. The failures are in there too, in order.
+**Refusing pays at every level of completeness, but how much to refuse changes by a factor of
+fifty.** That is the claim, it is a setting rather than a slogan, and the baked threshold is read
+per completeness level so the dial on the page and the server's decision are one number.
+
+Margin still beats entropy at every coverage level. On complete records this product is nearly
+pointless and we say so.
 
 ## Module B, measured 13 Oct
 
@@ -100,8 +113,10 @@ With a served model, the proposer harness adds the model to the table automatica
 
 1. Proposer recall with a real model — the go/no-go above.
 2. Model confidence against the naive Bayes margin on the risk-coverage curve. Beating
-   21%-to-85.3% with real logprobs is the point: a better model does not make answers cheaper,
-   it makes more of them answerable.
+   the completeness grid with real logprobs is the point: a better scorer does not make answers
+   cheaper, it makes more of them answerable. We have already measured one step of that axis the
+   cheap way — naive Bayes at 22.6% against a linear model at 99.6% moved the best policy from
+   answering 5% of cases to answering 98% — so the GPU run extends a curve rather than starting one.
 3. The PP3/BP4 evidence line for module B via ESM-2. The time sink there is mapping HGVS to a
    position in a protein sequence, not the model.
 

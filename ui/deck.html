@@ -94,46 +94,36 @@
 </section>
 
 <section>
-  <div class="tag">The measurement · 1,500 held-out patients · 49 conditions · 2% chance</div>
-  <h2>Answer fewer cases. Be right about the ones you answer.</h2>
+  <div class="tag">The measurement · 6,000 held-out patients · 49 conditions · 2% chance</div>
+  <h2>The scorer is 99.6% right on a complete record.<br>Then take the record away.</h2>
   <table>
-    <tr><th>Coverage</th><th>Accuracy</th><th>Confident and wrong</th></tr>
-    <tr><td>100% — answer everything</td><td>21.0%</td><td class="bad">1,185</td></tr>
-    <tr><td>25%</td><td>56.3%</td><td>164</td></tr>
-    <tr class="key"><td>10%</td><td>85.3%</td><td>22</td></tr>
-    <tr><td>5%</td><td>98.7%</td><td>1</td></tr>
+    <tr><th>evidence present</th><th>findings</th><th>answer everything</th><th>answer the top 25%</th></tr>
+    <tr><td>all of it</td><td>15.6</td><td class="good">99.6%</td><td>100.0%</td></tr>
+    <tr><td>60%</td><td>9.0</td><td>96.2%</td><td>99.9%</td></tr>
+    <tr class="key"><td>40%</td><td>5.8</td><td>82.6%</td><td>98.3%</td></tr>
+    <tr class="key"><td>20%</td><td>2.7</td><td class="bad">39.9%</td><td>73.5%</td></tr>
+    <tr><td>10%</td><td>1.2</td><td class="bad">17.1%</td><td>44.9%</td></tr>
   </table>
-  <p class="lede"><span class="dim">21.0%</span> → <span class="hot">85.3%</span> by answering one
-  case in ten. Margin beats entropy as the confidence signal at every coverage level.</p>
-  <div class="src">DDXPlus, CC BY 4.0, held-out split · docs/results/2026-10-13-the-refusal-works.md
-  · the 98.7% row is 74 of 75 answered cases, so the honest floor is <strong>92.8%</strong>, Wilson 95%</div>
+  <p class="lede">A model this good is <span class="bad">39.9%</span> right on three findings.
+  Refusing the least confident takes it to <span class="hot">73.5%</span>.</p>
+  <div class="src">Trained on complete records, tested on incomplete ones · Wilson 95% intervals in
+  docs/results/abstention.json · margin beats entropy at every coverage level</div>
 </section>
 
 <section>
-  <div class="tag">What refusing is worth</div>
-  <h2>"It declines to answer" is a weak claim. Priced, it stops being weak.</h2>
-  <div class="cols">
-    <div>
-      <div class="huge">94<span style="font-size:.45em">%</span></div>
-      <p class="dim">cheaper per case<br>79.00 → 4.82</p>
-    </div>
-    <div>
-      <table>
-        <tr><th>wrong : referral</th><th>best coverage</th><th>saving</th></tr>
-        <tr><td>100 : 5</td><td>5%</td><td>94%</td></tr>
-        <tr><td>100 : 20</td><td>5%</td><td>76%</td></tr>
-        <tr><td>100 : 50</td><td>10%</td><td>41%</td></tr>
-        <tr><td>50 : 5</td><td>5%</td><td>88%</td></tr>
-        <tr><td>20 : 5</td><td>5%</td><td>70%</td></tr>
-        <tr><td>10 : 5</td><td>10%</td><td>41%</td></tr>
-        <tr><td>100 : 1</td><td>5%</td><td>99%</td></tr>
-      </table>
-    </div>
-  </div>
-  <p><strong>We do not need to know a buyer's cost of a confident mistake.</strong> Seven price
-  ratios, saving from 41% to 99%, optimum never leaving 5–10% coverage. The sign of the result does
-  not depend on choosing flattering numbers.</p>
-  <div class="src">74,183 saved per thousand cases at 100:5 · docs/results/2026-10-13-economics.md</div>
+  <div class="tag">What refusing is worth · wrong answer 100, referral 5</div>
+  <h2>Refusing pays at every level. How much to refuse changes fifty-fold.</h2>
+  <table>
+    <tr><th>evidence present</th><th>always answer</th><th>cheapest</th><th>answers</th><th>saving</th></tr>
+    <tr><td>all of it</td><td>0.42</td><td>0.26</td><td>98%</td><td>38%</td></tr>
+    <tr><td>60%</td><td>3.80</td><td>2.05</td><td>80%</td><td>46%</td></tr>
+    <tr class="key"><td>40%</td><td>17.43</td><td>4.00</td><td>35%</td><td>77%</td></tr>
+    <tr class="key"><td>20%</td><td>60.15</td><td>5.24</td><td>2%</td><td>91%</td></tr>
+  </table>
+  <p><strong>That is a setting, not a slogan.</strong> Answer 98% of complete records; answer 2% of
+  nearly empty ones. The page lets you move it and the server obeys the same number.</p>
+  <p class="dim">Seven price ratios at 20% evidence: 28% to 98% cheaper. Even when a referral costs
+  half a wrong answer it is 28% cheaper. The direction does not depend on flattering prices.</p>
 </section>
 
 <section>
@@ -154,12 +144,19 @@
 
 <section>
   <div class="tag">What we got wrong, with dates on it</div>
-  <h2>Four dead ends are in the repo. One of them is ours.</h2>
+  <h2>The biggest thing we got wrong, we found ourselves.</h2>
   <ul>
+    <li><strong>We published a headline that measured our own baseline, then killed it.</strong>
+    "21% to 85.3% by refusing" came from a naive Bayes at 22.6% top-1. A linear model gets 99.6% in
+    31 seconds on a laptop, so the lift was about our classifier, not about medicine. Found by two
+    of our own files disagreeing, re-run end to end, old notes kept with a notice on them.</li>
     <li><strong>Our first ranking objective made things worse than guessing.</strong> Following its
     advice scored <span class="bad">18.8%</span> against <span class="cool">26.0%</span> for asking
-    at random and 28.0% for asking nothing. Flip probability selects for volatility, not
-    information. Replaced with expected information gain → 28.4%, harm gone.</li>
+    at random. Flip probability selects for volatility, not information. Replaced with expected
+    information gain → 28.4%, harm gone.</li>
+    <li><strong>A French-to-English label join was broken</strong> — the conditions file is keyed in
+    French, the patient labels are English, overlap 1 of 42. Caught before the GPU run, which would
+    have scored French predictions against English truth at $1.99 an hour.</li>
     <li>A d-dimer shows why: <strong>0.264 bits of information at a flip probability of 0.00.</strong>
     It settles the question without changing the leading answer, and the old objective could not see it.</li>
     <li><strong>Cheap-proposes-then-model-ablates caps the system near 32%</strong> — shortlist
@@ -174,8 +171,9 @@
   <div class="tag">Behaving badly, on purpose, as the track requires</div>
   <h2>Five questions, five answers that point at code or at a number.</h2>
   <table>
-    <tr><td><strong>Incorrect responses</strong></td><td>Measured: 1,185 confident errors → 22. The
-    whole product is this question.</td></tr>
+    <tr><td><strong>Incorrect responses</strong></td><td>Measured: on thin records, 39.9% right
+    answering everything against 73.5% answering the confident quarter. The whole product is this
+    question.</td></tr>
     <tr><td><strong>Sensitive information</strong></td><td>None enters. Synthetic and CC0 data only.
     MIMIC-IV deliberately excluded — its DUA forbids redistribution.</td></tr>
     <tr><td><strong>Uncertain results</strong></td><td>Uncertainty <em>is</em> the output: full

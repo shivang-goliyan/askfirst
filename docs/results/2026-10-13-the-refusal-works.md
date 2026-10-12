@@ -1,5 +1,12 @@
 # Three failures and one strong result, 13 October 2026
 
+> **SUPERSEDED 13 Oct by `2026-10-13-the-scorer-was-the-bottleneck.md`.** The numbers below come
+> from a naive Bayes that scores 22.6% top-1, and from complete records. A softmax regression on
+> the same features gets 99.6%, which makes the lift here a measurement of our own weak baseline
+> rather than of clinical uncertainty. Left unedited on purpose — deleting a wrong result is worse
+> than having published one.
+
+
 A day of measurement on CPU, no GPU, no language model. Recorded in order, including the parts
 that went wrong, because the sequence is the argument.
 

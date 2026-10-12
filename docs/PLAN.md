@@ -72,7 +72,8 @@ written down rather than quietly made:
 The live URL. The refusal curve and its price, because that is the whole submission. The video,
 the deck and the cover image, because without them there is nothing to judge. The safety answers
 in `docs/SAFETY.md`, because the track requires them. And **an honest statement of limits** — four
-dead ends with dates, the 92.8% floor rather than the 98.7% headline, the synthetic-data caveat,
+dead ends with dates, the headline we killed ourselves rather than the one that flattered us,
+the synthetic-data caveat,
 and the fact that MediQ posed this problem first.
 
 ## What nobody should do, including on day five

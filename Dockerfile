@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir \
       "fastapi==0.115.6" \
       "uvicorn==0.34.0" \
       "pyyaml==6.0.2" \
+      "numpy==2.3.5" \
       "openai==1.59.6"
 
 COPY LICENSE pyproject.toml ./

@@ -44,17 +44,19 @@ Capture from the **deployed URL**, never localhost. One browser window, no tabs,
 
 **1:25-2:05 — the measurement**
 
-*On screen:* the risk-coverage curve, then the cost table.
+*On screen:* the completeness selector, dragged from "complete" down to "20% in", then the cost table.
 
-> This is measured, not demonstrated. Fifteen hundred held-out patients, forty-nine conditions,
-> two percent chance. Answer every case and it gets twenty-one percent right, with eleven hundred
-> and eighty-five confident wrong answers. Answer only the most confident tenth and accuracy goes
-> to eighty-five point three, with twenty-two.
+> This is measured, not demonstrated — and we measured it wrong the first time, so let me show you
+> the version that survived. Six thousand held-out patients, forty-nine conditions. The scorer is
+> ninety-nine point six percent right when it has the whole record. Then we take the record away.
 >
-> Price it — a confident wrong decision at a hundred, a referral to a person at five — and cost per
-> case falls from seventy-nine to four point eight two. Ninety-four percent cheaper. We tested seven
-> different price ratios; the saving ranges from forty-one to ninety-nine percent, so the result
-> doesn't depend on us picking flattering numbers.
+> With a fifth of the evidence — about three findings — that same model is thirty-nine point nine
+> percent right. Refusing the least confident cases takes it back to seventy-three point five.
+>
+> Price it, a confident wrong decision at a hundred, a referral at five, and the interesting part
+> isn't the saving. It's that the right amount to refuse changes fifty-fold: answer ninety-eight
+> percent of complete records, two percent of nearly empty ones. That's a setting, and we can tell
+> you where to put it.
 
 **2:05-2:30 — why AMD**
 
@@ -72,11 +74,12 @@ Capture from the **deployed URL**, never localhost. One browser window, no tabs,
 *On screen:* the repo's results directory, the dates visible.
 
 > What we won't claim. No clinician has reviewed this and it is not medical advice. The data is
-> synthetic and we say so. The ninety-eight point seven figure rests on seventy-five cases, so we
-> quote ninety-two point eight. The question-ranking half is neutral so far, not proven. MediQ at
-> NeurIPS posed this problem before us. And one of our own ranking objectives made results worse
-> than asking at random — we measured it, diagnosed it and replaced it, and it's all in the repo
-> with dates on it.
+> synthetic, and a linear model gets ninety-nine point six percent on it, which tells you how
+> synthetic. On a complete record this product is nearly pointless and we say so on the slide.
+> The question-ranking half is neutral so far, not proven. MediQ at NeurIPS posed this problem
+> before us. And our first headline measured our own weak baseline — two of our files disagreed, we
+> chased it, killed the claim and re-ran everything. The old notes are still in the repo with a
+> notice on them.
 >
 > It knows when it doesn't know. That's the product.
 

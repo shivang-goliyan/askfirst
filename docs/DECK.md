@@ -45,31 +45,42 @@ Five steps, one diagram:
 
 ## 4 — The measurement
 
-1,500 held-out DDXPlus patients, 49 conditions, 2% chance.
+6,000 held-out DDXPlus patients, 49 conditions, 2% chance. Trained on complete records,
+tested on incomplete ones.
 
-| coverage | accuracy | confident wrong |
-|---|---|---|
-| 100% | 21.0% | 1,185 |
-| 25% | 56.3% | 164 |
-| 10% | **85.3%** | 22 |
-| 5% | 98.7% | 1 |
+| evidence present | findings | answer everything | answer the top 25% |
+|---|---|---|---|
+| all of it | 15.6 | **99.6%** | 100.0% |
+| 60% | 9.0 | 96.2% | 99.9% |
+| **40%** | 5.8 | **82.6%** | **98.3%** |
+| **20%** | 2.7 | **39.9%** | **73.5%** |
+| 10% | 1.2 | 17.1% | 44.9% |
 
-**21.0% → 85.3% by answering one case in ten.** Margin beats entropy as the confidence signal at
-every coverage level. *Source: `docs/results/2026-10-13-the-refusal-works.md`.*
+**The scorer is 99.6% right on a complete record — then take the record away.** At three findings
+it is 39.9%, and refusing the least confident takes it to 73.5%. Margin beats entropy at every
+coverage level. *Source: `docs/results/2026-10-13-the-scorer-was-the-bottleneck.md`.*
 
-Footnote on the slide, not buried: the 98.7% row is 74 of 75 answered cases; the honest floor is
-**92.8%**, Wilson 95%.
+Say on the slide, not in the footnote: this was measured wrong the first time. A naive Bayes at
+22.6% made refusing look four times better than it is, and we found it and re-ran everything.
 
 ## 5 — What refusing is worth
 
 A confident wrong decision costs 100, a referral to a person costs 5.
 
-**79.00 per case → 4.82. 94% cheaper. 74,183 saved per thousand cases.**
+| evidence present | always answer | cheapest | answers | saving |
+|---|---|---|---|---|
+| all of it | 0.42 | 0.26 | **98%** | 38% |
+| 60% | 3.80 | 2.05 | **80%** | 46% |
+| 40% | 17.43 | 4.00 | **35%** | 77% |
+| 20% | 60.15 | 5.24 | **2%** | 91% |
 
-Then the slide that wins the business criterion — the robustness table. Seven price ratios, saving
-from 41% to 99%, optimum never leaving 5-10% coverage. **We do not need to know a buyer's cost of
-a wrong confident answer; the sign of the result does not depend on it.**
-*Source: `docs/results/2026-10-13-economics.md`.*
+**Refusing pays at every level of completeness, but how much to refuse changes fifty-fold.** That
+is a setting, not a slogan — and the page moves it while the server obeys the same number.
+
+Then the robustness line: seven price ratios at 20% evidence give savings from 28% to 98%. Even
+when a referral costs half a wrong answer it is 28% cheaper. **We do not need to know a buyer's
+cost of a confident mistake; the direction does not depend on it.**
+*Source: `docs/results/2026-10-13-the-scorer-was-the-bottleneck.md`.*
 
 ## 6 — Why this needs an open model on AMD
 
@@ -101,7 +112,7 @@ and judges in this track reward stated limits.
 
 ## 8 — Safety, as the track requires
 
-One slide, five answers, pointing at `docs/SAFETY.md`. Incorrect responses → measured, 1,185 → 22.
+One slide, five answers, pointing at `docs/SAFETY.md`. Incorrect responses → measured, 39.9% → 73.5% on thin records.
 Sensitive data → none enters, MIMIC-IV deliberately excluded. Uncertainty → it is the output.
 High-risk decisions → never made; the only decision is answer-or-hand-over. Human review → refusal
 *is* the handoff, and it carries a ranked costed work list.
@@ -147,5 +158,5 @@ Close on the live URL and invite them to try to make it answer something it shou
 - Dark, plain, one accent colour. The numbers are the design.
 - Slide 4 is the hero — one table, big type, nothing else on it.
 - Screenshots come from the deployed URL, not localhost. A judge will notice.
-- Cover image: the coverage dial at 10% with "85.3%" legible at thumbnail size.
+- Cover image: the completeness selector at "20% in" with "39.9% → 73.5%" legible at thumbnail size.
 - No slide that says "AI-powered". The mechanism is specific; name it.

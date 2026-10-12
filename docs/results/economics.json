@@ -1,0 +1,1497 @@
+{
+  "1.0": {
+    "always": {
+      "coverage": 1.0,
+      "accuracy": 0.9958333333333333,
+      "wrong": 25,
+      "referred": 0,
+      "cost": 0.4166666666666667
+    },
+    "best": {
+      "coverage": 0.975,
+      "accuracy": 0.9986324786324786,
+      "wrong": 8,
+      "referred": 150,
+      "cost": 0.25833333333333336
+    },
+    "saving": 0.37999999999999995,
+    "rows": [
+      {
+        "coverage": 0.025,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5850,
+        "cost": 4.875
+      },
+      {
+        "coverage": 0.05,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5700,
+        "cost": 4.75
+      },
+      {
+        "coverage": 0.075,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5550,
+        "cost": 4.625
+      },
+      {
+        "coverage": 0.1,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5400,
+        "cost": 4.5
+      },
+      {
+        "coverage": 0.125,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5250,
+        "cost": 4.375
+      },
+      {
+        "coverage": 0.15,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5100,
+        "cost": 4.25
+      },
+      {
+        "coverage": 0.175,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4950,
+        "cost": 4.125
+      },
+      {
+        "coverage": 0.2,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4800,
+        "cost": 4.0
+      },
+      {
+        "coverage": 0.225,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4650,
+        "cost": 3.875
+      },
+      {
+        "coverage": 0.25,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4500,
+        "cost": 3.75
+      },
+      {
+        "coverage": 0.275,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4350,
+        "cost": 3.625
+      },
+      {
+        "coverage": 0.3,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4200,
+        "cost": 3.5
+      },
+      {
+        "coverage": 0.325,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4050,
+        "cost": 3.375
+      },
+      {
+        "coverage": 0.35,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 3900,
+        "cost": 3.25
+      },
+      {
+        "coverage": 0.375,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 3750,
+        "cost": 3.125
+      },
+      {
+        "coverage": 0.4,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 3600,
+        "cost": 3.0
+      },
+      {
+        "coverage": 0.425,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 3450,
+        "cost": 2.875
+      },
+      {
+        "coverage": 0.45,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 3300,
+        "cost": 2.75
+      },
+      {
+        "coverage": 0.475,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 3150,
+        "cost": 2.625
+      },
+      {
+        "coverage": 0.5,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 3000,
+        "cost": 2.5
+      },
+      {
+        "coverage": 0.525,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 2850,
+        "cost": 2.375
+      },
+      {
+        "coverage": 0.55,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 2700,
+        "cost": 2.25
+      },
+      {
+        "coverage": 0.5748333333333333,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 2551,
+        "cost": 2.1258333333333335
+      },
+      {
+        "coverage": 0.6,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 2400,
+        "cost": 2.0
+      },
+      {
+        "coverage": 0.625,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 2250,
+        "cost": 1.875
+      },
+      {
+        "coverage": 0.65,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 2100,
+        "cost": 1.75
+      },
+      {
+        "coverage": 0.675,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 1950,
+        "cost": 1.625
+      },
+      {
+        "coverage": 0.7,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 1800,
+        "cost": 1.5
+      },
+      {
+        "coverage": 0.725,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 1650,
+        "cost": 1.375
+      },
+      {
+        "coverage": 0.75,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 1500,
+        "cost": 1.25
+      },
+      {
+        "coverage": 0.775,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 1350,
+        "cost": 1.125
+      },
+      {
+        "coverage": 0.8,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 1200,
+        "cost": 1.0
+      },
+      {
+        "coverage": 0.825,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 1050,
+        "cost": 0.875
+      },
+      {
+        "coverage": 0.85,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 900,
+        "cost": 0.75
+      },
+      {
+        "coverage": 0.875,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 750,
+        "cost": 0.625
+      },
+      {
+        "coverage": 0.9,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 600,
+        "cost": 0.5
+      },
+      {
+        "coverage": 0.925,
+        "accuracy": 0.9998198198198198,
+        "wrong": 1,
+        "referred": 450,
+        "cost": 0.39166666666666666
+      },
+      {
+        "coverage": 0.95,
+        "accuracy": 0.9992982456140351,
+        "wrong": 4,
+        "referred": 300,
+        "cost": 0.31666666666666665
+      },
+      {
+        "coverage": 0.975,
+        "accuracy": 0.9986324786324786,
+        "wrong": 8,
+        "referred": 150,
+        "cost": 0.25833333333333336
+      },
+      {
+        "coverage": 1.0,
+        "accuracy": 0.9958333333333333,
+        "wrong": 25,
+        "referred": 0,
+        "cost": 0.4166666666666667
+      }
+    ]
+  },
+  "0.6": {
+    "always": {
+      "coverage": 1.0,
+      "accuracy": 0.962,
+      "wrong": 228,
+      "referred": 0,
+      "cost": 3.8
+    },
+    "best": {
+      "coverage": 0.8,
+      "accuracy": 0.986875,
+      "wrong": 63,
+      "referred": 1200,
+      "cost": 2.05
+    },
+    "saving": 0.46052631578947373,
+    "rows": [
+      {
+        "coverage": 0.025,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5850,
+        "cost": 4.875
+      },
+      {
+        "coverage": 0.05,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5700,
+        "cost": 4.75
+      },
+      {
+        "coverage": 0.075,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5550,
+        "cost": 4.625
+      },
+      {
+        "coverage": 0.1,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5400,
+        "cost": 4.5
+      },
+      {
+        "coverage": 0.125,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5250,
+        "cost": 4.375
+      },
+      {
+        "coverage": 0.15,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5100,
+        "cost": 4.25
+      },
+      {
+        "coverage": 0.175,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4950,
+        "cost": 4.125
+      },
+      {
+        "coverage": 0.2,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 4800,
+        "cost": 4.0
+      },
+      {
+        "coverage": 0.225,
+        "accuracy": 0.9992592592592593,
+        "wrong": 1,
+        "referred": 4650,
+        "cost": 3.8916666666666666
+      },
+      {
+        "coverage": 0.25,
+        "accuracy": 0.9993333333333333,
+        "wrong": 1,
+        "referred": 4500,
+        "cost": 3.7666666666666666
+      },
+      {
+        "coverage": 0.275,
+        "accuracy": 0.9981818181818182,
+        "wrong": 3,
+        "referred": 4350,
+        "cost": 3.675
+      },
+      {
+        "coverage": 0.3,
+        "accuracy": 0.9983333333333333,
+        "wrong": 3,
+        "referred": 4200,
+        "cost": 3.55
+      },
+      {
+        "coverage": 0.325,
+        "accuracy": 0.997948717948718,
+        "wrong": 4,
+        "referred": 4050,
+        "cost": 3.441666666666667
+      },
+      {
+        "coverage": 0.35,
+        "accuracy": 0.9971428571428571,
+        "wrong": 6,
+        "referred": 3900,
+        "cost": 3.35
+      },
+      {
+        "coverage": 0.375,
+        "accuracy": 0.9973333333333333,
+        "wrong": 6,
+        "referred": 3750,
+        "cost": 3.225
+      },
+      {
+        "coverage": 0.4,
+        "accuracy": 0.9970833333333333,
+        "wrong": 7,
+        "referred": 3600,
+        "cost": 3.1166666666666667
+      },
+      {
+        "coverage": 0.425,
+        "accuracy": 0.9968627450980392,
+        "wrong": 8,
+        "referred": 3450,
+        "cost": 3.0083333333333333
+      },
+      {
+        "coverage": 0.45,
+        "accuracy": 0.9966666666666667,
+        "wrong": 9,
+        "referred": 3300,
+        "cost": 2.9
+      },
+      {
+        "coverage": 0.475,
+        "accuracy": 0.9954385964912281,
+        "wrong": 13,
+        "referred": 3150,
+        "cost": 2.841666666666667
+      },
+      {
+        "coverage": 0.5,
+        "accuracy": 0.9946666666666667,
+        "wrong": 16,
+        "referred": 3000,
+        "cost": 2.7666666666666666
+      },
+      {
+        "coverage": 0.525,
+        "accuracy": 0.9942857142857143,
+        "wrong": 18,
+        "referred": 2850,
+        "cost": 2.675
+      },
+      {
+        "coverage": 0.55,
+        "accuracy": 0.9936363636363637,
+        "wrong": 21,
+        "referred": 2700,
+        "cost": 2.6
+      },
+      {
+        "coverage": 0.5748333333333333,
+        "accuracy": 0.993621339518701,
+        "wrong": 22,
+        "referred": 2551,
+        "cost": 2.4925
+      },
+      {
+        "coverage": 0.6,
+        "accuracy": 0.9930555555555556,
+        "wrong": 25,
+        "referred": 2400,
+        "cost": 2.4166666666666665
+      },
+      {
+        "coverage": 0.625,
+        "accuracy": 0.9914666666666667,
+        "wrong": 32,
+        "referred": 2250,
+        "cost": 2.408333333333333
+      },
+      {
+        "coverage": 0.65,
+        "accuracy": 0.99,
+        "wrong": 39,
+        "referred": 2100,
+        "cost": 2.4
+      },
+      {
+        "coverage": 0.675,
+        "accuracy": 0.9901234567901235,
+        "wrong": 40,
+        "referred": 1950,
+        "cost": 2.2916666666666665
+      },
+      {
+        "coverage": 0.7,
+        "accuracy": 0.9890476190476191,
+        "wrong": 46,
+        "referred": 1800,
+        "cost": 2.2666666666666666
+      },
+      {
+        "coverage": 0.725,
+        "accuracy": 0.9885057471264368,
+        "wrong": 50,
+        "referred": 1650,
+        "cost": 2.2083333333333335
+      },
+      {
+        "coverage": 0.75,
+        "accuracy": 0.9877777777777778,
+        "wrong": 55,
+        "referred": 1500,
+        "cost": 2.1666666666666665
+      },
+      {
+        "coverage": 0.775,
+        "accuracy": 0.9870967741935484,
+        "wrong": 60,
+        "referred": 1350,
+        "cost": 2.125
+      },
+      {
+        "coverage": 0.8,
+        "accuracy": 0.986875,
+        "wrong": 63,
+        "referred": 1200,
+        "cost": 2.05
+      },
+      {
+        "coverage": 0.825,
+        "accuracy": 0.9850505050505051,
+        "wrong": 74,
+        "referred": 1050,
+        "cost": 2.1083333333333334
+      },
+      {
+        "coverage": 0.85,
+        "accuracy": 0.983921568627451,
+        "wrong": 82,
+        "referred": 900,
+        "cost": 2.1166666666666667
+      },
+      {
+        "coverage": 0.875,
+        "accuracy": 0.9824761904761905,
+        "wrong": 92,
+        "referred": 750,
+        "cost": 2.158333333333333
+      },
+      {
+        "coverage": 0.9,
+        "accuracy": 0.9805555555555555,
+        "wrong": 105,
+        "referred": 600,
+        "cost": 2.25
+      },
+      {
+        "coverage": 0.925,
+        "accuracy": 0.9798198198198198,
+        "wrong": 112,
+        "referred": 450,
+        "cost": 2.2416666666666667
+      },
+      {
+        "coverage": 0.95,
+        "accuracy": 0.9757894736842105,
+        "wrong": 138,
+        "referred": 300,
+        "cost": 2.55
+      },
+      {
+        "coverage": 0.975,
+        "accuracy": 0.969059829059829,
+        "wrong": 181,
+        "referred": 150,
+        "cost": 3.1416666666666666
+      },
+      {
+        "coverage": 1.0,
+        "accuracy": 0.962,
+        "wrong": 228,
+        "referred": 0,
+        "cost": 3.8
+      }
+    ]
+  },
+  "0.4": {
+    "always": {
+      "coverage": 1.0,
+      "accuracy": 0.8256666666666667,
+      "wrong": 1046,
+      "referred": 0,
+      "cost": 17.433333333333334
+    },
+    "best": {
+      "coverage": 0.35,
+      "accuracy": 0.9785714285714285,
+      "wrong": 45,
+      "referred": 3900,
+      "cost": 4.0
+    },
+    "saving": 0.7705544933078394,
+    "rows": [
+      {
+        "coverage": 0.025,
+        "accuracy": 1.0,
+        "wrong": 0,
+        "referred": 5850,
+        "cost": 4.875
+      },
+      {
+        "coverage": 0.05,
+        "accuracy": 0.9966666666666667,
+        "wrong": 1,
+        "referred": 5700,
+        "cost": 4.766666666666667
+      },
+      {
+        "coverage": 0.075,
+        "accuracy": 0.9977777777777778,
+        "wrong": 1,
+        "referred": 5550,
+        "cost": 4.641666666666667
+      },
+      {
+        "coverage": 0.1,
+        "accuracy": 0.995,
+        "wrong": 3,
+        "referred": 5400,
+        "cost": 4.55
+      },
+      {
+        "coverage": 0.125,
+        "accuracy": 0.9946666666666667,
+        "wrong": 4,
+        "referred": 5250,
+        "cost": 4.441666666666666
+      },
+      {
+        "coverage": 0.15,
+        "accuracy": 0.9944444444444445,
+        "wrong": 5,
+        "referred": 5100,
+        "cost": 4.333333333333333
+      },
+      {
+        "coverage": 0.175,
+        "accuracy": 0.9914285714285714,
+        "wrong": 9,
+        "referred": 4950,
+        "cost": 4.275
+      },
+      {
+        "coverage": 0.2,
+        "accuracy": 0.9875,
+        "wrong": 15,
+        "referred": 4800,
+        "cost": 4.25
+      },
+      {
+        "coverage": 0.225,
+        "accuracy": 0.9844444444444445,
+        "wrong": 21,
+        "referred": 4650,
+        "cost": 4.225
+      },
+      {
+        "coverage": 0.25,
+        "accuracy": 0.9826666666666667,
+        "wrong": 26,
+        "referred": 4500,
+        "cost": 4.183333333333334
+      },
+      {
+        "coverage": 0.275,
+        "accuracy": 0.9812121212121212,
+        "wrong": 31,
+        "referred": 4350,
+        "cost": 4.141666666666667
+      },
+      {
+        "coverage": 0.3,
+        "accuracy": 0.9805555555555555,
+        "wrong": 35,
+        "referred": 4200,
+        "cost": 4.083333333333333
+      },
+      {
+        "coverage": 0.325,
+        "accuracy": 0.9805128205128205,
+        "wrong": 38,
+        "referred": 4050,
+        "cost": 4.008333333333334
+      },
+      {
+        "coverage": 0.35,
+        "accuracy": 0.9785714285714285,
+        "wrong": 45,
+        "referred": 3900,
+        "cost": 4.0
+      },
+      {
+        "coverage": 0.375,
+        "accuracy": 0.976,
+        "wrong": 54,
+        "referred": 3750,
+        "cost": 4.025
+      },
+      {
+        "coverage": 0.4,
+        "accuracy": 0.9733333333333334,
+        "wrong": 64,
+        "referred": 3600,
+        "cost": 4.066666666666666
+      },
+      {
+        "coverage": 0.425,
+        "accuracy": 0.9713725490196078,
+        "wrong": 73,
+        "referred": 3450,
+        "cost": 4.091666666666667
+      },
+      {
+        "coverage": 0.45,
+        "accuracy": 0.9677777777777777,
+        "wrong": 87,
+        "referred": 3300,
+        "cost": 4.2
+      },
+      {
+        "coverage": 0.475,
+        "accuracy": 0.964561403508772,
+        "wrong": 101,
+        "referred": 3150,
+        "cost": 4.308333333333334
+      },
+      {
+        "coverage": 0.5,
+        "accuracy": 0.9626666666666667,
+        "wrong": 112,
+        "referred": 3000,
+        "cost": 4.366666666666666
+      },
+      {
+        "coverage": 0.525,
+        "accuracy": 0.9603174603174603,
+        "wrong": 125,
+        "referred": 2850,
+        "cost": 4.458333333333333
+      },
+      {
+        "coverage": 0.55,
+        "accuracy": 0.9563636363636364,
+        "wrong": 144,
+        "referred": 2700,
+        "cost": 4.65
+      },
+      {
+        "coverage": 0.5748333333333333,
+        "accuracy": 0.953029863728617,
+        "wrong": 162,
+        "referred": 2551,
+        "cost": 4.825833333333334
+      },
+      {
+        "coverage": 0.6,
+        "accuracy": 0.9486111111111111,
+        "wrong": 185,
+        "referred": 2400,
+        "cost": 5.083333333333333
+      },
+      {
+        "coverage": 0.625,
+        "accuracy": 0.9453333333333334,
+        "wrong": 205,
+        "referred": 2250,
+        "cost": 5.291666666666667
+      },
+      {
+        "coverage": 0.65,
+        "accuracy": 0.941025641025641,
+        "wrong": 230,
+        "referred": 2100,
+        "cost": 5.583333333333333
+      },
+      {
+        "coverage": 0.675,
+        "accuracy": 0.9375308641975308,
+        "wrong": 253,
+        "referred": 1950,
+        "cost": 5.841666666666667
+      },
+      {
+        "coverage": 0.7,
+        "accuracy": 0.9321428571428572,
+        "wrong": 285,
+        "referred": 1800,
+        "cost": 6.25
+      },
+      {
+        "coverage": 0.725,
+        "accuracy": 0.9232183908045977,
+        "wrong": 334,
+        "referred": 1650,
+        "cost": 6.941666666666666
+      },
+      {
+        "coverage": 0.75,
+        "accuracy": 0.9164444444444444,
+        "wrong": 376,
+        "referred": 1500,
+        "cost": 7.516666666666667
+      },
+      {
+        "coverage": 0.775,
+        "accuracy": 0.909247311827957,
+        "wrong": 422,
+        "referred": 1350,
+        "cost": 8.158333333333333
+      },
+      {
+        "coverage": 0.8,
+        "accuracy": 0.9020833333333333,
+        "wrong": 470,
+        "referred": 1200,
+        "cost": 8.833333333333334
+      },
+      {
+        "coverage": 0.825,
+        "accuracy": 0.8925252525252525,
+        "wrong": 532,
+        "referred": 1050,
+        "cost": 9.741666666666667
+      },
+      {
+        "coverage": 0.85,
+        "accuracy": 0.8852941176470588,
+        "wrong": 585,
+        "referred": 900,
+        "cost": 10.5
+      },
+      {
+        "coverage": 0.875,
+        "accuracy": 0.8782857142857143,
+        "wrong": 639,
+        "referred": 750,
+        "cost": 11.275
+      },
+      {
+        "coverage": 0.9,
+        "accuracy": 0.8707407407407407,
+        "wrong": 698,
+        "referred": 600,
+        "cost": 12.133333333333333
+      },
+      {
+        "coverage": 0.925,
+        "accuracy": 0.8609009009009009,
+        "wrong": 772,
+        "referred": 450,
+        "cost": 13.241666666666667
+      },
+      {
+        "coverage": 0.95,
+        "accuracy": 0.8503508771929824,
+        "wrong": 853,
+        "referred": 300,
+        "cost": 14.466666666666667
+      },
+      {
+        "coverage": 0.975,
+        "accuracy": 0.837948717948718,
+        "wrong": 948,
+        "referred": 150,
+        "cost": 15.925
+      },
+      {
+        "coverage": 1.0,
+        "accuracy": 0.8256666666666667,
+        "wrong": 1046,
+        "referred": 0,
+        "cost": 17.433333333333334
+      }
+    ]
+  },
+  "0.2": {
+    "always": {
+      "coverage": 1.0,
+      "accuracy": 0.3985,
+      "wrong": 3609,
+      "referred": 0,
+      "cost": 60.15
+    },
+    "best": {
+      "coverage": 0.025,
+      "accuracy": 0.8533333333333334,
+      "wrong": 22,
+      "referred": 5850,
+      "cost": 5.241666666666666
+    },
+    "saving": 0.9128567470213356,
+    "rows": [
+      {
+        "coverage": 0.025,
+        "accuracy": 0.8533333333333334,
+        "wrong": 22,
+        "referred": 5850,
+        "cost": 5.241666666666666
+      },
+      {
+        "coverage": 0.05,
+        "accuracy": 0.8566666666666667,
+        "wrong": 43,
+        "referred": 5700,
+        "cost": 5.466666666666667
+      },
+      {
+        "coverage": 0.075,
+        "accuracy": 0.8533333333333334,
+        "wrong": 66,
+        "referred": 5550,
+        "cost": 5.725
+      },
+      {
+        "coverage": 0.1,
+        "accuracy": 0.8133333333333334,
+        "wrong": 112,
+        "referred": 5400,
+        "cost": 6.366666666666666
+      },
+      {
+        "coverage": 0.125,
+        "accuracy": 0.7973333333333333,
+        "wrong": 152,
+        "referred": 5250,
+        "cost": 6.908333333333333
+      },
+      {
+        "coverage": 0.15,
+        "accuracy": 0.7711111111111111,
+        "wrong": 206,
+        "referred": 5100,
+        "cost": 7.683333333333334
+      },
+      {
+        "coverage": 0.175,
+        "accuracy": 0.7590476190476191,
+        "wrong": 253,
+        "referred": 4950,
+        "cost": 8.341666666666667
+      },
+      {
+        "coverage": 0.2,
+        "accuracy": 0.7633333333333333,
+        "wrong": 284,
+        "referred": 4800,
+        "cost": 8.733333333333333
+      },
+      {
+        "coverage": 0.225,
+        "accuracy": 0.7474074074074074,
+        "wrong": 341,
+        "referred": 4650,
+        "cost": 9.558333333333334
+      },
+      {
+        "coverage": 0.25,
+        "accuracy": 0.7346666666666667,
+        "wrong": 398,
+        "referred": 4500,
+        "cost": 10.383333333333333
+      },
+      {
+        "coverage": 0.275,
+        "accuracy": 0.7242424242424242,
+        "wrong": 455,
+        "referred": 4350,
+        "cost": 11.208333333333334
+      },
+      {
+        "coverage": 0.3,
+        "accuracy": 0.7144444444444444,
+        "wrong": 514,
+        "referred": 4200,
+        "cost": 12.066666666666666
+      },
+      {
+        "coverage": 0.325,
+        "accuracy": 0.6958974358974359,
+        "wrong": 593,
+        "referred": 4050,
+        "cost": 13.258333333333333
+      },
+      {
+        "coverage": 0.35,
+        "accuracy": 0.6780952380952381,
+        "wrong": 676,
+        "referred": 3900,
+        "cost": 14.516666666666667
+      },
+      {
+        "coverage": 0.375,
+        "accuracy": 0.6644444444444444,
+        "wrong": 755,
+        "referred": 3750,
+        "cost": 15.708333333333334
+      },
+      {
+        "coverage": 0.4,
+        "accuracy": 0.64375,
+        "wrong": 855,
+        "referred": 3600,
+        "cost": 17.25
+      },
+      {
+        "coverage": 0.425,
+        "accuracy": 0.6286274509803922,
+        "wrong": 947,
+        "referred": 3450,
+        "cost": 18.658333333333335
+      },
+      {
+        "coverage": 0.45,
+        "accuracy": 0.6177777777777778,
+        "wrong": 1032,
+        "referred": 3300,
+        "cost": 19.95
+      },
+      {
+        "coverage": 0.475,
+        "accuracy": 0.6056140350877193,
+        "wrong": 1124,
+        "referred": 3150,
+        "cost": 21.358333333333334
+      },
+      {
+        "coverage": 0.5,
+        "accuracy": 0.596,
+        "wrong": 1212,
+        "referred": 3000,
+        "cost": 22.7
+      },
+      {
+        "coverage": 0.525,
+        "accuracy": 0.5885714285714285,
+        "wrong": 1296,
+        "referred": 2850,
+        "cost": 23.975
+      },
+      {
+        "coverage": 0.55,
+        "accuracy": 0.576060606060606,
+        "wrong": 1399,
+        "referred": 2700,
+        "cost": 25.566666666666666
+      },
+      {
+        "coverage": 0.5748333333333333,
+        "accuracy": 0.559872426790374,
+        "wrong": 1518,
+        "referred": 2551,
+        "cost": 27.425833333333333
+      },
+      {
+        "coverage": 0.6,
+        "accuracy": 0.5455555555555556,
+        "wrong": 1636,
+        "referred": 2400,
+        "cost": 29.266666666666666
+      },
+      {
+        "coverage": 0.625,
+        "accuracy": 0.5322666666666667,
+        "wrong": 1754,
+        "referred": 2250,
+        "cost": 31.108333333333334
+      },
+      {
+        "coverage": 0.65,
+        "accuracy": 0.522051282051282,
+        "wrong": 1864,
+        "referred": 2100,
+        "cost": 32.81666666666667
+      },
+      {
+        "coverage": 0.675,
+        "accuracy": 0.514320987654321,
+        "wrong": 1967,
+        "referred": 1950,
+        "cost": 34.40833333333333
+      },
+      {
+        "coverage": 0.7,
+        "accuracy": 0.5040476190476191,
+        "wrong": 2083,
+        "referred": 1800,
+        "cost": 36.21666666666667
+      },
+      {
+        "coverage": 0.725,
+        "accuracy": 0.49494252873563216,
+        "wrong": 2197,
+        "referred": 1650,
+        "cost": 37.99166666666667
+      },
+      {
+        "coverage": 0.75,
+        "accuracy": 0.4888888888888889,
+        "wrong": 2300,
+        "referred": 1500,
+        "cost": 39.583333333333336
+      },
+      {
+        "coverage": 0.775,
+        "accuracy": 0.4808602150537634,
+        "wrong": 2414,
+        "referred": 1350,
+        "cost": 41.358333333333334
+      },
+      {
+        "coverage": 0.8,
+        "accuracy": 0.473125,
+        "wrong": 2529,
+        "referred": 1200,
+        "cost": 43.15
+      },
+      {
+        "coverage": 0.825,
+        "accuracy": 0.4634343434343434,
+        "wrong": 2656,
+        "referred": 1050,
+        "cost": 45.141666666666666
+      },
+      {
+        "coverage": 0.85,
+        "accuracy": 0.45294117647058824,
+        "wrong": 2790,
+        "referred": 900,
+        "cost": 47.25
+      },
+      {
+        "coverage": 0.875,
+        "accuracy": 0.44323809523809526,
+        "wrong": 2923,
+        "referred": 750,
+        "cost": 49.34166666666667
+      },
+      {
+        "coverage": 0.9,
+        "accuracy": 0.4325925925925926,
+        "wrong": 3064,
+        "referred": 600,
+        "cost": 51.56666666666667
+      },
+      {
+        "coverage": 0.925,
+        "accuracy": 0.4227027027027027,
+        "wrong": 3204,
+        "referred": 450,
+        "cost": 53.775
+      },
+      {
+        "coverage": 0.95,
+        "accuracy": 0.41368421052631577,
+        "wrong": 3342,
+        "referred": 300,
+        "cost": 55.95
+      },
+      {
+        "coverage": 0.975,
+        "accuracy": 0.4064957264957265,
+        "wrong": 3472,
+        "referred": 150,
+        "cost": 57.99166666666667
+      },
+      {
+        "coverage": 1.0,
+        "accuracy": 0.3985,
+        "wrong": 3609,
+        "referred": 0,
+        "cost": 60.15
+      }
+    ]
+  },
+  "0.1": {
+    "always": {
+      "coverage": 1.0,
+      "accuracy": 0.17083333333333334,
+      "wrong": 4975,
+      "referred": 0,
+      "cost": 82.91666666666667
+    },
+    "best": {
+      "coverage": 0.025,
+      "accuracy": 0.56,
+      "wrong": 66,
+      "referred": 5850,
+      "cost": 5.975
+    },
+    "saving": 0.9279396984924624,
+    "rows": [
+      {
+        "coverage": 0.025,
+        "accuracy": 0.56,
+        "wrong": 66,
+        "referred": 5850,
+        "cost": 5.975
+      },
+      {
+        "coverage": 0.05,
+        "accuracy": 0.5133333333333333,
+        "wrong": 146,
+        "referred": 5700,
+        "cost": 7.183333333333334
+      },
+      {
+        "coverage": 0.075,
+        "accuracy": 0.5622222222222222,
+        "wrong": 197,
+        "referred": 5550,
+        "cost": 7.908333333333333
+      },
+      {
+        "coverage": 0.1,
+        "accuracy": 0.6316666666666667,
+        "wrong": 221,
+        "referred": 5400,
+        "cost": 8.183333333333334
+      },
+      {
+        "coverage": 0.125,
+        "accuracy": 0.5773333333333334,
+        "wrong": 317,
+        "referred": 5250,
+        "cost": 9.658333333333333
+      },
+      {
+        "coverage": 0.15,
+        "accuracy": 0.5411111111111111,
+        "wrong": 413,
+        "referred": 5100,
+        "cost": 11.133333333333333
+      },
+      {
+        "coverage": 0.175,
+        "accuracy": 0.5228571428571429,
+        "wrong": 501,
+        "referred": 4950,
+        "cost": 12.475
+      },
+      {
+        "coverage": 0.2,
+        "accuracy": 0.47333333333333333,
+        "wrong": 632,
+        "referred": 4800,
+        "cost": 14.533333333333333
+      },
+      {
+        "coverage": 0.225,
+        "accuracy": 0.4525925925925926,
+        "wrong": 739,
+        "referred": 4650,
+        "cost": 16.191666666666666
+      },
+      {
+        "coverage": 0.25,
+        "accuracy": 0.44866666666666666,
+        "wrong": 827,
+        "referred": 4500,
+        "cost": 17.533333333333335
+      },
+      {
+        "coverage": 0.275,
+        "accuracy": 0.4315151515151515,
+        "wrong": 938,
+        "referred": 4350,
+        "cost": 19.258333333333333
+      },
+      {
+        "coverage": 0.3,
+        "accuracy": 0.4011111111111111,
+        "wrong": 1078,
+        "referred": 4200,
+        "cost": 21.466666666666665
+      },
+      {
+        "coverage": 0.325,
+        "accuracy": 0.37435897435897436,
+        "wrong": 1220,
+        "referred": 4050,
+        "cost": 23.708333333333332
+      },
+      {
+        "coverage": 0.35,
+        "accuracy": 0.3580952380952381,
+        "wrong": 1348,
+        "referred": 3900,
+        "cost": 25.716666666666665
+      },
+      {
+        "coverage": 0.375,
+        "accuracy": 0.3466666666666667,
+        "wrong": 1470,
+        "referred": 3750,
+        "cost": 27.625
+      },
+      {
+        "coverage": 0.4,
+        "accuracy": 0.3433333333333333,
+        "wrong": 1576,
+        "referred": 3600,
+        "cost": 29.266666666666666
+      },
+      {
+        "coverage": 0.425,
+        "accuracy": 0.3419607843137255,
+        "wrong": 1678,
+        "referred": 3450,
+        "cost": 30.841666666666665
+      },
+      {
+        "coverage": 0.45,
+        "accuracy": 0.3385185185185185,
+        "wrong": 1786,
+        "referred": 3300,
+        "cost": 32.516666666666666
+      },
+      {
+        "coverage": 0.475,
+        "accuracy": 0.33052631578947367,
+        "wrong": 1908,
+        "referred": 3150,
+        "cost": 34.425
+      },
+      {
+        "coverage": 0.5,
+        "accuracy": 0.31566666666666665,
+        "wrong": 2053,
+        "referred": 3000,
+        "cost": 36.71666666666667
+      },
+      {
+        "coverage": 0.525,
+        "accuracy": 0.30063492063492064,
+        "wrong": 2203,
+        "referred": 2850,
+        "cost": 39.09166666666667
+      },
+      {
+        "coverage": 0.55,
+        "accuracy": 0.2875757575757576,
+        "wrong": 2351,
+        "referred": 2700,
+        "cost": 41.43333333333333
+      },
+      {
+        "coverage": 0.5748333333333333,
+        "accuracy": 0.2751522180342128,
+        "wrong": 2500,
+        "referred": 2551,
+        "cost": 43.7925
+      },
+      {
+        "coverage": 0.6,
+        "accuracy": 0.26472222222222225,
+        "wrong": 2647,
+        "referred": 2400,
+        "cost": 46.11666666666667
+      },
+      {
+        "coverage": 0.625,
+        "accuracy": 0.2544,
+        "wrong": 2796,
+        "referred": 2250,
+        "cost": 48.475
+      },
+      {
+        "coverage": 0.65,
+        "accuracy": 0.24820512820512822,
+        "wrong": 2932,
+        "referred": 2100,
+        "cost": 50.61666666666667
+      },
+      {
+        "coverage": 0.675,
+        "accuracy": 0.24123456790123457,
+        "wrong": 3073,
+        "referred": 1950,
+        "cost": 52.84166666666667
+      },
+      {
+        "coverage": 0.7,
+        "accuracy": 0.2330952380952381,
+        "wrong": 3221,
+        "referred": 1800,
+        "cost": 55.18333333333333
+      },
+      {
+        "coverage": 0.725,
+        "accuracy": 0.22528735632183908,
+        "wrong": 3370,
+        "referred": 1650,
+        "cost": 57.541666666666664
+      },
+      {
+        "coverage": 0.75,
+        "accuracy": 0.21777777777777776,
+        "wrong": 3520,
+        "referred": 1500,
+        "cost": 59.916666666666664
+      },
+      {
+        "coverage": 0.775,
+        "accuracy": 0.210752688172043,
+        "wrong": 3670,
+        "referred": 1350,
+        "cost": 62.291666666666664
+      },
+      {
+        "coverage": 0.8,
+        "accuracy": 0.20416666666666666,
+        "wrong": 3820,
+        "referred": 1200,
+        "cost": 64.66666666666667
+      },
+      {
+        "coverage": 0.825,
+        "accuracy": 0.19797979797979798,
+        "wrong": 3970,
+        "referred": 1050,
+        "cost": 67.04166666666667
+      },
+      {
+        "coverage": 0.85,
+        "accuracy": 0.19215686274509805,
+        "wrong": 4120,
+        "referred": 900,
+        "cost": 69.41666666666667
+      },
+      {
+        "coverage": 0.875,
+        "accuracy": 0.18704761904761905,
+        "wrong": 4268,
+        "referred": 750,
+        "cost": 71.75833333333334
+      },
+      {
+        "coverage": 0.9,
+        "accuracy": 0.18425925925925926,
+        "wrong": 4405,
+        "referred": 600,
+        "cost": 73.91666666666667
+      },
+      {
+        "coverage": 0.925,
+        "accuracy": 0.18144144144144145,
+        "wrong": 4543,
+        "referred": 450,
+        "cost": 76.09166666666667
+      },
+      {
+        "coverage": 0.95,
+        "accuracy": 0.17842105263157895,
+        "wrong": 4683,
+        "referred": 300,
+        "cost": 78.3
+      },
+      {
+        "coverage": 0.975,
+        "accuracy": 0.17504273504273504,
+        "wrong": 4826,
+        "referred": 150,
+        "cost": 80.55833333333334
+      },
+      {
+        "coverage": 1.0,
+        "accuracy": 0.17083333333333334,
+        "wrong": 4975,
+        "referred": 0,
+        "cost": 82.91666666666667
+      }
+    ]
+  }
+}

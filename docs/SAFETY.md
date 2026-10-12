@@ -13,10 +13,15 @@ come from a public knowledge base.
 The product exists because of this question. Being wrong *while confident* is the failure mode it
 is built to remove, and the removal is measured rather than asserted.
 
-Answering all 1,500 held-out cases produces 1,185 wrong answers. Answering only the most confident
-tenth produces **22**. Priced at 100 for a confident wrong decision and 5 for a referral, cost per
-case falls from 79.00 to 4.82 — and the direction holds across all seven price ratios tested, down
-to a referral costing half a wrong answer (`docs/results/2026-10-13-economics.md`).
+On 6,000 held-out cases holding a fifth of the evidence, answering everything is right 39.9% of
+the time. Answering only the most confident quarter is right 73.5%. Priced at 100 for a confident
+wrong decision and 5 for a referral, cost per case falls from 60.15 to 5.24 — and the direction
+holds across all seven price ratios tested, down to a referral costing half a wrong answer
+(`docs/results/2026-10-13-the-scorer-was-the-bottleneck.md`).
+
+The scorer behind that is 99.6% accurate on *complete* records, so this is not a weak model being
+flattered by a filter. The first version of this measurement was exactly that, and it was caught
+and replaced rather than shipped.
 
 It is still wrong sometimes, and the interface never hides that. The accuracy on answered cases is
 printed next to the answer, with its confidence interval, at whatever coverage the dial is set to.
@@ -73,11 +78,13 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
 ## What we will not claim
 
 - Not clinically validated. Not reviewed by a clinician. Not for use on real patients.
-- The 98.7% figure at 5% coverage rests on 75 answered cases. The honest floor is **92.8%**
-  (Wilson 95%), and that is the number used everywhere.
+- On a complete record this product is nearly pointless: the scorer is already 99.6% right and the
+  cheapest policy answers 98% of cases. It earns its keep on thin records, and we say where the
+  line is rather than leaving it vague.
 - DDXPlus is rule-based synthetic data, so recovering a deleted field may partly mean recovering
   the generator. MedQA is the cross-check and the limitation is stated rather than buried.
 - The question-ranking half is **neutral, not proven useful** — 28.4% against 26.0% for asking at
-  random, intervals overlapping. It ships as a visible aid, not as a claim.
+  random, intervals overlapping, and that was measured with the old weak scorer so it is due a
+  re-run. It ships as a visible aid, not as a claim.
 - The concept is not novel. MediQ (NeurIPS 2024) posed the interactive version of this problem
   first; the contribution here is the calibrated refusal and its price, not the idea.
