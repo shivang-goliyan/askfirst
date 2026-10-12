@@ -16,6 +16,22 @@ Margin beats entropy as the confidence signal at every coverage level.
 
 Full numbers in `results/`. The failures are in there too, in order.
 
+## Module B, measured 13 Oct
+
+The computational evidence line **gets the sign wrong for 21% of clinically-evidenced variants** —
+98 of 458, where ESM-2 prefers the mutant residue over the wild type. `PIK3CA H1047R`, with 23
+supporting evidence items, is one of them. No threshold needed to say that, which is why it is the
+number quoted.
+
+534 scoreable variants over 100 genes from CIViC's protein-level labels, which is why the HGVS
+mapping never became the time sink the plan feared. **21 variants were dropped because UniProt's
+canonical sequence does not carry the stated wild-type residue** — those would have produced
+normal-looking, meaningless scores.
+
+Caveat first: this is the 34M ESM-2, chosen because it runs on a laptop in 200 seconds. The 650M
+run is queued for the GPU and the figure will be re-reported either way.
+Full write-up: `results/2026-10-13-esm2-evidence-line.md`.
+
 ## What does not work yet
 
 **The advice.** Ranking by expected information gain scores 28.4% against 26.0% for asking at

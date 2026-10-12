@@ -10,6 +10,7 @@ with the reason.
 |---|---|---|---|
 | DDXPlus | CC-BY | figshare record states CC-BY — re-check before release | Module A primary. ~1.3M synthetic patients, 49 pathologies, 110 symptoms, 113 antecedents, with a differential and a ground-truth pathology per patient |
 | MedQA | MIT | multiple secondary sources agree; confirm at source | Module A cross-check on real exam-style items |
+| UniProt (Swiss-Prot) | **CC BY 4.0** | terms stated on uniprot.org/help/license; reviewed human entries fetched over the public REST API, no key | Module B. Canonical protein sequences, so a variant label can be checked against the residue it claims. Cached under `data/uniprot/`, **not committed** |
 | CIViC | CC0 1.0 | project states CC0 for data, MIT for their code | Module B. Evidence items, variants, assertions. Bulk TSV and VCF, plus an open API; monthly dumps are mirrored on AWS Open Data and listable without an account |
 
 DDXPlus is synthetic, generated from a proprietary knowledge base and a rule-based system. That is
@@ -45,7 +46,8 @@ credit allocation does not support multi-device tensor parallelism for a sustain
 
 | Model | Licence | Used for | Runs on |
 |---|---|---|---|
-| ESM-2 (facebookresearch/esm) | **MIT** | PP3/BP4 computational evidence from log-likelihood ratios | MI300X |
+| ESM-2 35M (`esm2_t12_35M_UR50D`) | **MIT** | The computational evidence line, measured 13 Oct: 534 variants in 200s | CPU — ran on a laptop |
+| ESM-2 650M (`esm2_t33_650M_UR50D`) | **MIT** | The same run at a size worth quoting; the 35M result is deliberately reported as a floor | MI300X, queued |
 | An open instruct model via vLLM | per model card, must be permissive | Outcome scoring in steps 2-4 of the engine | MI300X |
 
 **AlphaMissense is excluded.** Its predictions are released CC-BY-NC-SA, which is a
