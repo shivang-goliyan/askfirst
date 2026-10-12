@@ -56,18 +56,23 @@ class NaiveBayes:
         self.prior = defaultdict(float)
         self.seen = defaultdict(float)
         self.joint = defaultdict(float)
+        # how many PATIENTS had this field at all, as distinct from how many values they gave
+        self.field_seen = defaultdict(float)
         self.labels = []
+        self.total = 0.0
 
     def fit(self, patients):
         for p in patients:
             label = p["pathology"]
             self.prior[label] += 1.0
             for name, value in p["evidences"].items():
+                self.field_seen[(label, name)] += 1.0
                 for v in (value if isinstance(value, list) else [value]):
                     self.joint[(label, name, v)] += 1.0
                     self.seen[(label, name)] += 1.0
-        total = sum(self.prior.values())
-        self.prior = {k: v / total for k, v in self.prior.items()}
+        self.total = sum(self.prior.values())
+        self.counts = dict(self.prior)
+        self.prior = {k: v / self.total for k, v in self.prior.items()}
         self.labels = sorted(self.prior)
         return self
 

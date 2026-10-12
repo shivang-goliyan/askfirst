@@ -1,5 +1,10 @@
 # Evaluation, fixed in advance
 
+> **Amended 13 October 2026.** Risk and coverage is now the PRIMARY metric; absent-field
+> recovery drops to a sanity check. See `results/2026-10-13-the-refusal-works.md`. Recovery
+> measures whether the system can guess what a patient probably had, which is not what the
+> product claims. The original 30% top-3 kill criterion stays on the record as missed.
+
 Written 12 October 2026, before any model was chosen or tuned. The point of writing it down now
 is that the numbers below cannot be chosen later to flatter the result.
 

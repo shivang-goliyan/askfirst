@@ -1,10 +1,17 @@
-"""Leave-one-out influence for fields that are present, and expected influence for fields
-that are not. The second one is the product; the first one calibrates it.
+"""Leave-one-out influence for fields that are present, and expected information gain for
+fields that are not. The second one is the product; the first one calibrates it.
+
+Ranking by flip probability was the first thing tried and it is actively harmful: it selects for
+whatever is most likely to change the answer, which is volatility, not information. A field that
+flips the decision half the time is a coin, and following that advice measured WORSE than asking
+at random. Expected information gain asks how much the answer gets SETTLED instead, which is
+what the question was always meant to mean.
 
 Expected influence is weighted by how likely each value is. Treating a troponin as equally
 likely to come back normal, raised or very raised is not a neutral assumption — it is a wrong
 one, and it makes the ranking lumpy on top of being wrong."""
 
+import math
 from dataclasses import dataclass, field as dc_field
 
 
@@ -21,11 +28,17 @@ class Outcome:
     flips: bool
     shift: float
     verdict: str
+    entropy: float = 0.0
+
+
+def entropy(dist):
+    return -sum(p * math.log(p, 2) for p in dist.values() if p > 0)
 
 
 @dataclass
 class Gap:
     field: str
+    info_gain: float
     flip_prob: float
     expected_shift: float
     worst_shift: float
@@ -34,7 +47,7 @@ class Gap:
     by_value: list = dc_field(default_factory=list)
 
     def value_per_cost(self):
-        return self.flip_prob / (self.cost + 1.0)
+        return self.info_gain / (self.cost + 1.0)
 
     def most_telling(self):
         """The value worth quoting in a UI: the likeliest one that changes the answer."""
@@ -66,6 +79,7 @@ def rank_gaps(record, scorer, schema, candidates=None):
     result by how likely that value is. flip_prob is then a real probability: the chance that
     going and getting this field changes the decision."""
     base = scorer(record)
+    base_entropy = entropy(base)
     settled = argmax(base)
     candidates = candidates or schema.missing_from(record)
 
@@ -86,11 +100,13 @@ def rank_gaps(record, scorer, schema, candidates=None):
                 flips=verdict != settled,
                 shift=total_variation(base, dist),
                 verdict=verdict,
+                entropy=entropy(dist),
             ))
 
         spec = schema.fields[name]
         gaps.append(Gap(
             field=name,
+            info_gain=base_entropy - sum(r.prior * r.entropy for r in rows),
             flip_prob=sum(r.prior for r in rows if r.flips),
             expected_shift=sum(r.prior * r.shift for r in rows),
             worst_shift=max(r.shift for r in rows),
@@ -99,7 +115,7 @@ def rank_gaps(record, scorer, schema, candidates=None):
             by_value=rows,
         ))
 
-    return sorted(gaps, key=lambda g: (-g.flip_prob, -g.expected_shift))
+    return sorted(gaps, key=lambda g: (-g.info_gain, -g.expected_shift))
 
 
 def sufficiency(record, scorer, schema):
