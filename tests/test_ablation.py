@@ -52,3 +52,45 @@ def test_present_fields_have_influence():
     schema = load_schema("clinical")
     infl = sensitivity_map(CASE, make_scorer(schema), schema)
     assert [i.field for i in infl] and all(i.shift >= 0 for i in infl)
+
+
+def test_priors_normalise():
+    schema = load_schema("clinical")
+    weights = schema.priors_for("troponin")
+    assert abs(sum(weights.values()) - 1.0) < 1e-9
+    assert weights["normal"] > weights["very_raised"]
+
+
+def test_uniform_when_undeclared():
+    schema = load_schema("variant")
+    weights = schema.priors_for("PM2")
+    assert set(weights.values()) == {0.5}
+
+
+def test_flip_prob_is_not_lumpy():
+    schema = load_schema("clinical")
+    gaps = rank_gaps(CASE, make_scorer(schema), schema)
+    probs = {round(g.flip_prob, 4) for g in gaps}
+    assert len(probs) > 2
+
+
+def test_flip_prob_is_a_probability():
+    schema = load_schema("clinical")
+    for gap in rank_gaps(CASE, make_scorer(schema), schema):
+        assert 0.0 <= gap.flip_prob <= 1.0
+        assert abs(sum(o.prior for o in gap.by_value) - 1.0) < 1e-9
+
+
+def test_fitted_priors_follow_data():
+    from askfirst.schema import fit_priors
+    schema = load_schema("clinical")
+    sample = [{"troponin": "raised"} for _ in range(50)]
+    tuned = schema.with_priors(fit_priors(sample, schema))
+    assert tuned.priors_for("troponin")["raised"] > 0.8
+
+
+def test_most_telling_picks_likeliest():
+    schema = load_schema("clinical")
+    gaps = {g.field: g for g in rank_gaps(CASE, make_scorer(schema), schema)}
+    tell = gaps["troponin"].most_telling()
+    assert tell is not None and tell.flips

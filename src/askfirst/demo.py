@@ -13,20 +13,26 @@ CASE = {
 def main():
     schema = load_schema("clinical")
     scorer = make_scorer(schema)
+    gaps = rank_gaps(CASE, scorer, schema)
 
     print("Record — 34F, chest pain 2h, HR high, BP normal, smoker\n")
     print(f"  SUFFICIENCY  {sufficiency(CASE, scorer, schema)} / 100")
     print(f"  leaning      {argmax(scorer(CASE))}\n")
 
     print("  Go get:")
-    for gap in rank_gaps(CASE, scorer, schema)[:4]:
+    for gap in gaps[:5]:
+        tell = gap.most_telling()
+        detail = (
+            f"if {tell.value} -> {tell.verdict}" if tell else "wouldn't change the answer"
+        )
         print(
-            f"    {gap.field:<16} answer changes with p = {gap.flip_prob:.2f}"
-            f"   cost {gap.cost:>4.0f}  {gap.delay:>4.0f} min"
+            f"    {gap.field:<16} p = {gap.flip_prob:.2f}   {detail:<26}"
+            f" cost {gap.cost:>3.0f}  {gap.delay:>4.0f} min"
         )
 
-    best = max(rank_gaps(CASE, scorer, schema), key=lambda g: g.value_per_cost())
-    print(f"\n  Cheapest decisive item: {best.field}\n")
+    best = max(gaps, key=lambda g: g.value_per_cost())
+    print(f"\n  Best value for money: {best.field} "
+          f"(p = {best.flip_prob:.2f} at cost {best.cost:.0f})\n")
 
     print("  What the record already rests on:")
     for inf in sensitivity_map(CASE, scorer, schema)[:4]:

@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field as dc_field
 from pathlib import Path
 
 import yaml
@@ -13,6 +13,7 @@ class Field:
     values: list
     cost: float
     delay: float
+    priors: dict = dc_field(default_factory=dict)
 
 
 @dataclass
@@ -24,11 +25,34 @@ class Schema:
     def values_for(self, name):
         return self.fields[name].values
 
+    def priors_for(self, name):
+        """How likely each value is before we ask. Uniform when the schema doesn't say,
+        which is a defensible default and a bad one — see fit_priors."""
+        spec = self.fields[name]
+        declared = spec.priors
+        if not declared:
+            share = 1.0 / len(spec.values)
+            return {v: share for v in spec.values}
+
+        total = sum(declared.get(v, 0.0) for v in spec.values)
+        if total <= 0:
+            raise ValueError(f"Priors for {name!r} add up to {total}, which can't be right")
+        return {v: declared.get(v, 0.0) / total for v in spec.values}
+
     def missing_from(self, record):
         return [f for f in self.fields if f not in record]
 
     def present_in(self, record):
         return [f for f in record if f in self.fields]
+
+    def with_priors(self, fitted):
+        fields = {}
+        for name, spec in self.fields.items():
+            fields[name] = Field(
+                spec.name, spec.kind, spec.values, spec.cost, spec.delay,
+                dict(fitted.get(name) or spec.priors),
+            )
+        return Schema(self.domain, self.outcomes, fields)
 
 
 def _delay_of(spec):
@@ -54,5 +78,22 @@ def load_schema(domain):
                 values=list(spec["values"]),
                 cost=float(spec.get("cost", 0)),
                 delay=_delay_of(spec),
+                priors=dict(spec.get("priors") or {}),
             )
     return Schema(domain=raw["domain"], outcomes=list(raw["outcomes"]), fields=fields)
+
+
+def fit_priors(records, schema, smoothing=1.0):
+    """Count how often each value actually shows up. Laplace-smoothed so a value that never
+    appears in the sample doesn't get written off as impossible."""
+    counts = {name: {v: smoothing for v in spec.values} for name, spec in schema.fields.items()}
+    for record in records:
+        for name, value in record.items():
+            if name in counts and value in counts[name]:
+                counts[name][value] += 1.0
+
+    fitted = {}
+    for name, tally in counts.items():
+        total = sum(tally.values())
+        fitted[name] = {v: c / total for v, c in tally.items()}
+    return fitted
