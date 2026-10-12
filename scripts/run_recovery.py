@@ -33,8 +33,9 @@ def main(path, cases):
     held = [p for p in patients[4000:] if len(p["evidences"]) >= 4]
     schema = schema.with_priors(fit_priors([p["evidences"] for p in patients[:4000]], schema))
 
-    top1 = top3 = top10 = n = 0
-    chance1 = chance3 = 0.0
+    KS = (1, 3, 5, 10, 20, 50)
+    hits = {k: 0 for k in KS}
+    pool = n = 0
 
     for patient in held[:cases]:
         full = dict(patient["evidences"])
@@ -47,26 +48,19 @@ def main(path, cases):
             continue
 
         n += 1
-        top1 += ranked[0] == dropped
-        top3 += dropped in ranked[:3]
-        top10 += dropped in ranked[:10]
-        chance1 += 1.0 / len(candidates)
-        chance3 += 3.0 / len(candidates)
+        pool += len(candidates)
+        for k in KS:
+            hits[k] += dropped in ranked[:k]
 
-    print(f"cases                {n}")
-    print(f"mean candidate pool  {len(schema.fields)} fields, "
-          f"~{sum(1 for f in schema.fields):d} candidates per case")
-    print()
-    for label, hits, k, chance in (
-        ("top-1 ", top1, 1, chance1), ("top-3 ", top3, 3, chance3),
-        ("top-10", top10, 10, chance3 * 10 / 3),
-    ):
-        lo, hi = wilson(hits, n)
-        rate = hits / n if n else 0.0
-        base = chance / n if n else 0.0
+    avg_pool = pool / n if n else 0.0
+    print(f"cases {n}   mean candidate pool {avg_pool:.0f} of {len(schema.fields)} fields\n")
+    print(f"{'k':>4}  {'recall':>7}  {'95% CI':>18}  {'chance':>7}  {'lift':>6}")
+    for k in KS:
+        lo, hi = wilson(hits[k], n)
+        rate = hits[k] / n if n else 0.0
+        base = min(1.0, k / avg_pool) if avg_pool else 0.0
         lift = rate / base if base else 0.0
-        print(f"{label} recovery   {rate:6.1%}   95% CI [{lo:.1%}, {hi:.1%}]"
-              f"   chance {base:.2%}   lift {lift:>5.1f}x")
+        print(f"{k:>4}  {rate:>6.1%}   [{lo:>5.1%}, {hi:>5.1%}]  {base:>6.2%}  {lift:>5.1f}x")
 
 
 if __name__ == "__main__":
