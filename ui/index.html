@@ -1,0 +1,184 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>askfirst</title>
+<style>
+  :root{
+    --bg:#0d1014; --panel:#14191f; --line:#222a33; --ink:#e6edf3; --dim:#8b98a5;
+    --good:#3fb950; --warn:#d29922; --bad:#f85149; --accent:#58a6ff;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1040px;margin:0 auto;padding:32px 16px 72px}
+  h1{font-size:22px;margin:0 0 4px;letter-spacing:-.4px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:28px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:18px}
+  .panel h2{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin:0 0 16px}
+  .big{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:18px}
+  .stat{flex:1;min-width:132px}
+  .stat .n{font-size:30px;font-weight:600;letter-spacing:-1px}
+  .stat .l{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px}
+  .stat .ci{font-size:11px;color:var(--dim);margin-top:2px}
+  input[type=range]{width:100%;accent-color:var(--accent);margin:4px 0 2px}
+  .ends{display:flex;justify-content:space-between;font-size:11px;color:var(--dim)}
+  svg{width:100%;height:170px;display:block;margin-top:10px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+  th{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);font-weight:500}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .verdict{display:flex;align-items:center;gap:10px;font-size:15px;margin-bottom:6px}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{border:1px solid var(--line);background:#0f1318;color:var(--ink);font:inherit;
+        font-size:12px;padding:5px 10px;border-radius:14px;cursor:pointer}
+  .chip.on{border-color:var(--accent);color:var(--accent)}
+  .prov{font-size:11px;color:var(--dim);margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+  .note{font-size:12px;color:var(--dim);margin-top:12px}
+  .bad{color:var(--bad)} .good{color:var(--good)} .warn{color:var(--warn)} .acc{color:var(--accent)}
+</style>
+<div class="wrap">
+  <h1>askfirst</h1>
+  <div class="sub">Finds the one missing fact that would change the answer &mdash; and refuses to answer until it has it.</div>
+
+  <div class="panel">
+    <h2>Drag it. Watch what refusing buys you.</h2>
+    <div class="big">
+      <div class="stat"><div class="n" id="cov">&mdash;</div><div class="l">coverage</div>
+        <div class="ci" id="answered"></div></div>
+      <div class="stat"><div class="n good" id="acc">&mdash;</div><div class="l">accuracy when it answers</div>
+        <div class="ci" id="ci"></div></div>
+      <div class="stat"><div class="n bad" id="wrong">&mdash;</div><div class="l">confident wrong answers</div>
+        <div class="ci" id="referred"></div></div>
+      <div class="stat"><div class="n acc" id="cost">&mdash;</div><div class="l">cost per case</div>
+        <div class="ci" id="saving"></div></div>
+    </div>
+    <input type="range" id="dial" min="0" max="19" value="4">
+    <div class="ends"><span>answer almost nothing</span><span>answer everything</span></div>
+    <svg id="chart" viewBox="0 0 680 170" preserveAspectRatio="none"></svg>
+    <div class="note" id="curveNote"></div>
+  </div>
+
+  <div class="panel">
+    <h2>A case, live</h2>
+    <div class="chips" id="chips"></div>
+    <div id="verdict"></div>
+    <div id="detail"></div>
+    <div class="prov" id="prov"></div>
+  </div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const pct = x => (x*100).toFixed(1) + '%';
+let CURVE = null, PICKED = {};
+
+const FIELDS = [
+  ['heart_rate','high','heart rate high'], ['blood_pressure','normal','BP normal'],
+  ['temperature','fever','fever'], ['spo2','low','low oxygen'],
+  ['smoker',true,'smoker'], ['prior_mi',true,'previous heart attack'],
+  ['ecg','ischaemic','ECG ischaemic'], ['troponin','raised','troponin raised'],
+];
+
+function drawChart(active){
+  const rows = CURVE.rows, W = 680, H = 170, pad = 22;
+  const x = i => pad + (W - pad*2) * (i/(rows.length-1));
+  const y = v => H - pad - (H - pad*2) * v;
+  const line = (sel, cls) => rows.map((r,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(sel(r)).toFixed(1)}`).join(' ');
+  const maxCost = Math.max(...rows.map(r=>r.cost_per_case));
+  $('#chart').innerHTML = `
+    <path d="${line(r=>r.accuracy)}" fill="none" stroke="var(--good)" stroke-width="2"/>
+    <path d="${line(r=>r.cost_per_case/maxCost)}" fill="none" stroke="var(--accent)"
+          stroke-width="1.6" stroke-dasharray="4 3"/>
+    <line x1="${x(active)}" x2="${x(active)}" y1="${pad-8}" y2="${H-pad+6}"
+          stroke="var(--dim)" stroke-width="1"/>
+    <circle cx="${x(active)}" cy="${y(rows[active].accuracy)}" r="4" fill="var(--good)"/>
+    <text x="${pad}" y="14" fill="var(--good)" font-size="10">accuracy</text>
+    <text x="${pad+66}" y="14" fill="var(--accent)" font-size="10">cost per case</text>`;
+}
+
+function render(i){
+  const r = CURVE.rows[i], full = CURVE.rows[CURVE.rows.length-1];
+  $('#cov').textContent = pct(r.coverage);
+  $('#answered').textContent = `${r.answered} of ${CURVE.cases} cases`;
+  $('#acc').textContent = pct(r.accuracy);
+  $('#ci').textContent = `95% CI ${pct(r.ci[0])}–${pct(r.ci[1])}  (n=${r.answered})`;
+  $('#wrong').textContent = r.wrong;
+  $('#referred').textContent = `${r.referred} handed to a person`;
+  $('#cost').textContent = r.cost_per_case.toFixed(2);
+  const saved = (full.cost_per_case - r.cost_per_case) / full.cost_per_case;
+  $('#saving').textContent = saved > 0.005
+    ? `${(saved*100).toFixed(0)}% cheaper than always answering` : 'answering everything';
+  $('#curveNote').innerHTML =
+    `${CURVE.cases} held-out cases, ${CURVE.outcomes} possible conditions, chance ${pct(CURVE.chance)}. `
+    + `Scored by ${CURVE.scorer}. Prices: a confident wrong answer costs `
+    + `${CURVE.prices.confident_wrong}, handing over costs ${CURVE.prices.referral}. `
+    + `<span class="warn">Quote the CI lower bound, not the point estimate.</span>`;
+  drawChart(i);
+}
+
+function chips(){
+  $('#chips').innerHTML = FIELDS.map(([k,v,label],n)=>
+    `<button class="chip${PICKED[k]!==undefined?' on':''}" data-i="${n}">${label}</button>`).join('');
+  $('#chips').querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    const [k,v] = FIELDS[+b.dataset.i];
+    if (PICKED[k] !== undefined) delete PICKED[k]; else PICKED[k] = v;
+    chips(); assess();
+  });
+}
+
+async function assess(){
+  const cov = CURVE ? CURVE.rows[+$('#dial').value].coverage : 0.25;
+  let r;
+  try {
+    const res = await fetch('/api/assess', {method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({domain:'clinical', record:PICKED, coverage:cov})});
+    if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
+    r = await res.json();
+  } catch (e) {
+    $('#verdict').innerHTML = `<div class="verdict"><span class="dot" style="background:var(--warn)"></span>
+      <span>Live scoring is unavailable &mdash; <span class="warn">${e.message}</span>.
+      The measured curve above still works; it does not need a GPU.</span></div>`;
+    $('#detail').innerHTML = ''; $('#prov').textContent = ''; return;
+  }
+
+  const ok = r.answering;
+  $('#verdict').innerHTML = `
+    <div class="verdict">
+      <span class="dot" style="background:${ok?'var(--good)':'var(--warn)'}"></span>
+      <strong>${ok ? r.answer.label : 'Not answering'}</strong>
+      <span style="color:var(--dim)">&mdash; ${r.why}</span>
+    </div>
+    <div class="note">confidence ${r.confidence.toFixed(3)} against a cut-off of
+      ${r.threshold.toFixed(3)} at ${pct(cov)} coverage &middot;
+      ${r.entropy_bits} bits of uncertainty &middot; sufficiency ${r.sufficiency}/100</div>`;
+
+  const gaps = r.go_get.map(g => `<tr>
+      <td>${g.question}</td>
+      <td class="num">${g.info_gain_bits >= 0 ? '+' : ''}${g.info_gain_bits.toFixed(3)}</td>
+      <td class="num">${g.cost}</td><td class="num">${g.delay}</td>
+      <td>${g.if_this ? `if <strong>${g.if_this.label}</strong> &rarr; ${g.if_this.then}`
+                      : '<span style="color:var(--dim)">would not change it</span>'}</td></tr>`).join('');
+  const rests = r.rests_on.filter(x=>x.influence>0).map(x => `<tr><td>${x.question}</td>
+      <td class="num">${x.influence.toFixed(3)}</td></tr>`).join('');
+
+  $('#detail').innerHTML = `
+    <h2 style="margin-top:20px">Go get, best information first</h2>
+    <table><tr><th>what to obtain</th><th class="num">bits</th><th class="num">cost</th>
+      <th class="num">mins</th><th>and if it comes back</th></tr>${gaps}</table>
+    ${rests ? `<h2 style="margin-top:20px">What the answer currently rests on</h2>
+      <table><tr><th>already known</th><th class="num">influence</th></tr>${rests}</table>` : ''}`;
+  $('#prov').textContent = `Scored by: ${r.scored_by}`;
+}
+
+(async () => {
+  chips();
+  try {
+    CURVE = await (await fetch('/api/curve')).json();
+    $('#dial').oninput = e => { render(+e.target.value); assess(); };
+    render(+$('#dial').value);
+  } catch (e) {
+    $('#curveNote').innerHTML = `<span class="bad">Curve unavailable: ${e.message}</span>`;
+  }
+  assess();
+})();
+</script>

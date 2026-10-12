@@ -1,0 +1,275 @@
+{
+ "dataset": "DDXPlus validation split (CC BY 4.0)",
+ "scorer": "naive Bayes over 223 evidences, fitted on 4,000 patients",
+ "cases": 1500,
+ "outcomes": 49,
+ "chance": 0.0204,
+ "signal": "margin (max posterior); measured to beat entropy at every coverage level",
+ "prices": {
+  "confident_wrong": 100,
+  "referral": 5,
+  "correct": 0
+ },
+ "rows": [
+  {
+   "coverage": 0.05,
+   "threshold": 0.736085,
+   "answered": 75,
+   "accuracy": 0.9867,
+   "ci": [
+    0.9283,
+    0.9976
+   ],
+   "wrong": 1,
+   "referred": 1425,
+   "cost_per_case": 4.817
+  },
+  {
+   "coverage": 0.1,
+   "threshold": 0.602309,
+   "answered": 150,
+   "accuracy": 0.8533,
+   "ci": [
+    0.7879,
+    0.9011
+   ],
+   "wrong": 22,
+   "referred": 1350,
+   "cost_per_case": 5.967
+  },
+  {
+   "coverage": 0.15,
+   "threshold": 0.507027,
+   "answered": 225,
+   "accuracy": 0.7156,
+   "ci": [
+    0.6534,
+    0.7705
+   ],
+   "wrong": 64,
+   "referred": 1275,
+   "cost_per_case": 8.517
+  },
+  {
+   "coverage": 0.2,
+   "threshold": 0.435868,
+   "answered": 300,
+   "accuracy": 0.63,
+   "ci": [
+    0.574,
+    0.6827
+   ],
+   "wrong": 111,
+   "referred": 1200,
+   "cost_per_case": 11.4
+  },
+  {
+   "coverage": 0.25,
+   "threshold": 0.371903,
+   "answered": 375,
+   "accuracy": 0.5627,
+   "ci": [
+    0.5121,
+    0.612
+   ],
+   "wrong": 164,
+   "referred": 1125,
+   "cost_per_case": 14.683
+  },
+  {
+   "coverage": 0.3,
+   "threshold": 0.326396,
+   "answered": 450,
+   "accuracy": 0.5178,
+   "ci": [
+    0.4717,
+    0.5636
+   ],
+   "wrong": 217,
+   "referred": 1050,
+   "cost_per_case": 17.967
+  },
+  {
+   "coverage": 0.35,
+   "threshold": 0.285528,
+   "answered": 525,
+   "accuracy": 0.4705,
+   "ci": [
+    0.4281,
+    0.5132
+   ],
+   "wrong": 278,
+   "referred": 975,
+   "cost_per_case": 21.783
+  },
+  {
+   "coverage": 0.4,
+   "threshold": 0.259172,
+   "answered": 600,
+   "accuracy": 0.4283,
+   "ci": [
+    0.3893,
+    0.4683
+   ],
+   "wrong": 343,
+   "referred": 900,
+   "cost_per_case": 25.867
+  },
+  {
+   "coverage": 0.45,
+   "threshold": 0.23413,
+   "answered": 675,
+   "accuracy": 0.3985,
+   "ci": [
+    0.3623,
+    0.4359
+   ],
+   "wrong": 406,
+   "referred": 825,
+   "cost_per_case": 29.817
+  },
+  {
+   "coverage": 0.5,
+   "threshold": 0.215785,
+   "answered": 750,
+   "accuracy": 0.3693,
+   "ci": [
+    0.3355,
+    0.4045
+   ],
+   "wrong": 473,
+   "referred": 750,
+   "cost_per_case": 34.033
+  },
+  {
+   "coverage": 0.55,
+   "threshold": 0.200794,
+   "answered": 825,
+   "accuracy": 0.3442,
+   "ci": [
+    0.3126,
+    0.3773
+   ],
+   "wrong": 541,
+   "referred": 675,
+   "cost_per_case": 38.317
+  },
+  {
+   "coverage": 0.6,
+   "threshold": 0.189954,
+   "answered": 900,
+   "accuracy": 0.32,
+   "ci": [
+    0.2903,
+    0.3512
+   ],
+   "wrong": 612,
+   "referred": 600,
+   "cost_per_case": 42.8
+  },
+  {
+   "coverage": 0.65,
+   "threshold": 0.182983,
+   "answered": 975,
+   "accuracy": 0.2985,
+   "ci": [
+    0.2706,
+    0.3279
+   ],
+   "wrong": 684,
+   "referred": 525,
+   "cost_per_case": 47.35
+  },
+  {
+   "coverage": 0.7,
+   "threshold": 0.173388,
+   "answered": 1050,
+   "accuracy": 0.2848,
+   "ci": [
+    0.2583,
+    0.3128
+   ],
+   "wrong": 751,
+   "referred": 450,
+   "cost_per_case": 51.567
+  },
+  {
+   "coverage": 0.75,
+   "threshold": 0.168661,
+   "answered": 1125,
+   "accuracy": 0.2667,
+   "ci": [
+    0.2417,
+    0.2933
+   ],
+   "wrong": 825,
+   "referred": 375,
+   "cost_per_case": 56.25
+  },
+  {
+   "coverage": 0.8,
+   "threshold": 0.159443,
+   "answered": 1200,
+   "accuracy": 0.2508,
+   "ci": [
+    0.2271,
+    0.2761
+   ],
+   "wrong": 899,
+   "referred": 300,
+   "cost_per_case": 60.933
+  },
+  {
+   "coverage": 0.85,
+   "threshold": 0.150713,
+   "answered": 1275,
+   "accuracy": 0.2376,
+   "ci": [
+    0.2151,
+    0.2618
+   ],
+   "wrong": 972,
+   "referred": 225,
+   "cost_per_case": 65.55
+  },
+  {
+   "coverage": 0.9,
+   "threshold": 0.14332,
+   "answered": 1350,
+   "accuracy": 0.2259,
+   "ci": [
+    0.2044,
+    0.249
+   ],
+   "wrong": 1045,
+   "referred": 150,
+   "cost_per_case": 70.167
+  },
+  {
+   "coverage": 0.95,
+   "threshold": 0.129566,
+   "answered": 1425,
+   "accuracy": 0.2168,
+   "ci": [
+    0.1962,
+    0.239
+   ],
+   "wrong": 1116,
+   "referred": 75,
+   "cost_per_case": 74.65
+  },
+  {
+   "coverage": 1.0,
+   "threshold": 0.051204,
+   "answered": 1500,
+   "accuracy": 0.21,
+   "ci": [
+    0.1901,
+    0.2313
+   ],
+   "wrong": 1185,
+   "referred": 0,
+   "cost_per_case": 79.0
+  }
+ ]
+}

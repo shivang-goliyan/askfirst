@@ -14,6 +14,11 @@ class Field:
     cost: float
     delay: float
     priors: dict = dc_field(default_factory=dict)
+    question: str = ""
+    value_labels: dict = dc_field(default_factory=dict)
+
+    def label_for(self, value):
+        return self.value_labels.get(value, str(value))
 
 
 @dataclass
@@ -21,6 +26,10 @@ class Schema:
     domain: str
     outcomes: list
     fields: dict
+    labels: dict = dc_field(default_factory=dict)
+
+    def label_for_outcome(self, outcome):
+        return self.labels.get(outcome, outcome)
 
     def values_for(self, name):
         return self.fields[name].values
@@ -50,9 +59,9 @@ class Schema:
         for name, spec in self.fields.items():
             fields[name] = Field(
                 spec.name, spec.kind, spec.values, spec.cost, spec.delay,
-                dict(fitted.get(name) or spec.priors),
+                dict(fitted.get(name) or spec.priors), spec.question, spec.value_labels,
             )
-        return Schema(self.domain, self.outcomes, fields)
+        return Schema(self.domain, self.outcomes, fields, self.labels)
 
 
 def _delay_of(spec):
@@ -79,8 +88,15 @@ def load_schema(domain):
                 cost=float(spec.get("cost", 0)),
                 delay=_delay_of(spec),
                 priors=dict(spec.get("priors") or {}),
+                question=spec.get("question", ""),
+                value_labels=dict(spec.get("value_labels") or {}),
             )
-    return Schema(domain=raw["domain"], outcomes=list(raw["outcomes"]), fields=fields)
+    return Schema(
+        domain=raw["domain"],
+        outcomes=list(raw["outcomes"] or []),
+        fields=fields,
+        labels=dict(raw.get("outcome_labels") or {}),
+    )
 
 
 def fit_priors(records, schema, smoothing=1.0):

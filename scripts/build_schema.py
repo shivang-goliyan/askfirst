@@ -12,8 +12,15 @@ def quote(v):
     return f'"{v}"' if isinstance(v, str) else str(v)
 
 
-def main(path):
+def main(path, conditions_path=None):
     ev = json.load(open(path))
+    outcomes, english = [], {}
+    if conditions_path:
+        cond = json.load(open(conditions_path))
+        # the patient CSV's PATHOLOGY column holds condition_name, so that stays the join key.
+        # English is display only — swapping it in here would break the join silently.
+        outcomes = sorted(cond)
+        english = {k: (v.get("cond-name-eng") or k) for k, v in cond.items()}
     lines = [
         "# Generated from DDXPlus release_evidences.json (CC BY 4.0). Do not hand-edit;",
         "# rerun scripts/build_schema.py instead.",
@@ -21,7 +28,11 @@ def main(path):
         "# Every field here is a question a clinician asks, so acquisition cost is uniform.",
         "# Cost-aware ranking is exercised by the clinical and variant schemas, not this one.",
         "domain: ddxplus",
-        "outcomes: []   # filled from release_conditions.json at load time",
+        "outcomes:",
+        *(f"  - {json.dumps(o)}" for o in outcomes),
+        "",
+        "outcome_labels:",
+        *(f"  {json.dumps(k)}: {json.dumps(v)}" for k, v in sorted(english.items())),
         "",
         "fields:",
     ]
@@ -36,18 +47,24 @@ def main(path):
         else:
             kind = "multi"
 
+        labels = {
+            v: (meaning.get("en") or str(v))
+            for v, meaning in (spec.get("value_meaning") or {}).items()
+        }
         row = (
             f'  {key}: {{kind: {kind}, cost: 1, minutes: 1, '
             f'values: [{", ".join(quote(v) for v in values)}], '
-            f'question: {json.dumps(spec["question_en"])}}}'
+            f'question: {json.dumps(spec["question_en"])}'
+            + (f', value_labels: {json.dumps(labels, ensure_ascii=False)}' if labels else "")
+            + "}"
         )
         (antecedents if spec["is_antecedent"] else lines).append(row)
 
     OUT.write_text("\n".join(lines + antecedents) + "\n")
     binary = sum(1 for s in ev.values() if s["data_type"] == "B")
     print(f"wrote {OUT}  —  {len(ev)} fields "
-          f"({binary} binary, {len(ev) - binary} multi-valued)")
+          f"({binary} binary, {len(ev) - binary} multi-valued), {len(outcomes)} outcomes")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(*sys.argv[1:3])

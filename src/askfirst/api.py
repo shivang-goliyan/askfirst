@@ -1,0 +1,183 @@
+"""The web app.
+
+Two kinds of endpoint, split on purpose. The baked ones read a JSON artifact and cannot fail, so
+the page always has something to show even with no GPU attached and no model loaded. The live
+ones score a record on demand and are allowed to fail without taking the page down, because the
+GPU will not be up for the whole judging window — credits are per account and a 72-hour window
+does not fit in one.
+
+Which scorer answers a live request depends on what is configured, and the response says which
+one did, every time. Nobody should have to guess whether a number came off a GPU."""
+
+import json
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+
+from .ablation import argmax, entropy, rank_gaps, sensitivity_map, sufficiency
+from .model import Endpoint, ModelScorer
+from .schema import load_schema
+
+BAKED = Path(__file__).parent / "baked" / "curve.json"
+UI = Path(__file__).parent.parent.parent / "ui"
+
+app = FastAPI(title="askfirst", docs_url="/api/docs")
+_schemas = {}
+
+
+class Case(BaseModel):
+    domain: str = "clinical"
+    record: dict = {}
+    coverage: float = 0.25
+
+
+def schema_for(domain):
+    if domain not in _schemas:
+        try:
+            _schemas[domain] = load_schema(domain)
+        except FileNotFoundError as e:
+            raise HTTPException(404, str(e)) from e
+    return _schemas[domain]
+
+
+def pick_scorer(schema):
+    """The open model when there is one, the CPU baseline otherwise. The caller is told which."""
+    endpoint = Endpoint()
+    if endpoint.available():
+        return ModelScorer(schema, endpoint), "open model on AMD MI300X"
+    if schema.domain == "clinical":
+        from .stub import make_scorer
+        return make_scorer(schema), "hand-written baseline, no GPU attached"
+    raise HTTPException(
+        503,
+        f"No scorer for {schema.domain!r} without a model endpoint. "
+        "Set ASKFIRST_VLLM_URL, or use the clinical domain which has a CPU baseline.",
+    )
+
+
+@app.get("/api/health")
+def health():
+    return {
+        "ok": True,
+        "model_endpoint": Endpoint().available(),
+        "baked_curve": BAKED.exists(),
+        "schemas": sorted(p.stem for p in (Path(__file__).parent / "schemas").glob("*.yaml")),
+    }
+
+
+@app.get("/api/curve")
+def curve():
+    """Measured once, served cold. This is the headline and it never depends on a GPU."""
+    if not BAKED.exists():
+        raise HTTPException(503, "Curve not baked yet. Run scripts/bake_curve.py")
+    return json.loads(BAKED.read_text())
+
+
+@app.get("/api/schema/{domain}")
+def describe_schema(domain: str):
+    schema = schema_for(domain)
+    return {
+        "domain": schema.domain,
+        "outcomes": [
+            {"key": o, "label": schema.label_for_outcome(o)} for o in schema.outcomes
+        ],
+        "fields": [
+            {
+                "name": name,
+                "question": spec.question or name,
+                "values": [
+                    {"value": v, "label": spec.label_for(v)} for v in spec.values
+                ],
+                "cost": spec.cost,
+                "delay": spec.delay,
+            }
+            for name, spec in schema.fields.items()
+        ],
+    }
+
+
+@app.post("/api/assess")
+def assess(case: Case):
+    """Score a record, decide whether to answer, and say what to go and get if not."""
+    schema = schema_for(case.domain)
+    scorer, which = pick_scorer(schema)
+
+    try:
+        dist = scorer(case.record)
+    except Exception as e:
+        raise HTTPException(503, f"Scoring failed: {e}") from e
+
+    gaps = rank_gaps(case.record, scorer, schema)
+    confidence = max(dist.values()) if dist else 0.0
+    threshold = threshold_for(case.coverage)
+    answering = confidence >= threshold
+
+    ranked = sorted(dist.items(), key=lambda kv: -kv[1])[:5]
+    return {
+        "scored_by": which,
+        "answering": answering,
+        "why": (
+            "confident enough at this coverage setting" if answering
+            else "not confident enough — handing over, with what to get next"
+        ),
+        "confidence": round(confidence, 4),
+        "threshold": round(threshold, 4),
+        "entropy_bits": round(entropy(dist), 3),
+        "sufficiency": sufficiency(case.record, scorer, schema),
+        "answer": (
+            {"key": ranked[0][0], "label": schema.label_for_outcome(ranked[0][0])}
+            if answering and ranked else None
+        ),
+        "ranked": [
+            {"key": k, "label": schema.label_for_outcome(k), "p": round(v, 4)}
+            for k, v in ranked
+        ],
+        "go_get": [
+            {
+                "field": g.field,
+                "question": schema.fields[g.field].question or g.field,
+                "info_gain_bits": round(g.info_gain, 4),
+                "flip_prob": round(g.flip_prob, 4),
+                "cost": g.cost,
+                "delay": g.delay,
+                "per_cost": round(g.value_per_cost(), 5),
+                "if_this": (
+                    {
+                        "value": g.most_telling().value,
+                        "label": schema.fields[g.field].label_for(g.most_telling().value),
+                        "then": schema.label_for_outcome(g.most_telling().verdict),
+                    } if g.most_telling() else None
+                ),
+            }
+            for g in gaps[:6]
+        ],
+        "rests_on": [
+            {
+                "field": i.field,
+                "question": schema.fields[i.field].question or i.field,
+                "influence": round(i.shift, 4),
+            }
+            for i in sensitivity_map(case.record, scorer, schema)[:6]
+        ],
+    }
+
+
+def threshold_for(coverage):
+    """Read the confidence cut-off straight off the baked curve, so the dial in the UI and the
+    decision taken here are the same number rather than two guesses that drift apart."""
+    if not BAKED.exists():
+        return 0.0
+    rows = json.loads(BAKED.read_text())["rows"]
+    nearest = min(rows, key=lambda r: abs(r["coverage"] - coverage))
+    return float(nearest["threshold"])
+
+
+if UI.exists():
+    app.mount("/", StaticFiles(directory=str(UI), html=True), name="ui")
+
+    @app.get("/")
+    def index():
+        return FileResponse(str(UI / "index.html"))
