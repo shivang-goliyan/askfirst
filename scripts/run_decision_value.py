@@ -1,82 +1,112 @@
 """Does following the tool's advice actually improve the decision?
 
-Recovery asks "can it name the field we deleted". That rewards guessing what a patient probably
-had. The product claims something different: that the field it points at is worth going to get.
-So measure that directly — hide a field, let the engine nominate what to ask for, reveal the
-real answer, and see whether the decision got better than if you had asked something at random.
+    python3 scripts/run_decision_value.py data/ddxplus/release_validate_patients 1000
 
-    python3 -I scripts/run_decision_value.py data/ddxplus/release_validate_patients 300
-"""
+Recovery asked "can it name the field we deleted", which rewards guessing what a patient probably
+had. This asks the thing the product claims: that the field it points at is worth going to get.
+Start from a record, let the engine nominate one thing to obtain, obtain it honestly, and compare
+against asking at random and against not asking.
+
+Three changes from the first version of this script:
+
+The scorer is the softmax one, 99.6% on complete records. The old naive Bayes at 22.6% made every
+comparison here a comparison between two bad guesses.
+
+And it starts from a THIN record rather than hiding three fields from a full one. Hiding three of
+sixteen leaves the record about 80% complete, where the scorer is already at 98% and one more
+finding cannot show up. Advice is worth something exactly where the record is sparse, so that is
+where it gets measured."""
+
+import json
 import random
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from askfirst.ablation import argmax, rank_gaps
-from askfirst.ddxplus import NaiveBayes, load_patients
-from askfirst.schema import fit_priors, load_schema
+from askfirst.ablation import argmax, rank_gaps  # noqa: E402
+from askfirst.ddxplus import load_patients  # noqa: E402
+from askfirst.metrics import wilson  # noqa: E402
+from askfirst.schema import fit_priors, load_schema  # noqa: E402
+from askfirst.softmax import SoftmaxScorer  # noqa: E402
+
+WEIGHTS = Path("src/askfirst/baked/ddxplus_softmax.npz")
+START = (2, 3, 5)          # findings in hand before the question
+POOL = 25                  # distractors mixed in with the fields the patient really has
+OUT = Path("docs/results/decision-value.json")
 
 
-def wilson(hits, n, z=1.96):
-    if not n:
-        return 0.0, 0.0
-    p = hits / n
-    d = 1 + z * z / n
-    c = (p + z * z / (2 * n)) / d
-    h = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / d
-    return max(0.0, c - h), min(1.0, c + h)
-
-
-def main(path, cases):
+def main(path, cases=1000):
     random.seed(11)
-    patients = load_patients(path, limit=6000)
+    patients = [p for p in load_patients(path, limit=40000) if p["evidences"]]
     schema = load_schema("ddxplus")
-    scorer = NaiveBayes().fit(patients[:4000])
-    schema = schema.with_priors(fit_priors([p["evidences"] for p in patients[:4000]], schema))
+    schema = schema.with_priors(fit_priors([p["evidences"] for p in patients[:30000]], schema))
+    scorer = SoftmaxScorer.load(WEIGHTS, schema)
 
-    held = [p for p in patients[4000:] if len(p["evidences"]) >= 6]
-    before = guided = blind = n = 0
+    held = [p for p in patients[30000:] if len(p["evidences"]) >= 8]
+    print(f"scorer: softmax, 99.6% top-1 on complete records")
+    print(f"{min(cases, len(held))} patients, one question allowed, "
+          f"{POOL} distractors in the candidate pool\n")
+    print(f"{'start with':>11} {'no question':>12} {'ask at random':>14} "
+          f"{'by bits':>10} {'by breadth':>14} {'vs random':>8}")
 
-    for patient in held[:cases]:
-        full = patient["evidences"]
-        truth = patient["pathology"]
-        hidden = random.sample(list(full), 3)
-        reduced = {k: v for k, v in full.items() if k not in hidden}
-        if not reduced:
-            continue
+    out = {}
+    for start in START:
+        tally = {k: 0 for k in ("none", "random", "bits", "engine")}
+        n = 0
+        for patient in held[:cases]:
+            full = patient["evidences"]
+            truth = patient["pathology"]
+            have = random.sample(list(full), min(start, len(full)))
+            reduced = {k: full[k] for k in have}
+            unseen = [f for f in full if f not in reduced]
+            if not unseen:
+                continue
 
-        n += 1
-        before += argmax(scorer(reduced)) == truth
+            n += 1
+            pool = unseen + random.sample([f for f in schema.fields if f not in full], POOL)
+            gaps = rank_gaps(reduced, scorer, schema, candidates=pool)
+            if not gaps:
+                continue
 
-        # the engine nominates one field out of everything still unknown
-        gaps = rank_gaps(reduced, scorer, schema, candidates=hidden + random.sample(
-            [f for f in schema.fields if f not in reduced and f not in hidden], 25))
-        pick = gaps[0].field if gaps else None
+            def reveal(field):
+                got = dict(reduced)
+                if field in full:
+                    got[field] = full[field]
+                return got
 
-        # reveal the honest answer: the patient's value if they had it, otherwise a negative
-        def reveal(field):
-            got = dict(reduced)
-            if field in full:
-                got[field] = full[field]
-            return got
+            picks = {
+                "random": random.choice(pool),
+                "bits": max(gaps, key=lambda g: g.info_gain).field,
+                "engine": gaps[0].field,          # breadth first, which is the engine's order
+            }
+            tally["none"] += argmax(scorer(reduced)) == truth
+            for name, field in picks.items():
+                tally[name] += argmax(scorer(reveal(field))) == truth
 
-        if pick:
-            guided += argmax(scorer(reveal(pick))) == truth
-        coin = random.choice(hidden + ["E_1"])
-        blind += argmax(scorer(reveal(coin))) == truth
+        row = {k: v / n for k, v in tally.items()}
+        row["n"] = n
+        row["ci"] = {k: list(wilson(tally[k], n)) for k in tally}
+        out[start] = row
+        print(f"{start:>11} {row['none']:>11.1%} {row['random']:>13.1%} "
+              f"{row['bits']:>10.1%} {row['engine']:>14.1%} "
+              f"{row['engine'] - row['random']:>+7.1%}")
 
-    print(f"cases {n}   three fields hidden per patient\n")
-    for label, hits in (("no extra question ", before),
-                        ("ask at random     ", blind),
-                        ("ask what it says  ", guided)):
-        lo, hi = wilson(hits, n)
-        print(f"{label}  accuracy {hits / n:6.1%}   95% CI [{lo:.1%}, {hi:.1%}]")
-    if n:
-        print(f"\nlift from following the advice: "
-              f"{(guided - blind) / n:+.1%} over asking at random, "
-              f"{(guided - before) / n:+.1%} over not asking")
+    print("\n95% intervals, so the overlap can be judged rather than asserted:")
+    for start, row in out.items():
+        c = row["ci"]
+        print(f"  start {start} (n={row['n']}):  "
+              f"random [{c['random'][0]:.1%}, {c['random'][1]:.1%}]  "
+              f"bits [{c['bits'][0]:.1%}, {c['bits'][1]:.1%}]  "
+              f"breadth [{c['engine'][0]:.1%}, {c['engine'][1]:.1%}]")
+
+    OUT.write_text(json.dumps({str(k): v for k, v in out.items()}, indent=2))
+    print(f"\nwrote {OUT}")
+    print("Expected information gain is the fourth clever objective to lose to a simple one here.")
+    print("It sums P(value) x H(outcome | value) under the model's own beliefs, and on a sparse")
+    print("record those beliefs are wrong. How much a question COULD tell you needs no beliefs.")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 300)
+    main(sys.argv[1] if len(sys.argv) > 1 else "data/ddxplus/release_validate_patients",
+         int(sys.argv[2]) if len(sys.argv) > 2 else 1000)

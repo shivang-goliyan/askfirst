@@ -142,3 +142,11 @@ def test_rating_ignores_magnitude():
     from askfirst.civic import computational_line
     mild, wild = computational_line(-2.1), computational_line(-11.8)
     assert mild["rating"] == wild["rating"]
+
+
+def test_breadth_decides_the_order():
+    from askfirst.ablation import answer_breadth
+    schema = load_schema("clinical")
+    gaps = rank_gaps(CASE, make_scorer(schema), schema)
+    assert [g.breadth for g in gaps] == sorted((g.breadth for g in gaps), reverse=True)
+    assert answer_breadth(schema.fields["heart_rate"]) > answer_breadth(schema.fields["smoker"])

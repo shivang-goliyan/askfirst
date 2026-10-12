@@ -40,7 +40,7 @@ Five steps, one diagram:
 1. Record split into atomic fields.
 2. Open model scores it — the full distribution is kept, not a sampled answer.
 3. Each present field removed in turn → what the answer rests on.
-4. Each absent field ranked by expected information gain, then by cost and minutes.
+4. Each absent field ranked by how much it could tell you, then by cost and minutes.
 5. Unstable under ablation → refuse, return the ranked gaps, hand over.
 
 ## 4 — The measurement

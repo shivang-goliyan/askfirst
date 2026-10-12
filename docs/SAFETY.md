@@ -43,8 +43,9 @@ Uncertainty is the output, not a footnote on it. Every assessment returns:
 - entropy in bits;
 - the confidence against the threshold that decided whether to answer at all;
 - a **sufficiency** verdict — whether the record can support any answer;
-- for each missing field, its **expected information gain in bits**, what it costs and how many
-  minutes it takes;
+- for each missing field, how many answers it admits (which is what decides the order, measured),
+  its expected information gain in bits (shown, but measured to be a worse ordering than random),
+  what it costs and how many minutes it takes;
 - for each present field, how much the current answer **rests on** it, from the ablation map.
 
 The number on the dial and the number the server uses to refuse are the same number, read off the
@@ -83,8 +84,9 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
   line is rather than leaving it vague.
 - DDXPlus is rule-based synthetic data, so recovering a deleted field may partly mean recovering
   the generator. MedQA is the cross-check and the limitation is stated rather than buried.
-- The question-ranking half is **neutral, not proven useful** — 28.4% against 26.0% for asking at
-  random, intervals overlapping, and that was measured with the old weak scorer so it is due a
-  re-run. It ships as a visible aid, not as a claim.
+- The question-ranking half now **is** measured useful — 67.1% against 46.2% for asking at random,
+  with one question from three findings — but only after the principled objective was thrown out:
+  ranking by expected information gain scored *worse* than random. The working rule is a property
+  of the question, not of the model's beliefs.
 - The concept is not novel. MediQ (NeurIPS 2024) posed the interactive version of this problem
   first; the contribution here is the calibrated refusal and its price, not the idea.

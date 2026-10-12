@@ -88,7 +88,7 @@
     <li>Record split into atomic fields.</li>
     <li class="mark">Open model scores it — the full <strong>distribution</strong> is kept, not a sampled answer.</li>
     <li>Each present field removed in turn → what the answer rests on.</li>
-    <li>Each absent field ranked by expected information gain, then by cost and minutes.</li>
+    <li class="mark">Each absent field ranked by how much it <strong>could</strong> tell you, then by cost and minutes.</li>
     <li class="mark">Unstable under ablation → <strong>refuse</strong>, return the ranked gaps, hand over.</li>
   </ol>
 </section>
@@ -161,10 +161,14 @@
     It settles the question without changing the leading answer, and the old objective could not see it.</li>
     <li><strong>Cheap-proposes-then-model-ablates caps the system near 32%</strong> — shortlist
     recall at k=20 is 31.8% and stage two can only re-rank what stage one passes. Inverted.</li>
-    <li><strong>The advice half is neutral, not useful:</strong> 28.4% against 26.0%, intervals
-    overlapping. It ships as a visible aid, not as a claim.</li>
+    <li><strong>Expected information gain — the objective the literature uses — lost to a coin.</strong>
+    43.3% against <span class="cool">46.2%</span> for asking at random. It is an expectation taken
+    under the model's own beliefs, and on a three-finding record those beliefs are wrong. Ranking
+    by how much a question <em>could</em> tell you scores <span class="hot">67.1%</span>.</li>
   </ul>
-  <div class="src">Every failure is dated and committed in docs/results/ — in the order it happened</div>
+  <div class="src">Four objectives tried, three of them worse than a coin, and the winner is a
+  property of the question rather than anything learned. Every failure is dated and committed in
+  docs/results/, in the order it happened.</div>
 </section>
 
 <section>

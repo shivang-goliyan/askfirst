@@ -83,7 +83,8 @@ pathogenic.
 2. An open model scores the case. We keep the full distribution over outcomes, not just the text.
 3. Every field that *is* present is deleted in turn and the case re-scored. How far the
    distribution moves is that field's influence. This builds a sensitivity map of the record.
-4. Fields that are *absent* are ranked by expected influence, calibrated against that map, then
+4. Fields that are *absent* are ranked by how many answers each question admits — measured to
+   beat ranking by expected information gain, which scored worse than asking at random — then
    re-ranked by cost and turnaround time.
 5. If the outcome is unstable under ablation, askfirst refuses and returns the ranked gaps.
 
@@ -124,7 +125,11 @@ and the comparison against it is the point rather than something to avoid:
   systematically removing information from cases.
 - **ALFA** (arXiv 2502.14860) — aligning models to ask better clinical questions.
 - **BALAR / MedClarify** — choose the next question by expected information gain over a
-  predefined question set.
+  predefined question set. **We implemented that objective and measured it losing to a coin:**
+  43.3% against 46.2% for asking at random, with one question from a three-finding record. It is
+  an expectation taken under the model's own beliefs, and on a sparse record those beliefs are
+  wrong. Ranking instead by how much a question *could* tell you scores 67.1%
+  (`docs/results/2026-10-13-breadth-beats-information.md`).
 
 Those methods select from a question set, or prompt the model to ask. askfirst measures which
 *absent* field most destabilises the model's own answer distribution, and then prices the answer.

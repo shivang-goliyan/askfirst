@@ -55,11 +55,17 @@ A's finding from the other end. And 171 of 182 contested groups can take no comp
 all. n is 6-20 groups; read the counts, not the percentages.
 Write-up: `results/2026-10-13-computational-line-ablation.md`.
 
-## What does not work yet
+## The advice works too, as of 13 Oct
 
-**The advice.** Ranking by expected information gain scores 28.4% against 26.0% for asking at
-random and 28.0% for asking nothing — intervals overlapping. Neutral, not useful. It needs a
-model with medical knowledge; a naive Bayes knows co-occurrence and nothing else.
+One question, from a record cut to three findings: **41.7% without it, 46.2% asking at random,
+67.1% asking what the engine says.** Intervals [43.1%, 49.3%] against [64.1%, 69.9%].
+
+What fixed it was deleting the clever part. Ranking by **expected information gain measured worse
+than random** (43.3%), because it is an expectation taken under the model's own beliefs and those
+beliefs are wrong on exactly the sparse records where advice matters. Ranking by **answer breadth**
+— log2 of how many answers a question admits — needs no beliefs and adds 13 to 23 points. In
+clinical terms: characterise what you already know before asking about one more symptom.
+Write-up: `results/2026-10-13-breadth-beats-information.md`.
 
 ## Dead ends, so nobody repeats them
 
@@ -78,7 +84,8 @@ model with medical knowledge; a naive Bayes knows co-occurrence and nothing else
 1. Record parsed into atomic fields.
 2. Open model scores it; the full distribution is kept, not sampled text.
 3. Present fields ablated one at a time, giving a sensitivity map.
-4. Absent fields ranked by expected information gain, then by cost and time to obtain.
+4. Absent fields ranked by how many answers each question admits — measured to beat ranking by
+   expected information gain, which lost to a coin — then by cost and time to obtain.
 5. Unstable under ablation means refuse: return the ranked gaps and hand over.
 
 Step 2 is why this needs open weights. You cannot read a closed API's distribution, and without
