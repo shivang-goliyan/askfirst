@@ -97,6 +97,17 @@ cost: one case costs as many forward passes as it has fields, which is what the 
 - Not molecular design. Module B reads *existing published evidence about* variants. It does no
   structure prediction, no binding prediction, no wet-lab work of any kind.
 
+## How it behaves when it is wrong
+
+The honest answers to the five questions a health product has to answer — incorrect responses,
+sensitive data, uncertain results, high-risk decisions and human review — are in
+[docs/SAFETY.md](docs/SAFETY.md), each one pointing at code or at a measurement.
+
+Everything else: [state of play](docs/STATE.md) · [every measurement, including the
+failures](docs/results/) · [the metric, fixed in advance](docs/METRIC.md) · [data and
+licences](docs/DATA.md) · [how it is deployed](docs/DEPLOY-APP.md) · [the build
+plan](docs/PLAN.md).
+
 ## Prior work
 
 A model that seeks missing clinical information before deciding is an established line of work,
@@ -143,6 +154,21 @@ python -m venv .venv && source .venv/bin/activate
 pip install -e .
 scripts/fetch_data.sh          # prints what to download, from where, under what licence
 python -m askfirst.demo        # ablation loop on a bundled sample, CPU only
+```
+
+Or the whole app in a container, which is how it is deployed — CPU only, no GPU needed, because
+the headline curve is baked:
+
+```bash
+docker build -t askfirst .
+docker run --rm -p 7860:7860 askfirst     # then open http://127.0.0.1:7860
+```
+
+Point it at a served model and the same endpoints score against it instead; the response says
+which scorer answered, every time.
+
+```bash
+ASKFIRST_VLLM_URL=http://127.0.0.1:8000/v1 docker run --rm -p 7860:7860 -e ASKFIRST_VLLM_URL askfirst
 ```
 
 The CPU path exists so the engine can be built and tested without a GPU. The served version runs

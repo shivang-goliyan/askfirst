@@ -22,7 +22,20 @@ from .model import Endpoint, ModelScorer
 from .schema import load_schema
 
 BAKED = Path(__file__).parent / "baked" / "curve.json"
-UI = Path(__file__).parent.parent.parent / "ui"
+
+
+def find_ui():
+    """Source checkout and container put the page in different places. Look for the file
+    itself rather than assuming a depth, or a wrong guess serves a blank page quietly."""
+    here = Path(__file__).resolve()
+    tries = [here.parent.parent.parent / "ui", here.parent.parent / "ui", Path.cwd() / "ui"]
+    for d in tries:
+        if (d / "index.html").exists():
+            return d
+    return tries[0]
+
+
+UI = find_ui()
 
 app = FastAPI(title="askfirst", docs_url="/api/docs")
 _schemas = {}

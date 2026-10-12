@@ -1,0 +1,83 @@
+# How this behaves when it is wrong
+
+The health track asks five questions directly, and the product was designed around the answers
+rather than retrofitted to them. Each answer below points at code or at a measurement, because an
+answer with nothing behind it is a paragraph.
+
+**This is a research prototype. No clinician has reviewed any output. It does not diagnose and it
+is not medical advice.** The data is synthetic — DDXPlus is rule-based — and the variant examples
+come from a public knowledge base.
+
+## 1. Incorrect responses
+
+The product exists because of this question. Being wrong *while confident* is the failure mode it
+is built to remove, and the removal is measured rather than asserted.
+
+Answering all 1,500 held-out cases produces 1,185 wrong answers. Answering only the most confident
+tenth produces **22**. Priced at 100 for a confident wrong decision and 5 for a referral, cost per
+case falls from 79.00 to 4.82 — and the direction holds across all seven price ratios tested, down
+to a referral costing half a wrong answer (`docs/results/2026-10-13-economics.md`).
+
+It is still wrong sometimes, and the interface never hides that. The accuracy on answered cases is
+printed next to the answer, with its confidence interval, at whatever coverage the dial is set to.
+
+## 2. Sensitive information
+
+Nothing personal enters the system. Demo records are synthetic DDXPlus cases; the variant cases are
+CIViC, which is CC0. MIMIC-IV was excluded on purpose — its data use agreement forbids
+redistribution, which is incompatible with a public repository (`docs/DATA.md`).
+
+The deployed app stores nothing a visitor types. There is no account, no upload, no logging of case
+content, no analytics. Fields are scored and the response is returned.
+
+## 3. Uncertain results
+
+Uncertainty is the output, not a footnote on it. Every assessment returns:
+
+- the full distribution over outcomes, not a single label;
+- entropy in bits;
+- the confidence against the threshold that decided whether to answer at all;
+- a **sufficiency** verdict — whether the record can support any answer;
+- for each missing field, its **expected information gain in bits**, what it costs and how many
+  minutes it takes;
+- for each present field, how much the current answer **rests on** it, from the ablation map.
+
+The number on the dial and the number the server uses to refuse are the same number, read off the
+same baked curve. They were two separate values during the build, which is a bug we found and
+fixed — the dial would have looked decorative while the server answered everything.
+
+## 4. High-risk decisions
+
+The system does not make them. It never selects a treatment, a dose or a disposition; the outcome
+space is a label over a public dataset. Its only decision is **answer or hand over**, and that
+decision is tuned to be pessimistic: the measured optimum sits at 5-10% coverage, which means it
+refuses roughly nine cases in ten.
+
+Costs are asymmetric by design. A referral is cheap and a confident wrong answer is expensive, so
+the threshold is set from that asymmetry rather than from accuracy alone.
+
+## 5. Human review, and knowing when to ask for it
+
+Refusal **is** the handoff, and it is the common path rather than the exception. A refusal returns
+a ranked, costed work list — what to get, in what order, why each item matters in bits, what it
+costs and how long it takes — so the person receiving the case gets a next action rather than a
+shrug.
+
+Refusal applies to the **answer**, never to the interaction. Every case produces a work item:
+
+- **Confident** — the answer, plus the fields it rests on.
+- **Not confident** — the ranked gaps, their cost and delay, and the handoff.
+
+Coverage of useful output is 100%. Coverage of confident wrong answers is what gets driven to zero.
+
+## What we will not claim
+
+- Not clinically validated. Not reviewed by a clinician. Not for use on real patients.
+- The 98.7% figure at 5% coverage rests on 75 answered cases. The honest floor is **92.8%**
+  (Wilson 95%), and that is the number used everywhere.
+- DDXPlus is rule-based synthetic data, so recovering a deleted field may partly mean recovering
+  the generator. MedQA is the cross-check and the limitation is stated rather than buried.
+- The question-ranking half is **neutral, not proven useful** — 28.4% against 26.0% for asking at
+  random, intervals overlapping. It ships as a visible aid, not as a claim.
+- The concept is not novel. MediQ (NeurIPS 2024) posed the interactive version of this problem
+  first; the contribution here is the calibrated refusal and its price, not the idea.

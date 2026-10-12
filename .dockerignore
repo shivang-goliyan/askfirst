@@ -1,0 +1,10 @@
+.git
+.venv
+data
+docs
+tests
+scripts
+runs
+outputs
+**/__pycache__
+*.pyc

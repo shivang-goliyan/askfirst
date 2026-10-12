@@ -38,8 +38,14 @@ prices.
 
 ## Two things to say out loud before anyone quotes this
 
-**The 98.7% rests on 76 answered cases.** 75 right out of 76. The Wilson interval is
-[93.0%, 99.8%], so **93% is the number to quote**, not 98.7%.
+**The 98.7% rests on 75 answered cases.** 74 right out of 75. The Wilson interval is
+[92.8%, 99.8%], so **92.8% is the number to quote**, not 98.7%.
+
+*Corrected 13 Oct, same day:* this paragraph first said 75 of 76, which contradicted the table
+directly above it — 1,425 referred out of 1,500 leaves 75 answered, not 76. The count came from a
+different coverage step. The table was right, the sentence was wrong, and the interval moves from
+[93.0%, 99.8%] to [92.8%, 99.8%]. The baked curve in `src/askfirst/baked/curve.json` stored the
+correct figures throughout.
 
 **The optimum sitting at 5% coverage is partly our own scorer's fault.** Naive Bayes is 21%
 accurate overall, so the confidence signal has to cut deep before it finds a reliable subset. A

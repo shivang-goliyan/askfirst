@@ -8,7 +8,7 @@ Priced — a confident wrong decision at 100, a referral at 5 — always answeri
 case against 4.82, which is **94% cheaper**, and the result holds across seven price ratios
 (41% to 99% cheaper, optimum always 5-10% coverage).
 
-Quote **92.9%**, not 98.7%. The 5%-coverage figure is 75 of 76 cases; Wilson CI [92.9%, 99.8%].
+Quote **92.8%**, not 98.7%. The 5%-coverage figure is 74 of 75 cases; Wilson CI [92.8%, 99.8%].
 
 Margin beats entropy as the confidence signal at every coverage level.
 
