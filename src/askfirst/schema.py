@@ -89,8 +89,12 @@ def fit_priors(records, schema, smoothing=1.0):
     counts = {name: {v: smoothing for v in spec.values} for name, spec in schema.fields.items()}
     for record in records:
         for name, value in record.items():
-            if name in counts and value in counts[name]:
-                counts[name][value] += 1.0
+            if name not in counts:
+                continue
+            # multi-choice fields arrive as a list of the values the patient reported
+            for v in (value if isinstance(value, list) else [value]):
+                if v in counts[name]:
+                    counts[name][v] += 1.0
 
     fitted = {}
     for name, tally in counts.items():
