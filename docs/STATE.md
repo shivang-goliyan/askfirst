@@ -32,6 +32,16 @@ Caveat first: this is the 34M ESM-2, chosen because it runs on a laptop in 200 s
 run is queued for the GPU and the figure will be re-reported either way.
 Full write-up: `results/2026-10-13-esm2-evidence-line.md`.
 
+Then the question that matters — is that line load-bearing? Put the score into a CIViC group as one
+removable item and sweep the strength it is granted. **At supporting strength, where ACMG caps it,
+0 of 11 contested calls change. Granted clinical strength, 5 of 11 change, and every time the
+computational label itself ends up on top**, outranking documented therapy-response evidence
+(`EGFR S768I`, `FLT3 D835V`). Loosen the score threshold and even supporting strength moves calls,
+so **capping strength and knowing when to abstain are two mechanisms and you need both** — module
+A's finding from the other end. And 171 of 182 contested groups can take no computational vote at
+all. n is 6-20 groups; read the counts, not the percentages.
+Write-up: `results/2026-10-13-computational-line-ablation.md`.
+
 ## What does not work yet
 
 **The advice.** Ranking by expected information gain scores 28.4% against 26.0% for asking at

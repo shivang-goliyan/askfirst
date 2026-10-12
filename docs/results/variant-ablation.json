@@ -1,0 +1,33 @@
+{
+  "threshold": 3.0,
+  "contested": 182,
+  "eligible": 28,
+  "scoreable": 6,
+  "sweep": [
+    {
+      "level": "E",
+      "changed": 0,
+      "dominated": 0
+    },
+    {
+      "level": "D",
+      "changed": 2,
+      "dominated": 2
+    },
+    {
+      "level": "C",
+      "changed": 4,
+      "dominated": 4
+    },
+    {
+      "level": "B",
+      "changed": 4,
+      "dominated": 4
+    },
+    {
+      "level": "A",
+      "changed": 5,
+      "dominated": 5
+    }
+  ]
+}

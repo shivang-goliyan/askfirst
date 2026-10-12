@@ -123,3 +123,22 @@ def test_categories_are_not_scales():
     schema = load_schema("clinical")
     assert not schema.fields["heart_rate"].is_scale()
     assert schema.fields["heart_rate"].label_for("high") == "high"
+
+
+def test_weak_scores_say_nothing():
+    from askfirst.civic import computational_line
+    assert computational_line(0.4, threshold=2.0) is None
+    assert computational_line(-0.4, threshold=2.0) is None
+
+
+def test_line_picks_a_direction():
+    from askfirst.civic import DAMAGING, TOLERATED, computational_line
+    assert computational_line(-5.0)["significance"] == DAMAGING
+    assert computational_line(5.0)["significance"] == TOLERATED
+    assert computational_line(-5.0, level="B")["evidence_level"] == "B"
+
+
+def test_rating_ignores_magnitude():
+    from askfirst.civic import computational_line
+    mild, wild = computational_line(-2.1), computational_line(-11.8)
+    assert mild["rating"] == wild["rating"]

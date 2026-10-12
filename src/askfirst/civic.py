@@ -9,6 +9,10 @@ import csv
 from collections import defaultdict
 
 LEVEL_WEIGHT = {"A": 1.0, "B": 0.6, "C": 0.35, "D": 0.2, "E": 0.1}
+
+DAMAGING = "Predicted damaging"
+TOLERATED = "Predicted tolerated"
+COMPUTATIONAL = (DAMAGING, TOLERATED)
 TYPES = ("Predictive", "Prognostic", "Diagnostic", "Predisposing", "Functional", "Oncogenic")
 
 
@@ -61,3 +65,37 @@ def weighted_verdict(items):
     shifted = {k: v - floor + 1e-6 for k, v in tally.items()}
     total = sum(shifted.values())
     return {k: v / total for k, v in shifted.items()}
+
+
+def computational_line(llr, level="E", threshold=2.0, rating=3):
+    """The ESM-2 score as one evidence item, shaped like every other row so the engine can
+    remove it the same way it removes anything else.
+
+    `level` is the argument, not a detail. ACMG/AMP caps computational evidence at *supporting*
+    and ClinGen had to re-weight that slot downward because predictors were being trusted past
+    it, so the honest thing is to make the strength a dial and measure what it does to the call.
+    Rating stays fixed — letting it track the score's magnitude would smuggle in a calibration
+    nobody has established.
+
+    Returns None below the threshold, which is the common case and the correct behaviour: a
+    score near zero is not evidence of anything."""
+    if abs(llr) < threshold:
+        return None
+    return {
+        "molecular_profile": "",
+        "disease": "",
+        "therapies": "",
+        "significance": DAMAGING if llr < 0 else TOLERATED,
+        "evidence_type": "Functional",
+        "evidence_direction": "Supports",
+        "evidence_level": level,
+        "rating": str(rating),
+        "source": "ESM-2 masked marginal",
+        "llr": llr,
+    }
+
+
+def call_for(items):
+    """What the group currently says, as a single label."""
+    verdict = weighted_verdict(items)
+    return max(verdict, key=verdict.get) if verdict else None
