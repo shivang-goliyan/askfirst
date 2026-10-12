@@ -71,6 +71,15 @@ model with medical knowledge; a naive Bayes knows co-occurrence and nothing else
 Step 2 is why this needs open weights. You cannot read a closed API's distribution, and without
 it there is no entropy, no information gain and no calibrated refusal.
 
+## The GPU day is rehearsed
+
+The client has now run end to end against a served endpoint — `scripts/fake_vllm.py`, which answers
+in vLLM's documented shape. It found three bugs that the unit tests could not: the proposer parsed
+field names with a pattern that silently matched nothing outside DDXPlus, the invented-code
+safeguard was filtered out one line after being set, and the scorer label was a hardcoded
+"open model on AMD MI300X" that printed whatever was really answering. All three fixed.
+Order of work, cost arithmetic and kill criteria: [GPU-DAY.md](GPU-DAY.md).
+
 ## Running the measurements
 
     python3 -I scripts/run_abstention.py     data/ddxplus/release_validate_patients 1500

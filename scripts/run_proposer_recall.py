@@ -87,7 +87,7 @@ def main(path, count):
         ("marginal  (cpu)", MarginalProposer(scorer, schema), 180),
     ]
     if endpoint.available():
-        runs.insert(0, ("open model on AMD", ModelProposer(schema, endpoint), None))
+        runs.insert(0, (endpoint.describe()[:21], ModelProposer(schema, endpoint), None))
     else:
         print("No ASKFIRST_VLLM_URL set, so the model proposer is skipped. It is the one that\n"
               "matters: the CPU proposers know co-occurrence, not medicine.\n")

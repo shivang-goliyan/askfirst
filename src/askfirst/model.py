@@ -50,6 +50,19 @@ class Endpoint:
             self._client = OpenAI(api_key=self.api_key, base_url=self.base_url)
         return self._client
 
+    def describe(self):
+        """What is actually answering, named rather than claimed.
+
+        This used to be the hardcoded string "open model on AMD MI300X" at the call sites, which
+        says the same thing whether it is talking to an MI300X, a laptop or a stub — the one
+        place where a wrong label is worse than no label, because the whole product is about not
+        being confidently wrong. So the host and the served model get read off the endpoint."""
+        host = (self.base_url or "").split("//")[-1].split("/")[0] or "no endpoint"
+        try:
+            return f"{self.resolved_model()} served at {host}"
+        except Exception:
+            return f"an unnamed model at {host}"
+
     def resolved_model(self):
         if self.model:
             return self.model
@@ -190,14 +203,41 @@ class ModelProposer:
         self.schema = schema
         self.endpoint = endpoint or Endpoint()
         self.menu_size = menu_size
+        self.invented = []
+        self.replied_nothing = False
+
+    def _offered(self, record):
+        return self.schema.missing_from(record)[: self.menu_size]
 
     def _menu(self, record):
         rows = []
-        for name in self.schema.missing_from(record)[: self.menu_size]:
+        for name in self._offered(record):
             spec = self.schema.fields[name]
             question = getattr(spec, "question", None) or name
             rows.append(f"{name}: {question}")
         return "\n".join(rows)
+
+    @staticmethod
+    def _parse(text, offered):
+        """Find the offered names in the reply, in the order the reply puts them.
+
+        This used to match a hardcoded `\\b[A-Za-z]+_\\d+\\b`, which fits DDXPlus codes like E_55
+        and silently matches nothing at all on a schema whose fields are named `troponin` and
+        `d_dimer`. Matching against what was actually offered works for any schema and cannot
+        quietly return an empty list because the names looked different than expected."""
+        found = {}
+        for name in offered:
+            hit = re.search(rf"(?<![A-Za-z0-9_]){re.escape(name)}(?![A-Za-z0-9_])", text)
+            if hit and name not in found:
+                found[name] = hit.start()
+        return sorted(found, key=found.get)
+
+    @staticmethod
+    def _invented(text, known):
+        """Code-shaped tokens the schema has never heard of. A model making these up means the
+        prompt or the menu is wrong, so the count is kept rather than dropped."""
+        tokens = set(re.findall(r"\b[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9]+\b", text))
+        return sorted(t for t in tokens if t not in known)
 
     def __call__(self, record, k=10):
         client = self.endpoint.client()
@@ -213,12 +253,10 @@ class ModelProposer:
             max_tokens=200,
         )
         text = reply.choices[0].message.content or ""
-        picked = re.findall(r"\b[A-Za-z]+_\d+\b", text)
+        offered = self._offered(record)
 
-        unknown = [p for p in picked if p not in self.schema.fields]
-        kept = [p for p in picked if p in self.schema.fields and p not in record]
-        if unknown:
-            # worth seeing rather than silently dropping — a model inventing field codes is a
-            # signal the menu or the prompt is wrong
-            kept.append(f"#invented:{len(unknown)}")
-        return [p for p in kept if not p.startswith("#")][:k]
+        self.invented = self._invented(text, self.schema.fields)
+        self.replied_nothing = not text.strip()
+
+        picked = [p for p in self._parse(text, offered) if p not in record]
+        return picked[:k]

@@ -67,7 +67,7 @@ def pick_scorer(schema):
     """The open model when there is one, the CPU baseline otherwise. The caller is told which."""
     endpoint = Endpoint()
     if endpoint.available():
-        return ModelScorer(schema, endpoint), "open model on AMD MI300X"
+        return ModelScorer(schema, endpoint), endpoint.describe()
     if schema.domain == "clinical":
         from .stub import make_scorer
         return make_scorer(schema), "hand-written baseline, no GPU attached"
