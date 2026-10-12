@@ -1,0 +1,16 @@
+# Field schema for Module B. Fields are ACMG/AMP evidence codes rather than measurements.
+# Same engine reads this; only the schema changes.
+domain: variant
+outcomes: [benign, likely_benign, uncertain, likely_pathogenic, pathogenic]
+
+fields:
+  PVS1: {kind: categorical, values: [met, not_met],            cost: 2,  days: 1,  note: "null variant in a gene where LOF causes disease"}
+  PS1:  {kind: categorical, values: [met, not_met],            cost: 2,  days: 1,  note: "same amino acid change as an established pathogenic variant"}
+  PS3:  {kind: categorical, values: [strong, moderate, not_met], cost: 40, days: 90, note: "functional assay shows a damaging effect"}
+  PS4:  {kind: categorical, values: [met, not_met],            cost: 25, days: 60, note: "prevalence in affected significantly over controls"}
+  PM2:  {kind: categorical, values: [met, not_met],            cost: 1,  days: 1,  note: "absent or rare in population databases"}
+  PP1:  {kind: categorical, values: [strong, moderate, not_met], cost: 8, days: 21, note: "segregation with disease in affected family members"}
+  PP3:  {kind: categorical, values: [met, not_met],            cost: 1,  days: 1,  note: "computational evidence supports a deleterious effect"}
+  BS3:  {kind: categorical, values: [met, not_met],            cost: 40, days: 90, note: "functional assay shows no damaging effect"}
+  BP4:  {kind: categorical, values: [met, not_met],            cost: 1,  days: 1,  note: "computational evidence suggests no impact"}
+  BA1:  {kind: categorical, values: [met, not_met],            cost: 1,  days: 1,  note: "allele frequency too high for the disorder"}

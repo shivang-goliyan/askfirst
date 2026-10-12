@@ -1,0 +1,21 @@
+# Field schema for Module A. Values are what a field can come back as, which is what
+# the gap ranker imputes over. Costs are relative units plus minutes to result.
+domain: clinical
+outcomes: [discharge, observe, admit, escalate]
+
+fields:
+  heart_rate:   {kind: numeric,     values: [low, normal, high],              cost: 1,  minutes: 1}
+  blood_pressure: {kind: numeric,   values: [low, normal, high],              cost: 1,  minutes: 1}
+  temperature:  {kind: numeric,     values: [low, normal, fever],             cost: 1,  minutes: 1}
+  spo2:         {kind: numeric,     values: [low, normal],                    cost: 1,  minutes: 1}
+  ecg:          {kind: categorical, values: [normal, ischaemic, arrhythmia],  cost: 6,  minutes: 10}
+  troponin:     {kind: numeric,     values: [normal, raised, very_raised],    cost: 9,  minutes: 45}
+  d_dimer:      {kind: numeric,     values: [normal, raised],                 cost: 8,  minutes: 40}
+  chest_xray:   {kind: categorical, values: [clear, consolidation, effusion], cost: 14, minutes: 60}
+  ct_chest:     {kind: categorical, values: [normal, pe, dissection],         cost: 60, minutes: 180}
+
+# Antecedents are cheap because they are asked, not measured.
+antecedents:
+  smoker:       {kind: boolean, values: [true, false], cost: 0, minutes: 1}
+  prior_mi:     {kind: boolean, values: [true, false], cost: 0, minutes: 1}
+  family_history: {kind: boolean, values: [true, false], cost: 0, minutes: 2}
