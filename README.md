@@ -2,6 +2,8 @@
 
 **Finds the one missing fact that would change the answer — and refuses to answer until it has it.**
 
+**Live: [askfirst.kgbnetwork.com](https://askfirst.kgbnetwork.com)** · [the deck](https://askfirst.kgbnetwork.com/deck.html)
+
 Ask a model to decide something from an incomplete record and it will decide anyway. It sounds
 exactly as confident when the one result that settles the case is absent. On cases with
 information deliberately withheld, a recent evaluation measured a frontier model's hallucination

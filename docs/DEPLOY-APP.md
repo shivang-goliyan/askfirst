@@ -1,5 +1,7 @@
 # Getting the app online, and keeping it there
 
+**Live: https://askfirst.kgbnetwork.com** — deployed 12 Oct, valid certificate to 10 Jan 2027.
+
 The submission needs a URL a stranger can open, with nothing to install and no key to paste, and
 it has to survive judges poking it from 18 to 21 October. A GPU cannot be up for that window —
 $1.99/GPU-hour against $100 per account means 72 hours on one card costs $143, more than any one
@@ -11,56 +13,59 @@ account holds. So the app and the model are deployed separately and on purpose.
 artifact measured once over 1,500 patients. It cannot fail and it does not depend on a droplet.
 `/api/assess` falls back to the hand-written baseline scorer when no model endpoint is set.
 
-**The model attaches on demand.** Bring a droplet up, point the app at it, and the same endpoints
-start scoring against the open model instead. Every response carries `scored_by`, so nobody has
-to guess where a number came from:
+**The model attaches on demand.** Bring a droplet up, redeploy with one environment variable, and
+the same endpoints score against the open model instead. Every response carries `scored_by`, so
+nobody has to guess where a number came from:
 
     "scored_by": "open model on AMD MI300X"
     "scored_by": "hand-written baseline, no GPU attached"
 
-## Host: Hugging Face Space, Docker SDK, CPU basic
+## Where it runs
 
-Free, no payment method, public URL, and it does not cold-start behind a 50-second wall the way
-free Render does. One command, which creates the Space if it does not exist yet:
+A small container on a box we already own, behind Caddy, which already held the hostname and
+issues the certificate. No new account, no third-party token, and the model endpoint can be
+attached or removed in one command without anyone clicking through a hosting UI.
 
-    HF_TOKEN=hf_xxx ./scripts/deploy/space.sh <user>/askfirst
+    ./scripts/deploy/vm.sh                                   # redeploy, CPU only
+    ASKFIRST_VLLM_URL=http://<droplet>:8000/v1 \
+      ASKFIRST_MODEL=<name> ./scripts/deploy/vm.sh           # attach the model
 
-**The token must have the write role.** A read-only token fails at the create step with a 401 and
-an unhelpful message, so the script checks for that case and says what is actually wrong. Make one
-at huggingface.co/settings/tokens.
+The image is built on the box, because only ~200 KB of source needs to cross the wire that way and
+the upstream link stalls on large uploads. The container is capped at 400 MB and actually uses
+about 33 MB, which matters because that box runs other things that are not allowed to fall over.
 
-That pushes `src/`, `ui/`, the Dockerfile and `scripts/deploy/space-README.md` as the Space
-README. Front matter in that file sets `app_port: 7860`, which is what the Dockerfile listens on.
+**What the deploy touched, so it can be undone:** one container named `askfirst` bound to
+`127.0.0.1:3330`, and one appended block in `/etc/caddy/Caddyfile`. The Caddyfile was backed up
+first to `/etc/caddy/Caddyfile.bak-askfirst-20261012-193120`, validated before reloading, and
+reloaded rather than restarted. Nothing else on the box was stopped, restarted or edited.
 
-When a droplet is live, add **ASKFIRST_VLLM_URL** and **ASKFIRST_MODEL** as Space secrets and
-restart. Remove them when the droplet dies and the page keeps working.
+## Verified, not assumed
 
-## Verified locally, not assumed
-
-    docker build -t askfirst:local .
-    docker run --rm -p 7860:7860 askfirst:local
-
-Checked on 13 Oct against the image above:
+Checked against the public URL after the last deploy:
 
 | check | result |
 |---|---|
-| `GET /api/health` | `{"ok":true,"model_endpoint":false,"baked_curve":true,"schemas":["clinical","ddxplus","variant"]}` |
-| `GET /` | 200, 10257 bytes |
-| `GET /deck.html` | 200, 15138 bytes — the deck ships with the app |
-| `GET /api/curve` | 20 rows, first at 5% coverage |
-| `POST /api/assess` thin record | refuses — confidence 0.25 under threshold 0.3719, asks for troponin at 0.391 bits |
+| `GET /` | 200, 10,618 bytes |
+| `GET /deck.html` | 200, 15,138 bytes — the deck ships with the app |
+| `GET /api/health` | `{"ok":true,"model_endpoint":false,"baked_curve":true,...}` |
+| `GET /api/curve` | 200, 3,145 bytes |
+| `POST /api/assess`, one symptom | **refuses** — asks for troponin first, 0.391 bits |
+| certificate | Let's Encrypt, `CN=askfirst.kgbnetwork.com`, to 10 Jan 2027 |
 
-The image installs fastapi, uvicorn, pyyaml and openai at pinned versions. It does **not**
-install vLLM; the client speaks to the server over HTTP and nothing heavy belongs in a CPU image.
+## Running it anywhere else
 
-## Fallback, if the Space jams
+The container is plain and takes `PORT` from the environment, so it runs unchanged on any host:
 
-Render free web service from the same Dockerfile — `PORT` is read from the environment, so it
-needs no change. It sleeps after 15 minutes idle and wakes in roughly 50 seconds, which is
-survivable as a mirror and poor as a primary.
+    docker build -t askfirst .
+    docker run --rm -p 7860:7860 askfirst
+
+`scripts/deploy/space.sh` pushes the same image definition to a free Hugging Face Space, which is
+kept as a mirror in case the primary host is ever unavailable during judging. It needs a token with
+the **write** role; a read-only token fails at the create step and the script says so rather than
+passing on a bare 401.
 
 ## What is deliberately not here
 
-No API key entry, no login, no upload of anything personal. The demo records are synthetic
-DDXPlus cases and the variant examples come from CIViC, which is CC0. Nothing a visitor types is
-stored.
+No API key entry, no login, no upload of anything personal. The demo records are synthetic DDXPlus
+cases and the variant examples come from CIViC, which is CC0. Nothing a visitor types is stored,
+and the app sends `Cache-Control: no-store` so a proxy cannot serve one visitor's view to another.

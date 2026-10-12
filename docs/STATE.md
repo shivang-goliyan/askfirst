@@ -1,5 +1,7 @@
 # Where this stands
 
+**Live at https://askfirst.kgbnetwork.com** since 12 Oct — CPU only, no GPU attached, which is the point: the headline curve is baked and cannot go dark. Redeploy with `./scripts/deploy/vm.sh`; see [DEPLOY-APP.md](DEPLOY-APP.md).
+
 ## What works, measured
 
 **The refusal.** 1,500 held-out DDXPlus patients, 49 conditions, 2% chance. Answer only the most
