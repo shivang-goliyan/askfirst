@@ -92,22 +92,27 @@ class ModelScorer:
         )
 
     def _prompt(self, record, outcome):
+        """Returns the full prompt and the character offset where the outcome text begins.
+
+        We build the prompt, so we know exactly where the label starts. Handing that boundary to
+        the scorer beats trying to find the label again afterwards by walking tokens backwards
+        and hoping the string matches."""
         shown = self.schema.label_for_outcome(outcome)
-        return (
+        head = (
             f"{self.instruction}\n\nRecord:\n{describe(record, self.schema)}"
-            f"\n\nCondition: {shown}"
+            f"\n\nCondition: "
         )
+        return head + shown, len(head)
 
     def __call__(self, record):
         outcomes = self.schema.outcomes
         if not outcomes:
             raise ValueError("The schema has no outcomes to score against.")
 
-        client = self.endpoint.client()
-        prompts = [self._prompt(record, o) for o in outcomes]
-        reply = client.completions.create(
+        built = [self._prompt(record, o) for o in outcomes]
+        reply = self.endpoint.client().completions.create(
             model=self.endpoint.resolved_model(),
-            prompt=prompts,
+            prompt=[p for p, _ in built],
             echo=True,
             logprobs=0,
             max_tokens=0,
@@ -117,9 +122,8 @@ class ModelScorer:
         totals = {}
         for choice in reply.choices:
             outcome = outcomes[choice.index]
-            totals[outcome] = self._outcome_logprob(
-                choice, self.schema.label_for_outcome(outcome)
-            )
+            _, boundary = built[choice.index]
+            totals[outcome] = self._label_logprob(choice, boundary)
 
         top = max(totals.values())
         weights = {k: math.exp(v - top) for k, v in totals.items()}
@@ -127,31 +131,46 @@ class ModelScorer:
         return {k: v / mass for k, v in weights.items()}
 
     @staticmethod
-    def _outcome_logprob(choice, outcome):
-        """Sum the logprobs belonging to the outcome text at the end of the echoed prompt.
+    def _label_logprob(choice, boundary):
+        """Mean logprob of the tokens at or past the boundary.
 
-        Length-normalised, or long condition names are punished for being long rather than for
-        being unlikely."""
-        lp = choice.logprobs
-        tokens = list(lp.tokens or [])
-        values = list(lp.token_logprobs or [])
-        if not tokens:
+        text_offset is a cumulative character offset per token, so everything from the boundary
+        onward is the label and nothing else. Mean rather than sum, or long condition names get
+        punished for being long instead of for being unlikely.
+
+        The first prompt token has no logprob — there is nothing before it to condition on — so
+        None entries are skipped rather than treated as zero."""
+        lp = getattr(choice, "logprobs", None)
+        if lp is None or not getattr(lp, "token_logprobs", None):
             raise RuntimeError(
                 "The endpoint returned no prompt logprobs. echo=True with max_tokens=0 is "
-                "required, and some builds also need --return-tokens-as-token-ids off."
+                "required. If the server refuses, check --max-logprobs on the vLLM side."
             )
 
-        wanted = outcome.strip()
-        taken, total, seen = 0, 0.0, ""
-        for token, value in zip(reversed(tokens), reversed(values)):
-            if value is None:
-                continue
-            seen = token + seen
-            total += value
-            taken += 1
-            if wanted in seen or len(seen) > len(wanted) + 8:
-                break
-        return total / max(taken, 1)
+        offsets = list(getattr(lp, "text_offset", None) or [])
+        values = list(lp.token_logprobs or [])
+        tokens = list(getattr(lp, "tokens", None) or [])
+
+        if offsets and len(offsets) == len(values):
+            picked = [v for off, v in zip(offsets, values) if off >= boundary and v is not None]
+        else:
+            # no text_offset: fall back to counting back over the label's characters
+            picked, seen = [], 0
+            want = sum(len(t) for t in tokens) - boundary
+            for token, value in zip(reversed(tokens), reversed(values)):
+                if value is None:
+                    continue
+                picked.append(value)
+                seen += len(token)
+                if seen >= want:
+                    break
+
+        if not picked:
+            raise RuntimeError(
+                f"No tokens found past character {boundary}. Either echo was ignored or the "
+                "server tokenised the prompt differently than its offsets claim."
+            )
+        return sum(picked) / len(picked)
 
 
 class ModelProposer:
