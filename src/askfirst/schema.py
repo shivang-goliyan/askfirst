@@ -97,6 +97,9 @@ def _delay_of(spec):
 
 
 def load_schema(domain):
+    # the name comes off a URL, so it is not allowed to be a path
+    if not str(domain).replace("_", "").isalnum():
+        raise FileNotFoundError(f"{domain!r} is not a schema name.")
     path = SCHEMA_DIR / f"{domain}.yaml"
     if not path.exists():
         available = ", ".join(sorted(p.stem for p in SCHEMA_DIR.glob("*.yaml")))

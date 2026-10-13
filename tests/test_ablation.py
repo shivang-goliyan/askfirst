@@ -179,3 +179,13 @@ def test_french_names_stay_provenance():
     schema = load_schema("ddxplus")
     assert schema.label_for_outcome("Pneumonia") == "Pneumonia"
     assert schema.sources["Pneumonia"] == "Pneumonie"
+
+
+def test_domain_cannot_be_a_path():
+    for bad in ("../../etc/passwd", "clinical/../variant", ""):
+        try:
+            load_schema(bad)
+        except FileNotFoundError:
+            pass
+        else:
+            raise AssertionError(f"{bad!r} should not have loaded")

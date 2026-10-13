@@ -1,0 +1,118 @@
+# Submission copy — draft, not posted
+
+Nothing in here goes anywhere until Shivang approves it. Numbers are the ones currently in the
+repo; if a measurement moves, this file moves with it.
+
+---
+
+## Title
+
+**askfirst**
+
+## One line
+
+Finds the one missing fact that would change the answer — and refuses to answer until it has it.
+
+## Short description
+
+Medical AI is graded on how often it is right. The expensive failure is being confidently wrong on
+a record that was never complete enough to answer from. askfirst scores how much of the answer is
+actually supported by what is in front of it, hands the case to a person when it is not, and names
+the single cheapest thing to go and get. Both halves are measured on held-out data, and the write-up
+includes the four objectives we tried that did not work.
+
+## Full description
+
+**The problem.** A triage model given half a record still returns an answer with a confidence
+number on it. The accuracy figure in the paper is an average over complete cases, and the cost of
+the mistakes is not symmetric: a confident wrong call on an incomplete record is the expensive one.
+Nobody is grading "should this have been answered at all".
+
+**What it does.** Two things, and it will not do the first without the second.
+
+1. **It decides whether to answer.** The confidence cut-off is read off a measured risk-coverage
+   curve, one per level of record completeness, so "how much to refuse" is a setting with a number
+   behind it rather than a slogan. When it refuses, the case goes to a person — that is the
+   handoff, and it arrives with a work list.
+2. **It says what to go and get.** For every field the record does *not* have, it asks what the
+   answer would do to the distribution, and ranks them. On the costed domain it also prices them,
+   so a £0 question that settles a quarter as much as a 45-minute blood test is ranked honestly
+   against it.
+
+**What we measured.** 6,000 held-out DDXPlus patients, 49 conditions, chance 2.0%. The scorer is a
+softmax regression over 972 one-hot evidence features at 99.6% top-1 on complete records — chosen
+deliberately, because the first version of this result used a weak baseline and the lift turned out
+to be a statement about our classifier rather than about medicine. We killed that headline
+ourselves and re-ran everything.
+
+| evidence kept | answer everything | answer the confident 25% | cheapest policy |
+|---|---|---|---|
+| 100% | 99.6% | 100.0% | answer 98%, saves 38% |
+| 40% | 82.6% | 98.3% | answer 35%, saves 77% |
+| 20% | 39.9% | 73.5% | answer 2%, saves 91% |
+
+Refusing pays at every level of completeness, and how much to refuse changes by a factor of fifty
+across them. On a complete record the product is nearly pointless, and the page says so.
+
+**The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:
+42.9% without it, 47.9% asking at random, **72.5% asking what the engine says**. The ranking rule
+is `log2(number of answers the question admits)`, weighted by how often the question gets answered
+at all. In clinical terms: characterise what you already know before asking about one more symptom.
+
+**What we got wrong, with dates on it.** Four ranking objectives were tried and three lost to a
+coin — including expected information gain, the objective the literature uses, which measured worse
+than asking nothing at all (39.9% against 42.9%). Then three bugs turned up in that measurement,
+every one of them in our favour, and fixing them made the objective we beat *worse*. All of it is
+in `docs/results/`, dated, in the order it happened.
+
+**A second domain.** The same engine on variant interpretation. An ESM-2 score enters a contested
+CIViC group as one removable evidence item, and the strength it is granted is a dial on the page.
+At *supporting*, where ACMG/AMP caps computational evidence, 0 of 11 calls change. At *clinical*
+strength, 5 of 11 change and the prediction ends up on top every time — documented drug sensitivity
+becoming "predicted damaging". 171 of 182 contested groups cannot take a computational vote at all.
+
+**Limits, stated rather than buried.** DDXPlus is rule-based synthetic data. CIViC significance is
+clinical actionability, not ACMG classification. Eleven groups is a demonstration, not a benchmark.
+Nothing here is clinically validated and no clinician has reviewed any output.
+
+## AMD — TO BE WRITTEN ON THE GPU DAY
+
+**Do not submit with this section as a placeholder.** It needs the measured numbers, not a
+description of an intention. What goes here, from `docs/GPU-DAY.md`:
+
+- which open model was served on MI300X with vLLM on ROCm, and its served name
+- proposer recall at k=10 against the 40% bar — the go/no-go
+- model confidence against the softmax margin on the completeness grid
+- ESM-2 650M on ROCm against the 34M CPU floor: does the 21% wrong-sign figure move
+- one `rocprofv3` trace, for a measured kernel number rather than a described one
+
+Every response the app returns carries `scored_by`, naming what answered, and
+`threshold_calibrated`, saying whether the cut-off was measured against that scorer. That is the
+AMD component being visible in the working product rather than asserted in a slide.
+
+## Links
+
+- Live: https://askfirst.kgbnetwork.com
+- Deck: https://askfirst.kgbnetwork.com/deck.html
+- Module B at clinical strength: https://askfirst.kgbnetwork.com/#level=B
+- Source, every measurement, and the four dead ends: https://github.com/shivang-goliyan/askfirst
+- Video: *to come*
+
+## Tags
+
+health, clinical decision support, selective prediction, abstention, uncertainty, calibration,
+risk-coverage, ESM-2, variant interpretation, vLLM, ROCm, MI300X, FastAPI, DDXPlus, CIViC
+
+## Cover image
+
+`docs/assets/cover.png`, 1200x630. Source is `ui/cover.html`, so it can be re-rendered when a
+number moves instead of becoming a PNG nobody can edit:
+
+    google-chrome --headless=new --window-size=1200,630 \
+      --screenshot=docs/assets/cover.png file://$PWD/ui/cover.html
+
+Dark, monospace, the same palette as the page. One idea, legible as a thumbnail: a record with
+most of its fields greyed out, the verdict reading **"not answering yet"**, and the one thing to go
+and get beside it. Every number on it is real — the confidence and cut-off are what the live app
+returns for a three-finding record, and the 81% is the measured answer rate for that question. No
+stock photography, no stethoscopes, no glowing brains.

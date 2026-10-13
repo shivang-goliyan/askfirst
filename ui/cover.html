@@ -1,0 +1,72 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>askfirst — cover</title>
+<!-- Rendered to docs/cover.png at 1200x630. Kept as source so it can be re-rendered when a
+     number changes, instead of becoming a PNG nobody can edit. -->
+<style>
+  :root{
+    --bg:#0d1014; --panel:#14191f; --line:#222a33; --ink:#e6edf3; --dim:#55616e;
+    --good:#3fb950; --warn:#d29922; --accent:#58a6ff;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{width:1200px;height:630px;background:var(--bg);color:var(--ink);overflow:hidden;
+       font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+  .wrap{padding:46px 54px;height:100%;display:flex;flex-direction:column}
+  h1{font-size:46px;letter-spacing:-1.5px;font-weight:600}
+  .sub{color:#8b98a5;font-size:19px;margin-top:10px;max-width:980px;line-height:1.45}
+  .body{display:flex;gap:40px;margin-top:34px;flex:1}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+  .rec{flex:1.25}
+  .rec .h{font-size:11px;letter-spacing:1.3px;color:var(--dim);text-transform:uppercase;
+          margin-bottom:14px}
+  .row{display:flex;justify-content:space-between;font-size:15px;padding:7px 0;
+       border-bottom:1px solid #1b222a}
+  .row.gone{color:#2f3842}
+  .row.gone .v{color:#2f3842}
+  .v{color:var(--accent)}
+  .side{flex:1;display:flex;flex-direction:column;gap:16px}
+  .verdict{font-size:26px;color:var(--warn);letter-spacing:-.5px}
+  .vsub{color:#8b98a5;font-size:14px;margin-top:10px;line-height:1.5}
+  .get .h{font-size:11px;letter-spacing:1.3px;color:var(--dim);text-transform:uppercase;
+          margin-bottom:12px}
+  .get .q{font-size:17px;line-height:1.35}
+  .get .meta{color:var(--good);font-size:14px;margin-top:10px}
+  .foot{display:flex;justify-content:space-between;color:var(--dim);font-size:13px;
+        margin-top:26px}
+</style>
+<div class="wrap">
+  <h1>askfirst</h1>
+  <div class="sub">Finds the one missing fact that would change the answer &mdash;
+    and refuses to answer until it has it.</div>
+
+  <div class="body">
+    <div class="card rec">
+      <div class="h">the record, as it actually arrived</div>
+      <div class="row"><span>Shortness of breath?</span><span class="v">present</span></div>
+      <div class="row"><span>Cough with coloured sputum?</span><span class="v">present</span></div>
+      <div class="row"><span>Smoker?</span><span class="v">present</span></div>
+      <div class="row gone"><span>How intense is the pain?</span><span class="v">&mdash;</span></div>
+      <div class="row gone"><span>Where is the pain?</span><span class="v">&mdash;</span></div>
+      <div class="row gone"><span>How fast did it appear?</span><span class="v">&mdash;</span></div>
+      <div class="row gone" style="border:0"><span>Any wheezing?</span><span class="v">&mdash;</span></div>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <div class="verdict">&#9679; Not answering yet</div>
+        <div class="vsub">confidence 0.233 against a measured cut-off of 0.628.
+          Handed to a person, with the work list below.</div>
+      </div>
+      <div class="card get">
+        <div class="h">go get, first</div>
+        <div class="q">&ldquo;How intense is the pain?&rdquo;</div>
+        <div class="meta">11 possible answers &middot; answered 81% of the time</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>6,000 held-out patients &middot; 49 conditions &middot; 42.9% &rarr; 72.5% with one question</span>
+    <span>askfirst.kgbnetwork.com</span>
+  </div>
+</div>

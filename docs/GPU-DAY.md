@@ -38,7 +38,7 @@ Three bugs it found, which would otherwise have been found on the clock:
 2. **`run_proposer_recall.py` at n=200.** This is a go/no-go, it is cheap, and it decides whether
    the advice feature ships as a claim at all. **Bar: 40% recall at k=10.** Do it first so a
    failure costs twenty minutes instead of a day.
-3. **Model confidence against the naive Bayes margin on the risk-coverage curve.** This is the
+3. **Model confidence against the softmax margin, on the completeness grid.** This is the
    product and the reason the hardware matters. Budget most of the day here.
 4. **ESM-2 650M** — `scripts/score_variants.py --model facebook/esm2_t33_650M_UR50D`. A second,
    genuinely different workload. The 34M CPU run already stands as the floor, so this either
