@@ -305,6 +305,18 @@ dependency: its data use agreement forbids redistribution, which a public reposi
 The evaluation was written down before the model was built, including the kill criterion. See
 [docs/METRIC.md](docs/METRIC.md).
 
+## Check it yourself
+
+    ./scripts/verify.sh
+
+Four minutes. It rebuilds the risk-coverage curve, the calibration, the completeness estimator and
+the variant ablation from the public data, diffs each against the committed artifact, and then
+runs a test that fails naming any document quoting a figure the artifacts do not support.
+`--all` adds the two long measurements. It passes, byte for byte.
+
+Three numbers have drifted in this repo in two days and two of them were caught by a reviewer
+rather than by us, which is why this exists.
+
 ## Running it
 
 ```bash
