@@ -74,7 +74,8 @@ scale.** Refuse outright below 35% estimated completeness, whatever the confiden
 | 20% | — | 0.02% | **1** | one answered case, and it was wrong |
 | 10% | silent | — | 0 | |
 
-**Two mechanisms, and you need both** — the same conclusion module B reached from the other end,
+**Two mechanisms** (and a later experiment found the second one is optional on this scorer — see
+the note at the end of this file) — the same conclusion module B reached from the other end,
 where capping a predictor's strength only works if it also declines to speak when it has little
 to say.
 
@@ -120,3 +121,16 @@ sentence this product must never produce.
 
 About six minutes on a laptop CPU. It writes the measurement to `docs/results/calibration.json`
 and bakes the two pieces into `src/askfirst/baked/`.
+
+---
+
+**Later the same day: the floor turned out to be optional here.** This file argued that the
+calibration and the completeness floor were two mechanisms and that both were needed. Then the
+arm that removes the floor entirely was actually run, and the calibration alone keeps the 95%
+promise in all seven leave-one-pattern-out folds while answering 40.3% of the stream against the
+36.4% we ship. The floor buys 0.9 points of worst-fold precision for four points of coverage, and
+a plain count of findings does nearly as well as the ridge.
+
+It stays in, for reasons that are a judgement rather than a measurement, and those reasons are set
+out in `2026-10-13-we-tried-to-delete-our-own-floor.md`. The claim that it was load-bearing is
+withdrawn.

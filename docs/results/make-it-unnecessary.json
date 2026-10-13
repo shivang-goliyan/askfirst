@@ -1,0 +1,871 @@
+{
+ "target": 0.95,
+ "floor": 0.35,
+ "patients_each_split": 1200,
+ "train_patients": 30000,
+ "ci_kind": "bootstrap over patients, 400 draws",
+ "arms": {
+  "the shipped scorer, trained on complete records only": {
+   "answer_everything": 0.6707,
+   "in_distribution": [
+    {
+     "rule": "no floor at all",
+     "precision": 0.9883,
+     "coverage": 0.3975,
+     "answered": 16693,
+     "ci": [
+      0.9843,
+      0.9918
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "a bare count, n=0",
+     "precision": 0.9883,
+     "coverage": 0.3975,
+     "answered": 16693,
+     "ci": [
+      0.9843,
+      0.9918
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "constant denominator",
+     "precision": 0.9912,
+     "coverage": 0.3404,
+     "answered": 14298,
+     "ci": [
+      0.9872,
+      0.9946
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "a count giving up the same coverage, n=5",
+     "precision": 0.9913,
+     "coverage": 0.3546,
+     "answered": 14893,
+     "ci": [
+      0.9872,
+      0.9945
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "the learned ridge",
+     "precision": 0.992,
+     "coverage": 0.3618,
+     "answered": 15196,
+     "ci": [
+      0.9879,
+      0.9949
+     ],
+     "keeps_promise": true
+    }
+   ],
+   "knobs": {
+    "count": 0,
+    "matched_count": 5,
+    "mean_record_size": 15.47
+   },
+   "folds": {
+    "at random": [
+     {
+      "rule": "no floor at all",
+      "precision": 0.9854,
+      "coverage": 0.41,
+      "answered": 2460,
+      "ci": [
+       0.9795,
+       0.9906
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a bare count, n=0",
+      "precision": 0.9854,
+      "coverage": 0.41,
+      "answered": 2460,
+      "ci": [
+       0.9795,
+       0.9906
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "constant denominator",
+      "precision": 0.9906,
+      "coverage": 0.353,
+      "answered": 2118,
+      "ci": [
+       0.9857,
+       0.9948
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a count giving up the same coverage, n=4",
+      "precision": 0.9905,
+      "coverage": 0.3853,
+      "answered": 2312,
+      "ci": [
+       0.985,
+       0.9947
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "the learned ridge",
+      "precision": 0.991,
+      "coverage": 0.3702,
+      "answered": 2221,
+      "ci": [
+       0.9862,
+       0.995
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "the detail goes, the screen stays": [
+     {
+      "rule": "no floor at all",
+      "precision": 0.9904,
+      "coverage": 0.3628,
+      "answered": 2177,
+      "ci": [
+       0.9848,
+       0.9944
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a bare count, n=0",
+      "precision": 0.9904,
+      "coverage": 0.3628,
+      "answered": 2177,
+      "ci": [
+       0.9848,
+       0.9944
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "constant denominator",
+      "precision": 0.9973,
+      "coverage": 0.309,
+      "answered": 1854,
+      "ci": [
+       0.995,
+       0.9995
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a count giving up the same coverage, n=5",
+      "precision": 0.9974,
+      "coverage": 0.3177,
+      "answered": 1906,
+      "ci": [
+       0.9946,
+       0.9995
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "the learned ridge",
+      "precision": 0.9975,
+      "coverage": 0.329,
+      "answered": 1974,
+      "ci": [
+       0.9954,
+       0.9995
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "only the detail survives": [
+     {
+      "rule": "no floor at all",
+      "precision": 0.9792,
+      "coverage": 0.4493,
+      "answered": 2696,
+      "ci": [
+       0.971,
+       0.9864
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a bare count, n=0",
+      "precision": 0.9792,
+      "coverage": 0.4493,
+      "answered": 2696,
+      "ci": [
+       0.971,
+       0.9864
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "constant denominator",
+      "precision": 0.9861,
+      "coverage": 0.348,
+      "answered": 2088,
+      "ci": [
+       0.9787,
+       0.9923
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a count giving up the same coverage, n=4",
+      "precision": 0.9856,
+      "coverage": 0.404,
+      "answered": 2424,
+      "ci": [
+       0.9789,
+       0.9915
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "the learned ridge",
+      "precision": 0.987,
+      "coverage": 0.3712,
+      "answered": 2227,
+      "ci": [
+       0.9803,
+       0.9928
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "no history, symptoms only": [
+     {
+      "rule": "no floor at all",
+      "precision": 0.988,
+      "coverage": 0.4295,
+      "answered": 2577,
+      "ci": [
+       0.9824,
+       0.993
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a bare count, n=0",
+      "precision": 0.988,
+      "coverage": 0.4295,
+      "answered": 2577,
+      "ci": [
+       0.9824,
+       0.993
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "constant denominator",
+      "precision": 0.9922,
+      "coverage": 0.3652,
+      "answered": 2191,
+      "ci": [
+       0.9871,
+       0.9972
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a count giving up the same coverage, n=4",
+      "precision": 0.9921,
+      "coverage": 0.401,
+      "answered": 2406,
+      "ci": [
+       0.987,
+       0.9963
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "the learned ridge",
+      "precision": 0.993,
+      "coverage": 0.3835,
+      "answered": 2301,
+      "ci": [
+       0.9882,
+       0.9969
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "history only, nothing current": [
+     {
+      "rule": "no floor at all",
+      "precision": 0.9898,
+      "coverage": 0.3588,
+      "answered": 2153,
+      "ci": [
+       0.9853,
+       0.9939
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a bare count, n=0",
+      "precision": 0.9898,
+      "coverage": 0.3588,
+      "answered": 2153,
+      "ci": [
+       0.9853,
+       0.9939
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "constant denominator",
+      "precision": 0.9912,
+      "coverage": 0.3227,
+      "answered": 1936,
+      "ci": [
+       0.9867,
+       0.9949
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a count giving up the same coverage, n=5",
+      "precision": 0.9905,
+      "coverage": 0.3322,
+      "answered": 1993,
+      "ci": [
+       0.9852,
+       0.9949
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "the learned ridge",
+      "precision": 0.9907,
+      "coverage": 0.3417,
+      "answered": 2050,
+      "ci": [
+       0.9859,
+       0.9942
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "standard questions, no follow-ups": [
+     {
+      "rule": "no floor at all",
+      "precision": 0.9841,
+      "coverage": 0.3452,
+      "answered": 2071,
+      "ci": [
+       0.9759,
+       0.9907
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a bare count, n=0",
+      "precision": 0.9841,
+      "coverage": 0.3452,
+      "answered": 2071,
+      "ci": [
+       0.9759,
+       0.9907
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "constant denominator",
+      "precision": 0.9827,
+      "coverage": 0.3175,
+      "answered": 1905,
+      "ci": [
+       0.9735,
+       0.9896
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a count giving up the same coverage, n=5",
+      "precision": 0.9833,
+      "coverage": 0.33,
+      "answered": 1980,
+      "ci": [
+       0.9752,
+       0.9903
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "the learned ridge",
+      "precision": 0.9836,
+      "coverage": 0.336,
+      "answered": 2016,
+      "ci": [
+       0.9759,
+       0.9903
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "only what was volunteered": [
+     {
+      "rule": "no floor at all",
+      "precision": 0.9754,
+      "coverage": 0.4675,
+      "answered": 2805,
+      "ci": [
+       0.9695,
+       0.9819
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a bare count, n=0",
+      "precision": 0.9754,
+      "coverage": 0.4675,
+      "answered": 2805,
+      "ci": [
+       0.9695,
+       0.9819
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "constant denominator",
+      "precision": 0.9888,
+      "coverage": 0.3883,
+      "answered": 2330,
+      "ci": [
+       0.9841,
+       0.9932
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "a count giving up the same coverage, n=5",
+      "precision": 0.9803,
+      "coverage": 0.4067,
+      "answered": 2440,
+      "ci": [
+       0.9744,
+       0.9859
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "the learned ridge",
+      "precision": 0.9884,
+      "coverage": 0.4157,
+      "answered": 2494,
+      "ci": [
+       0.9841,
+       0.992
+      ],
+      "keeps_promise": true
+     }
+    ]
+   }
+  },
+  "trained for holes": {
+   "training_rows": 60000,
+   "answer_everything": 0.8233,
+   "in_distribution": [
+    {
+     "rule": "one global threshold on it",
+     "precision": 0.9471,
+     "coverage": 0.8073,
+     "answered": 33906,
+     "ci": [
+      0.9407,
+      0.9523
+     ],
+     "keeps_promise": false
+    },
+    {
+     "rule": "plus the gate",
+     "precision": 0.9977,
+     "coverage": 0.4652,
+     "answered": 19538,
+     "ci": [
+      0.9964,
+      0.9989
+     ],
+     "keeps_promise": true
+    }
+   ],
+   "folds": {
+    "at random": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9428,
+      "coverage": 0.7833,
+      "answered": 4700,
+      "ci": [
+       0.934,
+       0.9513
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9971,
+      "coverage": 0.4677,
+      "answered": 2806,
+      "ci": [
+       0.9947,
+       0.9993
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "the detail goes, the screen stays": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9454,
+      "coverage": 0.827,
+      "answered": 4962,
+      "ci": [
+       0.9369,
+       0.9527
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9973,
+      "coverage": 0.4953,
+      "answered": 2972,
+      "ci": [
+       0.995,
+       0.999
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "only the detail survives": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9393,
+      "coverage": 0.856,
+      "answered": 5136,
+      "ci": [
+       0.9294,
+       0.9488
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9968,
+      "coverage": 0.4657,
+      "answered": 2794,
+      "ci": [
+       0.9943,
+       0.9989
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "no history, symptoms only": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9493,
+      "coverage": 0.7765,
+      "answered": 4659,
+      "ci": [
+       0.9416,
+       0.9563
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9978,
+      "coverage": 0.46,
+      "answered": 2760,
+      "ci": [
+       0.9964,
+       0.9993
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "history only, nothing current": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9216,
+      "coverage": 0.8203,
+      "answered": 4922,
+      "ci": [
+       0.9125,
+       0.932
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9972,
+      "coverage": 0.4828,
+      "answered": 2897,
+      "ci": [
+       0.9952,
+       0.999
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "standard questions, no follow-ups": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9385,
+      "coverage": 0.6563,
+      "answered": 3938,
+      "ci": [
+       0.9303,
+       0.9469
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9972,
+      "coverage": 0.4193,
+      "answered": 2516,
+      "ci": [
+       0.9948,
+       0.9992
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "only what was volunteered": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9833,
+      "coverage": 0.9287,
+      "answered": 5572,
+      "ci": [
+       0.9786,
+       0.988
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.996,
+      "coverage": 0.502,
+      "answered": 3012,
+      "ci": [
+       0.9933,
+       0.9983
+      ],
+      "keeps_promise": true
+     }
+    ]
+   }
+  },
+  "trained for holes, same row count as shipped": {
+   "training_rows": 30000,
+   "answer_everything": 0.8186,
+   "in_distribution": [
+    {
+     "rule": "one global threshold on it",
+     "precision": 0.9486,
+     "coverage": 0.7924,
+     "answered": 33281,
+     "ci": [
+      0.9427,
+      0.9537
+     ],
+     "keeps_promise": false
+    },
+    {
+     "rule": "plus the gate",
+     "precision": 0.9976,
+     "coverage": 0.461,
+     "answered": 19363,
+     "ci": [
+      0.996,
+      0.9989
+     ],
+     "keeps_promise": true
+    }
+   ],
+   "folds": {
+    "at random": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9459,
+      "coverage": 0.7703,
+      "answered": 4622,
+      "ci": [
+       0.9377,
+       0.9546
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9963,
+      "coverage": 0.4563,
+      "answered": 2738,
+      "ci": [
+       0.9934,
+       0.9989
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "the detail goes, the screen stays": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9494,
+      "coverage": 0.8073,
+      "answered": 4844,
+      "ci": [
+       0.9417,
+       0.9561
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.997,
+      "coverage": 0.4942,
+      "answered": 2965,
+      "ci": [
+       0.994,
+       0.9993
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "only the detail survives": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.94,
+      "coverage": 0.8472,
+      "answered": 5083,
+      "ci": [
+       0.9303,
+       0.9494
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9985,
+      "coverage": 0.4545,
+      "answered": 2727,
+      "ci": [
+       0.9971,
+       0.9996
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "no history, symptoms only": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9527,
+      "coverage": 0.7582,
+      "answered": 4549,
+      "ci": [
+       0.9444,
+       0.96
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9971,
+      "coverage": 0.4525,
+      "answered": 2715,
+      "ci": [
+       0.9941,
+       0.9993
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "history only, nothing current": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9265,
+      "coverage": 0.805,
+      "answered": 4830,
+      "ci": [
+       0.9172,
+       0.9352
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9983,
+      "coverage": 0.477,
+      "answered": 2862,
+      "ci": [
+       0.9965,
+       0.9997
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "standard questions, no follow-ups": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9315,
+      "coverage": 0.6468,
+      "answered": 3881,
+      "ci": [
+       0.9225,
+       0.9407
+      ],
+      "keeps_promise": false
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.9975,
+      "coverage": 0.398,
+      "answered": 2388,
+      "ci": [
+       0.9954,
+       0.9992
+      ],
+      "keeps_promise": true
+     }
+    ],
+    "only what was volunteered": [
+     {
+      "rule": "one global threshold on it",
+      "precision": 0.9825,
+      "coverage": 0.9072,
+      "answered": 5443,
+      "ci": [
+       0.9777,
+       0.9874
+      ],
+      "keeps_promise": true
+     },
+     {
+      "rule": "plus the gate",
+      "precision": 0.996,
+      "coverage": 0.501,
+      "answered": 3006,
+      "ci": [
+       0.9926,
+       0.9987
+      ],
+      "keeps_promise": true
+     }
+    ]
+   }
+  }
+ }
+}

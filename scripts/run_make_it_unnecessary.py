@@ -58,8 +58,11 @@ def calibrated(fit, rates):
 
 
 def smallest_count_that_holds(fit, cal, target):
-    """The count floor an engineer would pick: try every n, keep the smallest that still
-    delivers the target on the fit split. Chosen on fit, applied to test, like everything else."""
+    """The count floor an engineer would pick: the smallest n that still delivers the target on
+    the fit split, which is also the one that keeps the most rows.
+
+    On this stream it picks n=0, because the calibration alone already clears the target — so
+    the arm says nothing on its own and `count_matching` below is the one that does the work."""
     for n in range(0, 40):
         kept = [r for r in fit
                 if len(r["record"]) >= n and cal(r["margin"], r["record"]) >= target]
@@ -70,12 +73,30 @@ def smallest_count_that_holds(fit, cal, target):
     return None
 
 
+def count_matching(fit, cal, ridge, target):
+    """The count floor that gives up the SAME coverage the learned ridge does.
+
+    This is the arm that can embarrass the ridge. If throwing away the same number of records
+    by counting them is as precise as throwing them away by estimating how complete they are,
+    the regression is decoration and the write-up has to say so."""
+    want = sum(1 for r in fit
+               if cal(r["margin"], r["record"]) >= target and ridge(r["record"]) >= FLOOR)
+    best, gap = None, None
+    for n in range(0, 40):
+        kept = sum(1 for r in fit
+                   if cal(r["margin"], r["record"]) >= target and len(r["record"]) >= n)
+        if gap is None or abs(kept - want) < gap:
+            best, gap = n, abs(kept - want)
+    return best
+
+
 def arms_on(fit, test, patients, rates, encode):
     """Fit every arm on `fit`, score every arm on `test`. Nothing is loaded off disk."""
     cal = calibrated(fit, rates)
     ridge = Completeness(encode).fit([(r["record"], r["true_n"]) for r in fit])
     mean_size = sum(r["true_n"] for r in fit) / len(fit)
     count = smallest_count_that_holds(fit, cal, TARGET)
+    matched_count = count_matching(fit, cal, ridge, TARGET)
 
     def passes(r):
         return cal(r["margin"], r["record"]) >= TARGET and len(r["record"]) <= CEILING
@@ -90,11 +111,15 @@ def arms_on(fit, test, patients, rates, encode):
               [r for r in test if passes(r)
                and min(1.0, len(r["record"]) / mean_size) >= FLOOR],
               len(test), patients),
+        score(f"a count giving up the same coverage, n={matched_count}",
+              [r for r in test if passes(r) and len(r["record"]) >= matched_count],
+              len(test), patients),
         score("the learned ridge",
               [r for r in test if passes(r) and ridge(r["record"]) >= FLOOR],
               len(test), patients),
     ]
-    return rows, {"count": count, "mean_record_size": round(mean_size, 2)}
+    return rows, {"count": count, "matched_count": matched_count,
+                  "mean_record_size": round(mean_size, 2)}
 
 
 def thin_randomly(patients, ways, seed=5):
@@ -150,54 +175,69 @@ def main(path, cases=1200):
     del fit, test
 
     # And the arm that tries to delete the whole thing: a scorer that has seen holes.
-    print(f"\n{'=' * 88}\nAnd now a scorer trained on records with holes in them\n{'=' * 88}")
-    masked = train + thin_randomly(train, ways)
-    print(f"  refitting on {len(masked):,} rows — {len(train):,} complete and {len(train):,} cut "
-          f"short at a random level for a random reason. This takes a few minutes.")
-    augmented = SoftmaxScorer(schema, seed=29).fit(masked, epochs=400, lr=0.05)
+    #
+    # Two of them, because the obvious version is confounded. Training on the complete records
+    # PLUS a cut copy of each doubles the rows, so a gain could be the extra data rather than the
+    # holes. The control uses half of each and lands on exactly the row count the shipped scorer
+    # saw, which is the comparison that attributes the gain to one thing or the other.
+    cut_copies = thin_randomly(train, ways)
+    sets = (
+        ("trained for holes", train + cut_copies),
+        ("trained for holes, same row count as shipped",
+         train[:len(train) // 2] + cut_copies[len(train) // 2:]),
+    )
+    for label, rows_in in sets:
+        print(f"\n{'=' * 88}\n{label} — {len(rows_in):,} rows\n{'=' * 88}")
+        print(f"  refitting. This takes a few minutes.")
+        augmented = SoftmaxScorer(schema, seed=29).fit(rows_in, epochs=400, lr=0.05)
 
-    fit = stream(augmented, fit_pool, ways, rates)
-    test = stream(augmented, test_pool, ways, rates)
-    loose = sum(1 for r in test if r["right"])
-    print(f"\n  answering everything with it: {loose / len(test):.1%} right, against "
-          f"{shipped_loose:.1%} for the shipped scorer on the same stream\n")
+        fit = stream(augmented, fit_pool, ways, rates)
+        test = stream(augmented, test_pool, ways, rates)
+        loose = sum(1 for r in test if r["right"])
+        print(f"\n  answering everything with it: {loose / len(test):.1%} right, against "
+              f"{shipped_loose:.1%} for the shipped scorer on the same stream\n")
 
-    cal = calibrated(fit, rates)
-    ridge = Completeness(augmented.encode).fit([(r["record"], r["true_n"]) for r in fit])
-    one = threshold(fit, TARGET)
-    bare = [r for r in test if one is not None and r["margin"] >= one]
-    both = [r for r in test
-            if cal(r["margin"], r["record"]) >= TARGET and len(r["record"]) <= CEILING
-            and ridge(r["record"]) >= FLOOR]
-    trained = [score("trained for holes, one global threshold", bare, len(test), len(test_pool)),
-               score("trained for holes, plus the gate", both, len(test), len(test_pool))]
-    show(trained)
-
-    print(f"\n  across {len(ways)} folds:\n")
-    folds = {}
-    for held in ways:
-        f2 = [r for r in fit if r["way"] != held]
-        t2 = [r for r in test if r["way"] == held]
-        c2 = calibrated(f2, rates)
-        r2 = Completeness(augmented.encode).fit([(r["record"], r["true_n"]) for r in f2])
-        o2 = threshold(f2, TARGET)
-        folds[held] = [
-            score("trained for holes, one global threshold",
-                  [r for r in t2 if o2 is not None and r["margin"] >= o2],
-                  len(t2), len(test_pool)),
-            score("trained for holes, plus the gate",
-                  [r for r in t2 if c2(r["margin"], r["record"]) >= TARGET
-                   and len(r["record"]) <= CEILING and r2(r["record"]) >= FLOOR],
-                  len(t2), len(test_pool)),
+        cal = calibrated(fit, rates)
+        ridge = Completeness(augmented.encode).fit([(r["record"], r["true_n"]) for r in fit])
+        one = threshold(fit, TARGET)
+        trained = [
+            score("one global threshold on it",
+                  [r for r in test if one is not None and r["margin"] >= one],
+                  len(test), len(test_pool)),
+            score("plus the gate",
+                  [r for r in test
+                   if cal(r["margin"], r["record"]) >= TARGET and len(r["record"]) <= CEILING
+                   and ridge(r["record"]) >= FLOOR],
+                  len(test), len(test_pool)),
         ]
-    summarise(folds, ways)
-    report["a scorer trained on records with holes"] = {
-        "answer_everything": round(loose / len(test), 4),
-        "in_distribution": trained, "folds": folds}
+        show(trained)
+
+        print(f"\n  across {len(ways)} folds:\n")
+        folds = {}
+        for held in ways:
+            f2 = [r for r in fit if r["way"] != held]
+            t2 = [r for r in test if r["way"] == held]
+            c2 = calibrated(f2, rates)
+            r2 = Completeness(augmented.encode).fit([(r["record"], r["true_n"]) for r in f2])
+            o2 = threshold(f2, TARGET)
+            folds[held] = [
+                score("one global threshold on it",
+                      [r for r in t2 if o2 is not None and r["margin"] >= o2],
+                      len(t2), len(test_pool)),
+                score("plus the gate",
+                      [r for r in t2 if c2(r["margin"], r["record"]) >= TARGET
+                       and len(r["record"]) <= CEILING and r2(r["record"]) >= FLOOR],
+                      len(t2), len(test_pool)),
+            ]
+        summarise(folds, ways)
+        report[label] = {"training_rows": len(rows_in),
+                         "answer_everything": round(loose / len(test), 4),
+                         "in_distribution": trained, "folds": folds}
+        del fit, test, augmented
 
     OUT.write_text(json.dumps({
         "target": TARGET, "floor": FLOOR, "patients_each_split": cases,
-        "train_patients": len(train), "augmented_rows": len(masked),
+        "train_patients": len(train),
         "ci_kind": "bootstrap over patients, 400 draws", "arms": report,
     }, indent=1))
     print(f"\nwrote {OUT}")

@@ -99,3 +99,48 @@ def test_readme_contrast_still_holds():
         chance = ask(confidence=0.5, scorer=scorer)["precision_promise"]["chance_right"]
         assert f"{chance * 100:.1f}%" in readme, (
             f"README does not quote {chance * 100:.1f}% for {scorer} at confidence 0.5")
+
+
+def test_anonymous_caller_gets_nothing():
+    """The bug this closes: `scorer` defaulted to "unnamed", which resolved to the shipped
+    calibrator, so the simplest possible request got OUR softmax's curve applied to somebody
+    else's confidence and came back saying the promise was available. The whole product is
+    about not being confidently wrong, in the endpoint whose job is that."""
+    bare = client.post("/api/gate", json={"record": DECENT, "confidence": 0.999})
+    assert bare.status_code == 200
+    d = bare.json()
+    assert d["precision_promise"]["available"] is False
+    assert d["precision_promise"]["fitted_from"] is None
+    assert d["answering"] is False
+    for alias in ("unnamed", "", "unknown", "none", "-"):
+        d = ask(confidence=0.999, scorer=alias)
+        assert d["precision_promise"]["available"] is False, f"{alias!r} reached a calibration"
+
+
+def test_named_scorer_says_which_curve():
+    """"calibrated against 'unnamed'" told the caller nothing about whose curve answered."""
+    for scorer, expected in (("softmax", "calibrator.json"),
+                             ("askfirst-ddxplus-softmax", "calibrator.json"),
+                             ("example-bayes", "calibrator-example-bayes.json")):
+        d = ask(confidence=0.9, scorer=scorer)
+        assert d["precision_promise"]["fitted_from"] == expected
+        assert expected in d["rule"]
+
+
+def test_fit_gate_names_both_artifacts_alike():
+    """The calibration was saved under the tidied name and the completeness estimator under the
+    raw one, so a scorer with a capital letter in it got its own curve and our completeness."""
+    from askfirst.api import tidy
+    source = (Path(__file__).parent.parent / "scripts/fit_gate.py").read_text()
+    assert 'completeness-{name}.npz' in source, "fit_gate saves completeness under a raw name"
+    assert 'calibrator-{name}.json' in source
+    assert tidy("Their XGBoost v2!") == "their-xgboost-v2-"
+
+
+def test_advice_reports_no_zeros():
+    """rank_blind has no distribution, so it must not report an information gain of nought."""
+    from askfirst.ablation import rank_blind
+    from askfirst.schema import load_schema
+    gaps = rank_blind({"E_55": True}, load_schema("ddxplus"))
+    assert gaps and not hasattr(gaps[0], "info_gain")
+    assert not hasattr(gaps[0], "flip_prob")

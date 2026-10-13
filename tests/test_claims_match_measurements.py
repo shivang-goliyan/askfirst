@@ -178,3 +178,25 @@ def test_portability_figures_quoted_right():
     sat = next(s["saturation"] for s in port["scorers"] if s["saturation"]["gap"] is not None)
     assert quotes(body, pct(sat["share"])), "README lost the share of saturated rows"
     assert quotes(body, pct(sat["thin"]["accuracy"])), "README lost the thin-record accuracy"
+
+
+def test_the_floor_retraction_stays_retracted():
+    """The floor was claimed to be what keeps the promise. Measured, the calibration alone keeps
+    all seven folds and answers more. This pins the retraction, because the old sentence was
+    comfortable and comfortable sentences come back."""
+    arms = load("make-it-unnecessary.json")["arms"]
+    shipped = arms["the shipped scorer, trained on complete records only"]
+    folds = shipped["folds"]
+    bare = [next(r for r in folds[h] if r["rule"] == "no floor at all") for h in folds]
+    ridge = [next(r for r in folds[h] if r["rule"] == "the learned ridge") for h in folds]
+    kept_bare = sum(1 for r in bare if r["keeps_promise"])
+    cov_bare = sum(r["coverage"] for r in bare) / len(bare)
+    cov_ridge = sum(r["coverage"] for r in ridge) / len(ridge)
+    assert kept_bare == len(bare), (
+        "no-floor no longer keeps every fold, so the retraction needs rewriting, not asserting")
+    assert cov_bare > cov_ridge, "no-floor no longer answers more than the ridge"
+    for name, body in text("README.md", "docs/results/2026-10-13-the-page-stops-asking.md").items():
+        assert "you need both" not in body, f"{name} still says you need both pieces"
+    source = (ROOT / "src/askfirst/calibrate.py").read_text()
+    assert "the measurement says you need both:" not in source, (
+        "calibrate.py's docstring still claims the measurement says you need both")

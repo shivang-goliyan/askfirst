@@ -74,6 +74,30 @@
    ],
    "keeps_promise": true,
    "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+  },
+  {
+   "rule": "inside the floor, ranked by the calibration",
+   "precision": 0.9945,
+   "coverage": 0.3575,
+   "answered": 25023,
+   "ci": [
+    0.9923,
+    0.9966
+   ],
+   "keeps_promise": true,
+   "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
+  },
+  {
+   "rule": "inside the floor, ranked by the raw margin",
+   "precision": 0.9942,
+   "coverage": 0.3575,
+   "answered": 25023,
+   "ci": [
+    0.9912,
+    0.9963
+   ],
+   "keeps_promise": true,
+   "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
   }
  ],
  "leave_one_pattern_out": {
@@ -147,6 +171,30 @@
      ],
      "keeps_promise": true,
      "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    },
+    {
+     "rule": "inside the floor, ranked by the calibration",
+     "precision": 0.995,
+     "coverage": 0.357,
+     "answered": 3570,
+     "ci": [
+      0.9918,
+      0.9972
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
+    },
+    {
+     "rule": "inside the floor, ranked by the raw margin",
+     "precision": 0.995,
+     "coverage": 0.357,
+     "answered": 3570,
+     "ci": [
+      0.992,
+      0.9974
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
     }
    ]
   },
@@ -220,6 +268,30 @@
      ],
      "keeps_promise": true,
      "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    },
+    {
+     "rule": "inside the floor, ranked by the calibration",
+     "precision": 0.9982,
+     "coverage": 0.3348,
+     "answered": 3348,
+     "ci": [
+      0.9967,
+      0.9994
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
+    },
+    {
+     "rule": "inside the floor, ranked by the raw margin",
+     "precision": 0.9979,
+     "coverage": 0.3348,
+     "answered": 3348,
+     "ci": [
+      0.9964,
+      0.9991
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
     }
    ]
   },
@@ -293,6 +365,30 @@
      ],
      "keeps_promise": true,
      "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    },
+    {
+     "rule": "inside the floor, ranked by the calibration",
+     "precision": 0.9881,
+     "coverage": 0.3769,
+     "answered": 3769,
+     "ci": [
+      0.9832,
+      0.993
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
+    },
+    {
+     "rule": "inside the floor, ranked by the raw margin",
+     "precision": 0.9897,
+     "coverage": 0.3769,
+     "answered": 3769,
+     "ci": [
+      0.9846,
+      0.9939
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
     }
    ]
   },
@@ -366,6 +462,30 @@
      ],
      "keeps_promise": true,
      "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    },
+    {
+     "rule": "inside the floor, ranked by the calibration",
+     "precision": 0.9949,
+     "coverage": 0.3742,
+     "answered": 3742,
+     "ci": [
+      0.9921,
+      0.9973
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
+    },
+    {
+     "rule": "inside the floor, ranked by the raw margin",
+     "precision": 0.9944,
+     "coverage": 0.3742,
+     "answered": 3742,
+     "ci": [
+      0.9914,
+      0.9971
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
     }
    ]
   },
@@ -439,6 +559,30 @@
      ],
      "keeps_promise": true,
      "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    },
+    {
+     "rule": "inside the floor, ranked by the calibration",
+     "precision": 0.9918,
+     "coverage": 0.3427,
+     "answered": 3427,
+     "ci": [
+      0.9889,
+      0.9947
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
+    },
+    {
+     "rule": "inside the floor, ranked by the raw margin",
+     "precision": 0.9945,
+     "coverage": 0.3427,
+     "answered": 3427,
+     "ci": [
+      0.9916,
+      0.9971
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
     }
    ]
   },
@@ -512,6 +656,30 @@
      ],
      "keeps_promise": true,
      "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    },
+    {
+     "rule": "inside the floor, ranked by the calibration",
+     "precision": 0.9853,
+     "coverage": 0.3203,
+     "answered": 3203,
+     "ci": [
+      0.9803,
+      0.99
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
+    },
+    {
+     "rule": "inside the floor, ranked by the raw margin",
+     "precision": 0.9872,
+     "coverage": 0.3203,
+     "answered": 3203,
+     "ci": [
+      0.9823,
+      0.9917
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
     }
    ]
   },
@@ -585,6 +753,30 @@
      ],
      "keeps_promise": true,
      "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    },
+    {
+     "rule": "inside the floor, ranked by the calibration",
+     "precision": 0.9959,
+     "coverage": 0.4125,
+     "answered": 4125,
+     "ci": [
+      0.9937,
+      0.9976
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
+    },
+    {
+     "rule": "inside the floor, ranked by the raw margin",
+     "precision": 0.9968,
+     "coverage": 0.4125,
+     "answered": 4125,
+     "ci": [
+      0.995,
+      0.9985
+     ],
+     "keeps_promise": true,
+     "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
     }
    ]
   }

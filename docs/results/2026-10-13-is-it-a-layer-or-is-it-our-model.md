@@ -52,30 +52,44 @@ reported as a failure anyway because the rule we are applying to everyone else h
 Handing the baseline our floor takes it from 10 of 21 to 14 of 21. So the floor is a real,
 transferable ingredient — and it is not sufficient on its own.
 
-## What the calibration actually buys, which depends on the scorer
+## What the calibration actually buys, isolated properly
 
-Stop the **raw, uncalibrated margin ranking** at exactly the coverage the gate chose, and let it
-pick that cut-off on the test set, which no deployable rule can do:
+The first version of this section compared the gate against a prefix of the raw margin ranking.
+A reviewer pointed out that our accepted set is **not** a prefix — the completeness floor throws
+out rows a margin cut would have taken — so any gap could have been the floor's work rather than
+the calibration's, and reading it as "the calibration buys ordering" was not something that
+comparison could support.
 
-| scorer | the gate | raw margin at the same coverage | the calibration buys |
+So here it is isolated: give both arms **the same eligibility** (ceiling and floor), take **the
+same number of rows** from each, and change only the sort key. Both arms pick their cut-off on the
+test ranking, which no deployable rule can do.
+
+| scorer | ranked by the calibration | ranked by the raw margin | ordering alone |
 |---|---|---|---|
-| logistic regression | 99.2% @ 36.2% | 99.4% [99.0%, 99.7%] | **−0.2 points** |
-| naive Bayes | 99.3% @ 8.1% | 89.4% [86.5%, 91.8%] *(breaks)* | **+9.9 points** |
-| nearest-neighbour vote | 99.7% @ 43.3% | 96.9% [96.5%, 97.3%] | **+2.8 points** |
+| logistic regression | 99.20% | 99.25% | **−0.05 points** |
+| naive Bayes | 99.29% *(keeps the promise)* | 88.69% *(breaks it)* | **+10.60 points** |
+| nearest-neighbour vote | 99.73% | 99.72% | **+0.01 points** |
 
-This is the finding, and it corrects something we published four hours ago. Measured on our own
-scorer alone, the calibration bought nothing but the stopping point, and we said so. Measured
-across three, that turns out to have been a fact about *our scorer being well behaved*, not about
-the calibration:
+That correction cost us one claim and strengthened another, which is the point of running it:
 
-- On a scorer whose confidence already ranks well, the calibration adds nothing to the ordering.
-  Its whole job is choosing where to stop without being shown the answers.
-- On a scorer whose confidence is **badly** shaped, it adds **ten points of precision at identical
-  coverage**, and the raw ranking breaks the promise where the calibration keeps it.
+- On the naive Bayes the effect was **not** the floor. Isolated, it is **+10.6 points of pure
+  ordering**, and inside the same eligible pool the calibrated ranking keeps the 95% promise where
+  the raw one breaks it outright at 88.7%.
+- On the nearest-neighbour vote the earlier **+2.8 points is retracted.** Isolated, the
+  calibration's ordering is worth **+0.01 points** — nothing. The whole of that 2.8 was the
+  completeness floor declining thin records, which a per-coverage comparison against a margin
+  prefix cannot tell apart from better ordering.
+- On our own scorer it remains nothing, −0.05 points.
 
-So the narrow claim from this morning was too narrow. The honest version: **the better your
-model's confidence already is, the less this buys you — and nobody deploying a triage model knows
-which case they are in, which is the problem.**
+So the shape of the answer is: **the calibration buys ordering on exactly one of these three
+scorers, and it is the one whose confidence is worst.** On the two whose confidence already ranks
+well it buys only the stopping point — a cut-off chosen without being shown the answers, which is
+the thing every rule in the table above except ours got wrong at least twice in seven folds.
+
+That is a narrower claim than "our calibration is more accurate" and a wider one than this
+morning's "it does not buy ordering". The version that survives both corrections: **the better
+your model's confidence already is, the less this buys you, and nobody deploying a triage model
+knows in advance which case they are in.**
 
 ## Why one number cannot do it, shown rather than argued
 
@@ -87,10 +101,15 @@ pile:
 | 4 findings or fewer | **91.8%** |
 | 12 findings or more | **100.0%** |
 
-An 8.2-point spread inside one number. To a threshold every row in that pile is identical, and
-they are not identical. The gate reads the record — how many findings are in hand and how unusual
-they are — so it can tell them apart. That is the entire mechanical argument for why this is not
-a threshold, and it needed a scorer whose confidence saturates to become visible.
+An 8.2-point spread inside one number, or as near to one number as makes no difference to a
+threshold: every row in that pile is within a thousandth of every other. The gate reads the
+record, so it can tell them apart.
+
+**And the isolated comparison says which part of the gate does that.** Not the calibration — its
+ordering on this scorer is worth +0.01 points. It is the **completeness floor**, which declines
+thin records on a property of the record and never consults the score at all. So the mechanical
+argument survives, with the credit reassigned: one number cannot separate that pile, the record
+can, and the piece that reads the record here is the floor rather than the calibration.
 
 ## What it costs
 

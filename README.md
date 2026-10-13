@@ -292,10 +292,11 @@ One row of that experiment costs us something: stop the **raw, uncalibrated marg
 exactly our coverage and it is equally precise (99.46% against 99.45%). On *this* scorer the
 calibration is not buying ordering — what it buys is a stopping point chosen *without* seeing the
 answers, and every rule above that had to choose blind, except ours, broke the promise at least
-twice in seven folds. Run the same row against two differently-shaped scorers and that flips: the
-calibration buys **+9.9 points at matched coverage** on an overconfident naive Bayes and **+2.8**
-on a saturated neighbour vote (next section). It buys nothing here because our own scorer already
-ranks well, which is not a thing a buyer knows about theirs in advance.
+twice in seven folds. Isolate ordering properly — same eligible pool, same
+size, only the sort key differing — and it buys **+10.6 points** on an overconfident naive Bayes,
+where the raw ranking breaks the promise and the calibration keeps it, and **nothing** on the
+other two (next section). It buys nothing here because our own scorer already ranks well, which
+is not a thing a buyer knows about theirs in advance.
 
 These baselines are selective prediction over a Mondrian partition, not conformal prediction
 sets, and they carry no conformal guarantee; calling them conformal was sloppy and is corrected
@@ -355,17 +356,25 @@ fold; a cell counts as held only when the bootstrap *lower* bound clears 94.5%.
 The one cell it misses is the naive Bayes under random thinning — 96.0% [93.6%, 98.2%] on 275
 accepted rows, underpowered rather than broken, and reported as a failure anyway.
 
-**And what the calibration buys turns out to depend on the scorer.** Stop the raw uncalibrated
-margin ranking at exactly the gate's coverage, letting it pick that cut-off on the test set:
+**And what the calibration buys turns out to depend on the scorer.** Give both arms the same
+eligibility (ceiling and floor), take the same number of rows from each, and change only the sort
+key — so the difference is ordering and nothing else:
 
-| scorer | the gate | raw margin, same coverage | the calibration buys |
+| scorer | ranked by the calibration | ranked by the raw margin | ordering alone |
 |---|---|---|---|
-| logistic regression (ours) | 99.2% @ 36.2% | 99.4% | **−0.2 points** |
-| naive Bayes | 99.3% @ 8.1% | 89.4% *(breaks)* | **+9.9 points** |
-| nearest-neighbour vote | 99.7% @ 43.3% | 96.9% | **+2.8 points** |
+| logistic regression (ours) | 99.20% | 99.25% | **−0.05 points** |
+| naive Bayes | 99.29% *(keeps the promise)* | 88.69% *(breaks it)* | **+10.60 points** |
+| nearest-neighbour vote | 99.73% | 99.72% | **+0.01 points** |
 
-So: the better your model's confidence already is, the less this buys you — and **nobody
-deploying a triage model knows in advance which case they are in.** That is the product.
+So: the calibration buys ordering on exactly one of the three, and it is the one whose confidence
+is worst. On the other two it buys only the stopping point. **The better your model's confidence
+already is, the less this buys you — and nobody deploying a triage model knows in advance which
+case they are in.** That is the product.
+
+An earlier version of this table compared the gate against a *prefix* of the margin ranking,
+which cannot separate the calibration's ordering from the floor's refusals. Isolating it cost us
+the +2.8 we had claimed on the neighbour vote — that was entirely the floor — and turned +9.9 on
+the naive Bayes into +10.6.
 
 The mechanical reason, shown rather than argued: the neighbour scorer pins its confidence at
 exactly 1.00 on **54.5% of rows**, and inside that one pile accuracy runs **91.8%** on four
@@ -374,6 +383,48 @@ A threshold sees that number; the gate sees the record.
 
 It costs coverage — 29.5% against 47.9% — and we over-deliver precision when asked for 95%,
 which is the open engineering item (`docs/results/2026-10-13-is-it-a-layer-or-is-it-our-model.md`).
+
+## We tried to delete our own floor, and mostly succeeded
+
+Two questions from a reviewer, both designed to remove parts of this rather than improve them.
+
+**Does the learned completeness estimator earn its place?** No, not on our own scorer:
+
+| arm | folds kept | worst fold | mean coverage |
+|---|---|---|---|
+| **no floor at all** — just the calibration and the ceiling | **7 of 7** | 97.5% | **40.3%** |
+| a bare count, smallest that holds on the fit split | 7 of 7 | 97.5% | 40.3% *(it picked n=0)* |
+| `findings / mean record size`, same 0.35 floor | 7 of 7 | 98.3% | 34.3% |
+| a count giving up the same coverage (n=4) | 7 of 7 | 98.0% | 36.8% |
+| **the learned ridge** — what ships | 7 of 7 | 98.4% | 36.4% |
+
+The calibration alone keeps the promise in all seven folds and answers **more** cases than we do.
+The floor costs four points of coverage and buys 0.9 points of worst-fold precision, and counting
+the findings does nearly as well as the regression. **So the claim that the floor is what keeps
+the promise is withdrawn** — in this README, in `calibrate.py`'s docstring, and in the write-up
+that first made it. It stays in because answering a two-finding record on the strength of
+arithmetic is the behaviour this exists to refuse, which is a judgement, not a measurement; and
+because it is the half that runs for a stranger's scorer unfitted, and the piece doing the work on
+the saturated one.
+
+**Does training the scorer on records with holes make the gate unnecessary?** It makes the gate
+considerably more valuable:
+
+| scorer | answering everything | one global threshold on it | with the gate |
+|---|---|---|---|
+| shipped, complete records only | 67.1% | — | 7/7, 36.4% coverage |
+| **trained for holes** | **82.3%** | **1 of 7 folds** | 7/7, **47.0%** |
+| trained for holes, same row count as shipped | 81.9% | 1 of 7 | 7/7, 46.2% |
+
+Masking augmentation is worth **14.8 points** of raw accuracy, and the same-row-count control says
+it is the holes and not the extra data. It is the largest single improvement measured in this
+project and it came out of an attempt to make the project unnecessary. Meanwhile a bare threshold
+on the *better* scorer keeps the promise in **1 of 7 folds** — making the model better made the
+naive rule more dangerous — and the gate turns the improvement into **36.4% → 46.2%** of the queue
+taken off a person at the same promise.
+
+Write-up, including the four things it does not establish:
+`docs/results/2026-10-13-we-tried-to-delete-our-own-floor.md`.
 
 ## Someone else's model can use it in two curls
 

@@ -454,23 +454,38 @@ def completeness_for(schema, named):
     return _gates[key], named
 
 
+# The identity of the scorer the shipped calibration was fitted against. A caller has to name
+# it to get that curve. It used to be reachable by leaving the scorer field out, which meant the
+# default request got our softmax's calibration applied to somebody else's confidence and came
+# back saying the promise was available — the exact failure this product exists to prevent, in
+# the endpoint that exists to prevent it. A reviewer found it; there is a test for it now.
+SHIPPED = ("askfirst-ddxplus-softmax", "softmax")
+ANONYMOUS = ("", "unnamed", "unknown", "none", "null", "-")
+
+
+def tidy(scorer):
+    return "".join(c if c.isalnum() or c in "-_" else "-" for c in (scorer or "").lower())[:48]
+
+
 def calibration_for(domain, scorer):
     """A calibration belongs to one scorer and is useless on another — measured, not assumed:
     an 80% cut-off borrowed from the softmax delivers 54.7% on the open model's own confidence.
 
-    So they are stored per scorer and looked up by name. A caller we have no fit for gets the
-    record-level verdict and an honest nothing where the precision promise would be."""
-    name = "".join(c if c.isalnum() or c in "-_" else "-" for c in scorer.lower())[:48]
-    path = BAKE / (f"calibrator-{name}.json" if name not in ("", "unnamed") else "calibrator.json")
-    if name in ("", "unnamed", "softmax", "askfirst"):
-        path = CALIBRATOR
+    So they are stored per scorer and looked up by name, and a caller that does not name one
+    gets no calibration at all rather than ours. Returns the rule, the tidied name, and which
+    file it came from, because "calibrated against 'unnamed'" told the caller nothing about
+    whose curve was answering for them."""
+    name = tidy(scorer)
+    if name in ANONYMOUS:
+        return None, name or "unnamed", None
+    path = CALIBRATOR if name in SHIPPED else BAKE / f"calibrator-{name}.json"
     if not path.exists():
-        return None, name
+        return None, name, None
     from .calibrate import Calibrator
     key = f"cal:{path.name}"
     if key not in _rules:
         _rules[key] = Calibrator.load(path)
-    return _rules[key], name
+    return _rules[key], name, path.name
 
 
 def odds(chance):
@@ -506,7 +521,7 @@ def gate(reading: Reading):
             422, "Send either a confidence between 0 and 1, or a distribution to take it from.")
     confidence = min(1.0, max(0.0, float(confidence)))
 
-    cal, named = calibration_for(schema.domain, reading.scorer)
+    cal, named, from_file = calibration_for(schema.domain, reading.scorer)
     seen, fitted_to = completeness_for(schema, named)
     complete = seen(record) if seen else None
     plausible = len(record) <= CEILING
@@ -518,12 +533,14 @@ def gate(reading: Reading):
     # print, least of all beside a refusal.
     chance = cal(confidence, record) if cal and plausible and enough else None
     if not cal:
-        answering, rule = False, "no calibration fitted for this scorer"
+        answering = False
+        rule = ("no scorer named, so no calibration applies" if named in ANONYMOUS
+                else "no calibration fitted for this scorer")
     elif chance is None:
         answering, rule = False, "the record was refused before anything was scored"
     else:
         answering = chance >= target
-        rule = f"calibrated against {named!r}"
+        rule = f"calibrated against {named!r}, from {from_file}"
 
     advice = rank_blind(record, schema)
     return {
@@ -534,6 +551,10 @@ def gate(reading: Reading):
             f"not come from a patient" if not plausible else
             f"only about {complete:.0%} of a record — too little to judge an answer by, whatever "
             f"the confidence says" if not enough else
+            "the record carries enough to judge an answer, but you did not say which scorer "
+            "produced that confidence, so there is no curve to read it against. Name it — and "
+            "if we hold no fit for it, scripts/fit_gate.py makes one."
+            if not cal and named in ANONYMOUS else
             "the record carries enough to judge an answer, but we hold no calibration for "
             f"{named!r}, so there is no precision promise to make. Fit one with "
             "scripts/fit_gate.py and this endpoint will keep it." if not cal else
@@ -549,11 +570,17 @@ def gate(reading: Reading):
             "floor": FLOOR,
             "enough_record": enough,
             "estimated_by": fitted_to,
-            "needs_no_fit": fitted_to == "shipped",
+            # it reads the record rather than the score, so it runs for any scorer without
+            # being refitted. That is not the same as being VALID for another operator's
+            # intake — measured, a calibration fitted on the wrong missingness pattern loses
+            # about a point — so this says what it is rather than "needs no fit".
+            "runs_unfitted": fitted_to == "shipped",
+            "fitted_to_this_caller": fitted_to != "shipped",
         },
         "precision_promise": {
             "available": bool(cal),
             "scorer": named,
+            "fitted_from": from_file,
             "target": target if cal else None,
             "chance_right": round(chance, 4) if chance is not None else None,
             # 1.0 here is the top of the fitted range, not a claim of certainty. A machine

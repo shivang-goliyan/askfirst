@@ -158,6 +158,27 @@ def rules_on(fit, test, patients, rates, encode):
         row["note"] = ("cut-off read off the test ranking, which no deployable rule can do — "
                        "this flatters the baseline on purpose")
         matched.append(row)
+
+        # The row above compares a POLICY against a policy, and our accepted set is not a prefix
+        # of the margin ranking — the floor throws out rows the margin would have taken. So any
+        # gap it shows could be the floor's work rather than the calibration's, and reading it as
+        # "the calibration buys ordering" was a mistake a reviewer caught.
+        #
+        # This isolates ordering properly: give BOTH arms the same eligibility (ceiling and
+        # floor), then take the same number of rows from each, one ranked by the calibrated
+        # probability and one by the raw margin. Same pool, same size, only the sort key differs.
+        eligible = [r for r in test
+                    if seen(r["record"]) >= FLOOR and len(r["record"]) <= CEILING]
+        if eligible:
+            want = min(len(ours), len(eligible))
+            by_cal = sorted(eligible, key=lambda r: -cal(r["margin"], r["record"]))[:want]
+            by_raw = sorted(eligible, key=lambda r: -r["margin"])[:want]
+            for label, rows in (("inside the floor, ranked by the calibration", by_cal),
+                                ("inside the floor, ranked by the raw margin", by_raw)):
+                row = score(label, rows, len(test), patients)
+                row["note"] = ("same eligible pool, same size, only the sort key differs — this "
+                               "is the row that isolates ordering from the floor")
+                matched.append(row)
     return out, matched
 
 

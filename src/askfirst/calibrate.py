@@ -7,7 +7,14 @@ gone — a linear model's logits shrink as features drop out, so the margin coll
 answer stays right. That matters more here than it usually would, because the refusal threshold
 *is* that number: a cut-off chosen on complete records delivers 76% on a fifth of a record.
 
-Two pieces, and the measurement says you need both:
+Two pieces. The docstring here used to say the measurement says you need both; it does not.
+Run the calibration with no floor at all and it keeps a 95% promise in all seven
+leave-one-missingness-pattern-out folds and answers MORE cases — 40.3% against 36.4%
+(`docs/results/2026-10-13-we-tried-to-delete-our-own-floor.md`). The floor costs four points of
+coverage and buys nine tenths of a point of worst-fold precision, and a plain count of findings
+does nearly as well as the regression. It stays because answering a two-finding record on the
+strength of arithmetic is the behaviour this exists to refuse, which is a judgement rather than a
+measurement, and because it is the half that runs for somebody else's scorer unfitted.
 
 `Calibrator` maps (margin, findings in hand) to P(the answer is right). Findings in hand, not
 completeness — nobody deploying this knows a record is 40% complete, but everyone knows how many

@@ -228,6 +228,20 @@ def sufficiency(record, scorer, schema, gaps=None):
     return round(100.0 * (1.0 - most_telling_gap(record, scorer, schema, gaps)), 1)
 
 
+@dataclass
+class Blind:
+    """One missing field, ranked without a scorer. Deliberately NOT a Gap: a Gap carries
+    info_gain and flip_prob, and filling those with 0.0 — which this did until a reviewer
+    pointed out the docstring and the code disagreed — publishes two zeros that read as
+    measurements of a question nobody asked."""
+
+    field: str
+    breadth: float
+    yield_rate: float
+    cost: float
+    delay: float
+
+
 def rank_blind(record, schema, candidates=None):
     """What to ask next, without a scorer.
 
@@ -243,9 +257,6 @@ def rank_blind(record, schema, candidates=None):
         spec = schema.fields.get(name)
         if spec is None or not spec.values:
             continue
-        out.append(Gap(
-            field=name, info_gain=0.0, flip_prob=0.0, expected_shift=0.0, worst_shift=0.0,
-            cost=spec.cost, delay=spec.delay,
-            breadth=answer_breadth(spec), yield_rate=spec.asked_rate,
-        ))
+        out.append(Blind(field=name, breadth=answer_breadth(spec), yield_rate=spec.asked_rate,
+                         cost=spec.cost, delay=spec.delay))
     return sorted(out, key=lambda g: (-(g.breadth * g.yield_rate), g.cost, g.field))

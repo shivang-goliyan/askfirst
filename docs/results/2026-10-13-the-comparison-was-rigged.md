@@ -95,9 +95,10 @@ is the hard part, and it is the part that fails silently.**
 
 > **Narrowed too far, corrected two hours later.** That paragraph is a fact about *this* scorer,
 > not about the calibration. Run the identical comparison against two scorers whose confidence is
-> shaped differently and the calibration buys **+9.9 points at matched coverage** on an
-> overconfident naive Bayes — where the raw ranking breaks the promise — and **+2.8** on a
-> saturated nearest-neighbour vote. It buys nothing on ours because ours already ranks well.
+> shaped differently and, with ordering isolated properly (same eligible pool, same size, only
+> the sort key differing), the calibration buys **+10.6 points** on an overconfident naive Bayes —
+> where the raw ranking breaks the promise and the calibration keeps it — and **nothing** on a
+> saturated nearest-neighbour vote (+0.01). It buys nothing on ours either, −0.05.
 > `2026-10-13-is-it-a-layer-or-is-it-our-model.md`.
 
 ## What this costs in coverage, stated plainly
@@ -118,14 +119,16 @@ conformal prediction set and it carries no conformal coverage guarantee: conform
 marginal coverage of a *set*, and what a buyer here asks for is precision conditional on having
 answered, which is a different quantity (Angelopoulos & Bates, arXiv:2107.07511; Vovk, Gammerman
 & Shafer 2005 for the partition). The earlier write-up implied these results showed conformal
-guarantees failing. They do not. They show that the practical construction everyone actually
-deploys breaks under missingness shift, which is a claim about practice, not about the theorem.
+guarantees failing. They do not. They show that this standard practical construction
+breaks under missingness shift. Whether it is what deployments actually use is not something this
+repo measured, and an earlier draft of this line asserted it.
 
 ## What a reader should take from this
 
-Two numbers we published this morning were worthless and we have withdrawn them. The replacement
-is a harder experiment that we would have had no way of surviving if the idea were wrong, and one
-of its rows says the calibration does less than we have been claiming.
+Two numbers we published this morning were worthless and we have withdrawn them. The replacement is a harder experiment, and one of its
+rows says the calibration does less than we have been claiming. It is not proof the idea is
+right — a conservative rule, a benchmark we chose and rivals we wrote ourselves can all come out
+flattering, and an earlier draft of this line claimed more than that.
 
 That is the second time in two days that a result here collapsed when it was made reproducible,
 and both times the tell was the same: it was built in a hurry and it agreed with us.
