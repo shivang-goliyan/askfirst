@@ -234,6 +234,28 @@ failures](docs/results/) · [the metric, fixed in advance](docs/METRIC.md) · [d
 licences](docs/DATA.md) · [how it is deployed](docs/DEPLOY-APP.md) · [the build
 plan](docs/PLAN.md).
 
+## We offered a frontier model the door
+
+Not an accuracy contest — ours is fitted on 30,000 labelled patients from this generator and
+Claude is zero-shot, so comparing top-1 would be a rigged race. The fair question is who knows to
+stop. 200 held-out patients, `claude-opus-5-5`, every call offering `INSUFFICIENT` as a real
+answer and telling it not to guess:
+
+| same 150 patients, 40% of a record | abstains | right when it answers |
+|---|---|---|
+| Claude Opus 5.5, effort low | 8.0% | 14.5% |
+| Claude Opus 5.5, effort high | **2.7%** | **4.1%** |
+| this gate | **83.8%** | **98.2%** |
+
+Abstention does climb as the record thins — 0% → 7.5% → 35% — which is better than the published
+GPT-5 figure and better than we predicted. It is still off by an order of magnitude: at a fifth of
+a record it answers two cases in three while being right in one case in 125. And raising the
+effort made it abstain **less**, so it is not a thinking-budget problem
+(`docs/results/2026-10-13-a-frontier-model-offered-the-door.md`).
+
+This is not a claim that we diagnose better than Claude. It is a gate; Claude is the kind of thing
+it gates; and the better the model behind it, the more the gate is worth.
+
 ## Why not conformal prediction?
 
 Because someone will ask, and the answer should be a measurement. Selective prediction with a

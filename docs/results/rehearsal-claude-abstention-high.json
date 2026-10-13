@@ -1,0 +1,1367 @@
+{
+ "model": "claude-opus-5-5",
+ "effort": "high",
+ "cases": 150,
+ "levels": [
+  0.4
+ ],
+ "seconds": 60.4,
+ "usage": {
+  "in": 116050,
+  "out": 9476,
+  "cached": 0
+ },
+ "approx_usd": 0.65,
+ "rows": [
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchospasm / acute asthma exacerbation"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Cluster headache"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute dystonic reactions"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Myasthenia gravis"
+  },
+  {
+   "kept": 0.4,
+   "n": 11,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pneumonia"
+  },
+  {
+   "kept": 0.4,
+   "n": 8,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Possible NSTEMI / STEMI"
+  },
+  {
+   "kept": 0.4,
+   "n": 10,
+   "said": "Anaphylaxis",
+   "abstained": false,
+   "picked": "Anaphylaxis",
+   "right": true,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 11,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pneumonia"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute pulmonary edema"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute rhinosinusitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "GERD"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Atrial fibrillation"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Atrial fibrillation"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Chagas"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Unstable angina"
+  },
+  {
+   "kept": 0.4,
+   "n": 1,
+   "said": "INSUFFICIENT",
+   "abstained": true,
+   "picked": null,
+   "right": false,
+   "truth": "Larygospasm"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Panic attack"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 9,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Influenza"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pericarditis"
+  },
+  {
+   "kept": 0.4,
+   "n": 9,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute rhinosinusitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 12,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pneumonia"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "INSUFFICIENT",
+   "abstained": true,
+   "picked": null,
+   "right": false,
+   "truth": "Tuberculosis"
+  },
+  {
+   "kept": 0.4,
+   "n": 11,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pneumonia"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Epiglottitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Atrial fibrillation"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchospasm / acute asthma exacerbation"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "INSUFFICIENT",
+   "abstained": true,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "Acute dystonic reactions",
+   "abstained": false,
+   "picked": "Acute dystonic reactions",
+   "right": true,
+   "truth": "Acute dystonic reactions"
+  },
+  {
+   "kept": 0.4,
+   "n": 9,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pancreatic neoplasm"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Spontaneous pneumothorax"
+  },
+  {
+   "kept": 0.4,
+   "n": 11,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pneumonia"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Cluster headache"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchiectasis"
+  },
+  {
+   "kept": 0.4,
+   "n": 9,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pancreatic neoplasm"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute pulmonary edema"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Epiglottitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "INSU",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Croup"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Tuberculosis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Possible NSTEMI / STEMI"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Localized edema"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "Acute dystonic reactions",
+   "abstained": false,
+   "picked": "Acute dystonic reactions",
+   "right": true,
+   "truth": "Acute dystonic reactions"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anemia"
+  },
+  {
+   "kept": 0.4,
+   "n": 10,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 9,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "Pulmonary",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pulmonary embolism"
+  },
+  {
+   "kept": 0.4,
+   "n": 9,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 8,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "HIV (initial infection)"
+  },
+  {
+   "kept": 0.4,
+   "n": 8,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pancreatic neoplasm"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 10,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Tuberculosis"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Guillain-Barr\u00e9 syndrome"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Localized edema"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pulmonary neoplasm"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Epiglottitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Stable angina"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Cluster headache"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Chronic rhinosinusitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Guillain-Barr\u00e9 syndrome"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Spontaneous pneumothorax"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anemia"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "GERD"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute dystonic reactions"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Localized edema"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "GERD"
+  },
+  {
+   "kept": 0.4,
+   "n": 10,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute COPD exacerbation / infection"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute pulmonary edema"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Panic attack"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "Pulmonary embolism",
+   "abstained": false,
+   "picked": "Pulmonary embolism",
+   "right": true,
+   "truth": "Pulmonary embolism"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Unstable angina"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchiectasis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Stable angina"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute laryngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Atrial fibrillation"
+  },
+  {
+   "kept": 0.4,
+   "n": 10,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 10,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "SLE"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Myasthenia gravis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anemia"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Unstable angina"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Scombroid food poisoning"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Tuberculosis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 8,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Unstable angina"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Bronchitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "G",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "GERD"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute laryngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 9,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Anaphylaxis"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "INSUFFICIENT",
+   "abstained": true,
+   "picked": null,
+   "right": false,
+   "truth": "Guillain-Barr\u00e9 syndrome"
+  },
+  {
+   "kept": 0.4,
+   "n": 8,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Sarcoidosis"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Myasthenia gravis"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Atrial fibrillation"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Chronic rhinosinusitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Spontaneous pneumothorax"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Atrial fibrillation"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute laryngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute pulmonary edema"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pericarditis"
+  },
+  {
+   "kept": 0.4,
+   "n": 2,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Allergic sinusitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "GERD",
+   "abstained": false,
+   "picked": "GERD",
+   "right": true,
+   "truth": "GERD"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute dystonic reactions"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pulmonary embolism"
+  },
+  {
+   "kept": 0.4,
+   "n": 8,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "HIV (initial infection)"
+  },
+  {
+   "kept": 0.4,
+   "n": 8,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Unstable angina"
+  },
+  {
+   "kept": 0.4,
+   "n": 7,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Inguinal hernia"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Tuberculosis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Viral pharyngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "URTI"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pericarditis"
+  },
+  {
+   "kept": 0.4,
+   "n": 5,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pericarditis"
+  },
+  {
+   "kept": 0.4,
+   "n": 12,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Pneumonia"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute otitis media"
+  },
+  {
+   "kept": 0.4,
+   "n": 3,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute dystonic reactions"
+  },
+  {
+   "kept": 0.4,
+   "n": 4,
+   "said": "",
+   "abstained": false,
+   "picked": null,
+   "right": false,
+   "truth": "Acute laryngitis"
+  },
+  {
+   "kept": 0.4,
+   "n": 6,
+   "said": "Anemia",
+   "abstained": false,
+   "picked": "Anemia",
+   "right": true,
+   "truth": "Anemia"
+  }
+ ]
+}

@@ -82,6 +82,30 @@ took a GPU and 44,100 scored prompts. The negative result is a result, and it is
 product ships a fitted scorer with a completeness estimate rather than trusting a general model's
 self-reported certainty.
 
+## "That was only a 3B model" — tested, and it is partly right
+
+Same experiment at ten times the size, `Qwen2.5-32B-Instruct`, 300 patients:
+
+| record | 3B top-1 | 32B top-1 | our softmax |
+|---|---|---|---|
+| complete | 35.3% | **51.7%** | 99.6% |
+| 40% of it | 20.7% | **32.3%** | 82.5% |
+| a fifth of it | 13.7% | **18.7%** | 40.2% |
+
+And the number that matters here — how far the confidence falls between a complete record and a
+fifth of one:
+
+| | fall in mean confidence |
+|---|---|
+| Qwen2.5-3B | 12% |
+| Qwen2.5-32B | **37%** |
+| our softmax | **83%** |
+
+**Scaling helps on both axes and does not close either gap.** Ten times the parameters buys 16
+points of accuracy and triples the responsiveness of the confidence, and still leaves it less than
+half as responsive as a linear model fitted on the task. The objection was worth testing and the
+answer is "better, not solved".
+
 ## What this does not say
 
 One model, one size, one prompt, one benchmark, 300 patients. DDXPlus is synthetic and its records
