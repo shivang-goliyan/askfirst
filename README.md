@@ -330,6 +330,66 @@ the distribution-derived objectives we tried, including theirs. The honest state
 difference is that **we went looking for a patient-specific ranking and found that a
 patient-independent one wins.**
 
+## Someone else's model can use it in two curls
+
+The fair reading of the old code was that this was a model with a gate bolted on, not a gate:
+`rule_for()` returned nothing for a scorer it could not encode for, and the response admitted it
+had borrowed a cut-off. The product claim was "a gate in front of whatever you already use" and
+the artifact did not do that.
+
+It does now. `POST /api/gate` takes a record and *your* model's confidence, and no scorer of ours
+appears anywhere in it:
+
+```bash
+curl -s https://askfirst.kgbnetwork.com/api/gate -H 'content-type: application/json' -d '{
+  "record": {"E_55": true, "E_54": true, "E_57": true, "E_56": true, "E_60": true,
+             "E_61": true, "E_62": true, "E_77": true, "E_88": true, "E_133": true,
+             "E_152": true, "E_204": true},
+  "confidence": 0.93,
+  "scorer": "your-model",
+  "target": 0.95
+}'
+```
+
+Two of the three checks need nothing fitted and work on the first call, because they read the
+**record** rather than the score: the ceiling (no real record holds more than 38 findings) and
+the completeness floor (below ~35% of a record estimated present, it hands over whatever the
+confidence says). The advice needs nothing either — the ranking that won our measurement is
+breadth × answer rate, and both terms come off the schema and the priors rather than a model.
+
+The third check — the precision promise — **does not transfer, and the endpoint says so instead
+of pretending.** An unknown scorer gets `"available": false` and the command that would fix it.
+That is not modesty, it is measured: a cut-off borrowed from the softmax delivered 54.7% where it
+promised 80% on an open model's own confidence.
+
+```bash
+python3 scripts/fit_gate.py your-history.jsonl --scorer your-model
+```
+
+One JSON object per line — the record, your confidence, whether you were right. It fits the
+calibration, holds 30% back, and **tells you if the promise does not hold rather than writing the
+file and looking pleased.** A worked example ships in the repo, fitted against the naive Bayes
+standing in for a customer's model: 16,800 rows, and on the 5,040 it never saw it answers 12.0%
+of them at 99.5% [99.0%, 100.0%].
+
+The contrast is the argument, and you can see it in two calls to the same endpoint. Same record,
+same confidence of **0.5**:
+
+| `"confidence": 0.5` on the same twelve findings | what it is worth |
+|---|---|
+| `"scorer": "softmax"` | **80.2%** likely right |
+| `"scorer": "example-bayes"` | **13.9%** likely right |
+
+Sixty-six points apart. At 0.7 it is 88.5% against 27.5%, and at 0.8 the two rules disagree about
+what to *do* — the softmax's 0.8 is still short of a 95% bar at 92.6% while the naive Bayes's 0.8
+is near the top of its own range, because that model almost never gets that confident. One
+number, two unrelated meanings. A threshold holds the number and cannot see which it has.
+
+Fitting also replaces the completeness estimator with one fitted to **that operator's** intake:
+on the same record the shipped estimate says 61% present and the example fit says 74%, because
+records do not go short the same way in two places. That substitution is the moat in `BUSINESS.md`
+expressed as a file on disk rather than as an argument.
+
 ## It does not need a form
 
 The engine scores structured findings; the world produces prose. An open model reads one into the

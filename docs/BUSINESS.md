@@ -25,6 +25,14 @@ to a precision they set, and hands the rest over with a ranked list of what to a
 It does not replace their triage model, their protocol or their clinicians. It decides which cases
 need the expensive one.
 
+Until today that sentence was a claim the code did not support — the gate only ran against our own
+scorer. It is now `POST /api/gate`: send a record and your model's confidence. The two
+record-level checks work on the first call with nothing fitted, because they read the record
+rather than the score, and so does the what-to-ask-next list. The precision promise needs a fit
+against their history (`scripts/fit_gate.py`), and an unfitted caller is told that rather than
+handed a borrowed curve. **The thing they pay for is the fit, which is also the reason they
+cannot take it with them** — see below.
+
 ## The unit economics, measured rather than modelled
 
 | per 1,000 records | |
@@ -72,6 +80,13 @@ So the deployed product is not a model you can copy. It is a model **fitted to o
 intake behaviour**, and it gets better as their records accumulate. A competitor arriving a year
 later does not inherit that, and neither does the customer if they leave. We did not design that
 moat; we measured it while trying to work out why one cell was failing.
+
+It is now a file rather than an argument. `fit_gate.py` writes a completeness estimator fitted to
+that operator's missingness, and `/api/gate` uses theirs instead of ours when it exists: on the
+same twelve-finding record the shipped estimate says 61% of a record is present and the worked
+example says 74%, because the two were fitted against intakes that go short differently. The
+number the floor compares against is therefore theirs, and it is the artifact that leaves with
+the contract.
 
 ## What would have to be true, and is not yet
 

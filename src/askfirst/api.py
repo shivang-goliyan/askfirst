@@ -21,6 +21,7 @@ from .ablation import (
     argmax,
     by_cost_effectiveness,
     entropy,
+    rank_blind,
     rank_gaps,
     sensitivity_map,
     most_telling_gap,
@@ -416,6 +417,169 @@ def assess(case: Case):
             }
             for i in sensitivity_map(record, scorer, schema)[:6]
         ],
+    }
+
+
+class Reading(BaseModel):
+    """Somebody else's scorer, reporting in.
+
+    The decision this product makes needs two things and neither of them is our model: the
+    record, and a number saying how sure something is. So it can be asked for directly, which is
+    what makes this a layer rather than a model with a web page attached."""
+
+    domain: str = "ddxplus"
+    record: dict = {}
+    confidence: float | None = None
+    distribution: dict | None = None
+    target: float = 0.95
+    scorer: str = "unnamed"
+
+
+def completeness_for(schema, named):
+    """How much of the record is here, estimated against ONE operator's intake behaviour.
+
+    The record-level half of the gate reads the record and not the scorer, so the shipped
+    estimate is a defensible default for anybody. But records do not go short the same way in
+    two places — seven realistic patterns span 54 points of accuracy at the same nominal
+    completeness — so an operator who has run `fit_gate.py` on their own history gets theirs
+    used instead of ours. That substitution is the thing a customer cannot take with them."""
+    path = BAKE / f"completeness-{named}.npz"
+    if not path.exists():
+        return gate_for(schema), "shipped"
+    key = f"seen:{path.name}"
+    if key not in _gates:
+        from .calibrate import Completeness
+        from .softmax import SoftmaxScorer
+        _gates[key] = Completeness.load(path, SoftmaxScorer.load(WEIGHTS, schema).encode)
+    return _gates[key], named
+
+
+def calibration_for(domain, scorer):
+    """A calibration belongs to one scorer and is useless on another — measured, not assumed:
+    an 80% cut-off borrowed from the softmax delivers 54.7% on the open model's own confidence.
+
+    So they are stored per scorer and looked up by name. A caller we have no fit for gets the
+    record-level verdict and an honest nothing where the precision promise would be."""
+    name = "".join(c if c.isalnum() or c in "-_" else "-" for c in scorer.lower())[:48]
+    path = BAKE / (f"calibrator-{name}.json" if name not in ("", "unnamed") else "calibrator.json")
+    if name in ("", "unnamed", "softmax", "askfirst"):
+        path = CALIBRATOR
+    if not path.exists():
+        return None, name
+    from .calibrate import Calibrator
+    key = f"cal:{path.name}"
+    if key not in _rules:
+        _rules[key] = Calibrator.load(path)
+    return _rules[key], name
+
+
+def odds(chance):
+    """An isotonic fit tops out at exactly 1.0. Nothing here says it is certain."""
+    return "better than 99%" if chance >= 0.995 else f"about {chance:.0%}"
+
+
+@app.post("/api/gate")
+def gate(reading: Reading):
+    """The gate, with no scorer of ours anywhere in it.
+
+    Send a record and your own model's confidence; get back whether the record can carry an
+    answer, and what to ask if it cannot. Two of the three checks need nothing from us — the
+    ceiling is a property of the record and the completeness floor is estimated from the record
+    alone — so they work on the first call, for anybody. The third, the precision promise, is a
+    calibration fitted to one scorer's confidence, and if we do not hold one for yours this says
+    so instead of quietly borrowing the wrong curve."""
+    from .calibrate import CEILING, FLOOR
+
+    schema = schema_for(reading.domain)
+    record, ignored = clean(reading.record, schema)
+    target = min(1.0, max(0.0, reading.target))
+
+    confidence = reading.confidence
+    if confidence is None and reading.distribution:
+        values = [v for v in reading.distribution.values() if isinstance(v, (int, float))]
+        if not values:
+            raise HTTPException(422, "The distribution had no numbers in it.")
+        total = sum(values)
+        confidence = max(values) / total if total > 0 else max(values)
+    if confidence is None:
+        raise HTTPException(
+            422, "Send either a confidence between 0 and 1, or a distribution to take it from.")
+    confidence = min(1.0, max(0.0, float(confidence)))
+
+    cal, named = calibration_for(schema.domain, reading.scorer)
+    seen, fitted_to = completeness_for(schema, named)
+    complete = seen(record) if seen else None
+    plausible = len(record) <= CEILING
+    enough = complete is None or complete >= FLOOR
+
+    # Only consult the calibration once the record has passed. Asked about a record the floor
+    # or the ceiling has already rejected it answers 1.0 — an isotonic fit pins the top of its
+    # range there — and "100% likely to be right" is the one sentence this product must never
+    # print, least of all beside a refusal.
+    chance = cal(confidence, record) if cal and plausible and enough else None
+    if not cal:
+        answering, rule = False, "no calibration fitted for this scorer"
+    elif chance is None:
+        answering, rule = False, "the record was refused before anything was scored"
+    else:
+        answering = chance >= target
+        rule = f"calibrated against {named!r}"
+
+    advice = rank_blind(record, schema)
+    return {
+        "answering": answering,
+        "rule": rule,
+        "why": (
+            f"{len(record)} findings in one record, and the largest real one holds 38 — this did "
+            f"not come from a patient" if not plausible else
+            f"only about {complete:.0%} of a record — too little to judge an answer by, whatever "
+            f"the confidence says" if not enough else
+            "the record carries enough to judge an answer, but we hold no calibration for "
+            f"{named!r}, so there is no precision promise to make. Fit one with "
+            "scripts/fit_gate.py and this endpoint will keep it." if not cal else
+            f"{odds(chance)} likely to be right, which clears the {target:.0%} asked for"
+            if answering else
+            f"{odds(chance)} likely to be right, short of the {target:.0%} asked for"
+        ),
+        "record_level": {
+            "findings": len(record),
+            "could_be_a_patient": plausible,
+            "ceiling": CEILING,
+            "completeness": round(complete, 4) if complete is not None else None,
+            "floor": FLOOR,
+            "enough_record": enough,
+            "estimated_by": fitted_to,
+            "needs_no_fit": fitted_to == "shipped",
+        },
+        "precision_promise": {
+            "available": bool(cal),
+            "scorer": named,
+            "target": target if cal else None,
+            "chance_right": round(chance, 4) if chance is not None else None,
+            # 1.0 here is the top of the fitted range, not a claim of certainty. A machine
+            # reading this field should know that; the prose above already refuses to say it.
+            "chance_is_capped_at": 1.0,
+            "chance_means": "the top of the isotonic fit, which is 1.0, not certainty",
+            "how_to_fit": None if cal else {
+                "script": "scripts/fit_gate.py",
+                "needs": "your scorer's confidence and whether it was right, on records of "
+                         "varying completeness — a few thousand rows is enough",
+                "why": "a cut-off borrowed across scorers was measured delivering 54.7% where "
+                       "it promised 80%",
+            },
+        },
+        "go_get": [
+            {"field": g.field,
+             "question": schema.fields[g.field].question or g.field,
+             "answers": len(schema.values_for(g.field)),
+             "usually_answered": round(g.yield_rate, 4)}
+            for g in advice[:6]
+        ],
+        "advice_rule": "breadth x answer rate, which needs no model and measured 72.3% against "
+                       "42.7% for asking nothing",
+        "ignored_fields": ignored,
+        "not_a_diagnosis": "This names a condition when it accepts and hands over when it does "
+                           "not. It is not a medical device and no clinician has reviewed it.",
     }
 
 

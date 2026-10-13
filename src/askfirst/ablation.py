@@ -226,3 +226,26 @@ def most_telling_gap(record, scorer, schema, gaps=None):
 def sufficiency(record, scorer, schema, gaps=None):
     """Kept for the command-line demo and the tests. Not served to anyone — see above."""
     return round(100.0 * (1.0 - most_telling_gap(record, scorer, schema, gaps)), 1)
+
+
+def rank_blind(record, schema, candidates=None):
+    """What to ask next, without a scorer.
+
+    The ranking that won the measurement above is `breadth x answer rate`, and neither term
+    needs a model: breadth comes off the schema and the answer rate off the priors. So the
+    advice half of this product transfers to anybody's scorer for free — which is worth saying
+    out loud, because the precision promise does not.
+
+    No `info_gain` or `flip_prob` here: those are the only fields that need a distribution, and
+    returning zeros for them would look like a measurement rather than an absence."""
+    out = []
+    for name in (candidates or schema.missing_from(record)):
+        spec = schema.fields.get(name)
+        if spec is None or not spec.values:
+            continue
+        out.append(Gap(
+            field=name, info_gain=0.0, flip_prob=0.0, expected_shift=0.0, worst_shift=0.0,
+            cost=spec.cost, delay=spec.delay,
+            breadth=answer_breadth(spec), yield_rate=spec.asked_rate,
+        ))
+    return sorted(out, key=lambda g: (-(g.breadth * g.yield_rate), g.cost, g.field))
