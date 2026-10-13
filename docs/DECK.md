@@ -98,6 +98,19 @@ The CPU baseline reaches its optimum at 5% coverage because a naive Bayes is 21%
 A stronger scorer moves that optimum to higher coverage at the same cost. That is the measured
 baseline the GPU run improves on, and the comparison is the AMD result.
 
+## 6b — The hole in that setting, and the fix
+
+The grid needs to know how complete the record is, and nobody deploying this knows that. Measured:
+the margin is honest on a full record and **40 points underconfident at 40% evidence**, so a
+cut-off chosen on complete records promises 95% and delivers **48%** on a tenth of one.
+
+Two pieces, because one measured insufficient: calibrate on **findings in hand** (observable where
+the fraction is not), and **estimate how much of the record is missing** (error 0.053), refusing
+outright below a floor. On 30,000 records of undeclared completeness: **99.6% right, 38 wrong, 34%
+answered** against 67.1% and 9,874.
+
+The line to say out loud: *the page now tells you what it thinks instead of asking you.*
+
 ## 7 — The honesty slide
 
 Keep it. Four of six winners in this series shipped a visible don't-be-confidently-wrong mechanism,

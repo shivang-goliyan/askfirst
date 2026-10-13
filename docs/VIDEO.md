@@ -1,6 +1,6 @@
 # The video — three minutes, timed
 
-Read it out loud with a stopwatch before recording. The script below runs about 3:05 at a normal
+Read it out loud with a stopwatch before recording. The script below runs about 3:15 at a normal
 speaking pace. If the platform caps at three minutes, cut the second domain — it is the only beat
 that stands alone, and the link in the submission copy covers it. Record the screen capture first and narrate over it;
 narrating live while clicking produces dead air and misclicks.
@@ -37,11 +37,28 @@ a time, until it stops answering.
 > every number on this page was measured on. Eleven findings in, it answers, and it's right.
 >
 > Now take the record apart. Nine findings. Seven. Five — still answering, less sure. Three, and it
-> stops. Read the confidence and the cut-off off the screen as they move; the point is that the
-> cut-off isn't a guess, it's read straight off the curve above, and it changes when you move that
-> dial. It won't answer, it hands the case over, and it arrives with a work list.
+> stops. And look at the reason it gives: not "I'm not confident", but *"only about twenty-three
+> percent of a record — too little to judge the answer by, whatever the confidence says."*
+>
+> Nobody told it that. It worked out how much of the record is missing. The only thing you set
+> here is how right it has to be. It won't answer, it hands the case over, and it arrives with a
+> work list.
 
-**1:20-1:45 — what to go and get, and the thing we got wrong**
+**1:20-1:35 — why that matters more than it sounds**
+
+*On screen:* the completeness read-out, then the table from slide 6.
+
+> We used to ask the user how complete their record was, which is absurd — that's the problem, not
+> an input to it. So we measured whether one threshold could work everywhere, and found the word
+> "calibrated" was doing work it hadn't earned. The confidence is honest on a full record and
+> forty points underconfident at forty percent evidence. A cut-off picked on complete records
+> promises ninety-five and delivers forty-eight on a tenth of one.
+>
+> Thirty thousand records, nobody saying how complete any of them are. Answer everything: sixty-seven
+> percent right, nine thousand eight hundred and seventy-four wrong. This rule: ninety-nine point six
+> percent right, thirty-eight wrong, on the third of cases it chooses to answer.
+
+**1:35-1:55 — what to go and get, and the thing we got wrong**
 
 *On screen:* the "go get" table, the answers column visible.
 
@@ -57,7 +74,7 @@ a time, until it stops answering.
 > five percent. In clinical terms: characterise what you already have before asking about one more
 > symptom.
 
-**1:45-2:15 — the measurement**
+**1:55-2:20 — the measurement**
 
 *On screen:* the completeness selector, dragged from "complete" down to "20% in", then the cost table.
 
@@ -73,7 +90,7 @@ a time, until it stops answering.
 > percent of complete records, two percent of nearly empty ones. That's a setting, and we can tell
 > you where to put it.
 
-**2:15-2:35 — the second domain**
+**2:20-2:40 — the second domain**
 
 *On screen:* `askfirst.kgbnetwork.com/#level=B`, then click back to E.
 
@@ -86,7 +103,7 @@ a time, until it stops answering.
 > every time. That one — documented evidence that a drug works, overruled by a conservation score.
 > The cap isn't bureaucracy. It's the thing standing between a predictor and the call.
 
-**2:35-2:50 — why AMD**
+**2:40-2:55 — why AMD**
 
 *On screen:* the vLLM request with `echo=True`, the logprobs coming back, the MI300X.
 
@@ -97,7 +114,7 @@ a time, until it stops answering.
 > And a better model doesn't make the answers cheaper. It makes more of them answerable. That's
 > what the hardware buys, and we have the CPU baseline to measure it against.
 
-**2:50-3:10 — the limits, said out loud**
+**2:55-3:15 — the limits, said out loud**
 
 *On screen:* the repo's results directory, the dates visible.
 

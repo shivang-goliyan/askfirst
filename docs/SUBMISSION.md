@@ -54,6 +54,14 @@ ourselves and re-ran everything.
 Refusing pays at every level of completeness, and how much to refuse changes by a factor of fifty
 across them. On a complete record the product is nearly pointless, and the page says so.
 
+**And it does not ask you how complete your record is.** It used to, which is absurd — that is the
+problem, not an input to it. The scorer's confidence turns out to be honest on a complete record
+and 40 points underconfident at 40% evidence, so a cut-off chosen on full records promises 95%
+precision and delivers 48% on a tenth of one. It now calibrates against how many findings it has
+in hand, estimates how much of the record is missing to within 0.053, and refuses outright below a
+floor. On 30,000 records of undeclared completeness: **99.6% right, 38 wrong, on the 34% of cases
+it chooses to answer** — against 67.1% and 9,874 wrong if it answers everything.
+
 **The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:
 42.9% without it, 47.9% asking at random, **72.5% asking what the engine says**. The ranking rule
 is `log2(number of answers the question admits)`, weighted by how often the question gets answered
