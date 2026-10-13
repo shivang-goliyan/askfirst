@@ -2,8 +2,34 @@
 
 ## Resume here
 
-Everything is built except **the AMD run, the video and the demo**. 52 commits, 46 tests, 20 dated
+Everything is built except **the AMD run, the video and the demo**. 60 commits, 66 tests, 24 dated
 write-ups in `results/`, clean tree, all endpoints live.
+
+**The evening of 13 Oct was a second review round, and it went badly for several published
+claims.** Read these five before anything else, because four of them are retractions:
+
+| | |
+|---|---|
+| `2026-10-13-the-comparison-was-rigged.md` | our own conformal shift test was rigged in our favour — the baselines were refitted on six missingness patterns and we reused a calibrator fitted on all seven. Redone across all 7 folds with everything refit: we keep the promise 7/7, worst fold 98.5%, against 5/7 for the best baseline. |
+| `2026-10-13-is-it-a-layer-or-is-it-our-model.md` | refit against two scorers it was never designed for. **20 of 21 scorer-fold cells**, against 14 of 21 for the best threshold. Ordering, isolated properly: **+10.6 points** on an overconfident naive Bayes, **nothing** on the other two. The earlier +2.8 on the neighbour vote was the floor, not the calibration, and is retracted. |
+| `2026-10-13-we-tried-to-delete-our-own-floor.md` | **the floor is not what keeps the promise.** The calibration alone keeps 7/7 folds and answers *more* cases. And the question that was meant to delete the gate found the biggest win in the project: training the scorer on records with holes is worth **14.8 points** of raw accuracy and takes coverage from 36.4% to 46.2%. Not shipped yet. |
+| `2026-10-13-the-real-queue-said-no.md` | **1 of 4 pre-registered conditions met on 72,004 real ED visits.** A loss. At a 95% target it cleared 258 people who needed a bed. The failure is the task, not the gate — the data's own ceiling is 94.0% precision at 1.0% recall — but we set a bar above what the data could supply and only found out afterwards. |
+| `2026-10-13-preregistered-real-queue.md` | the bar, committed before that ran. |
+
+**Two live bugs were found and fixed the same evening**, both in code committed hours earlier:
+`/api/gate` applied our softmax's calibration to any caller who did not name their scorer and
+reported the promise as available; and `fit_gate.py` saved its two artifacts under different
+names, so a customer got their own calibration and our completeness. Both have tests now.
+
+**What is new and worth showing a judge:** `POST /api/gate` — a record plus *your* model's
+confidence, no scorer of ours in it — and `scripts/fit_gate.py`, which fits a calibration to a
+customer's own model and refuses to look pleased when the promise does not hold. The contrast is
+two curls: confidence 0.5 is worth 80.2% from our softmax and 13.9% from a naive Bayes.
+
+**And business value finally has named operators**, read at source: Healthdirect Australia's own
+paper on 1,552,592 encounters says *"VTCR is configured to overtriage to minimize patient risk"*,
+and consumer symptom checkers lost 33.8 points of emergency sensitivity over five years while
+gaining specificity. See `BUSINESS.md`. Still no customer and no pilot.
 
     ./scripts/verify.sh      # 4 min: rebuilds every artifact from public data, passes byte-for-byte
 
