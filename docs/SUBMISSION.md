@@ -66,7 +66,7 @@ it chooses to answer** — against 67.1% and 9,874 wrong if it answers everythin
 version of this did before. Remove the same number of findings seven realistic ways — the
 follow-ups never happened, no history was available, the detail went and the screen stayed — and
 accuracy at a fifth of a record runs from 19.2% to 73.2% depending only on which fifth. The
-refusal rule keeps its promise in 33 of 35 cells, and the two it does not are in the write-up.
+refusal rule was tested in 22 of 35 cells, the other 13 going silent, and keeps its promise in all 22, and the two it does not are in the write-up.
 
 **The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:
 42.7% without it, 43.7% asking at random, **72.3% asking what the engine says**. The ranking rule
@@ -102,7 +102,7 @@ figure the artifacts do not support. It passes byte for byte.
 
 **A second domain.** The same engine on variant interpretation. An ESM-2 score enters a contested
 CIViC group as one removable evidence item, and the strength it is granted is a dial on the page.
-At *supporting*, where ACMG/AMP caps computational evidence, 0 of 11 calls change. At *clinical*
+At *supporting*, where an uncalibrated predictor belongs, 0 of 11 calls change. At *clinical*
 strength, 5 of 11 change and the prediction ends up on top every time — documented drug sensitivity
 becoming "predicted damaging". 171 of 182 contested groups cannot take a computational vote at all.
 

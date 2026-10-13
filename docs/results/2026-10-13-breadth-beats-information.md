@@ -46,7 +46,7 @@ literature states it, by going through the outcomes:
 with the first term counted once from the 30,000 fitting patients and the second taken from the
 scorer. **Doing it correctly is worth about one point and does not change the conclusion.**
 
-**Ranking by `log2(number of answers the question admits)` adds 13 to 29 points over a coin** — 24.3 at three findings, 29.2 at two, 13.5 at five, and
+**Ranking by `log2(number of answers the question admits)` adds 16 to 33 points over a coin** — 28.6 at three findings, 33.0 at two, 16.3 at five, and
 lands within 2 points of an oracle that is told which questions this patient can actually answer.
 
 ## Why the principled objective loses
@@ -157,7 +157,7 @@ checked on the live API; all three return the same first four questions.
 That is not a bug being excused. It is the result. Four patient-specific objectives were tried —
 flip probability, pathology-conditioned discrimination, expected information gain, answer rate —
 and three of them lost to a coin. **We went looking for a patient-specific ranking and found that
-a patient-independent one wins**, on this benchmark, by 24.3 points at three findings.
+a patient-independent one wins**, on this benchmark, by 28.6 points at three findings.
 
 What *is* patient-specific is everything shown beside the order: what the current answer rests on,
 what each answer would settle in bits, how often one more fact would change the decision. Those

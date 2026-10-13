@@ -125,7 +125,7 @@ The line to say out loud: *the page now tells you what it thinks instead of aski
 
 Then the robustness half: records do not go missing at random, and we tested seven ways they
 actually go short. Accuracy at a fifth of a record runs **19.2% to 73.2%** depending only on which
-fifth. The rule holds in 33 of 35 cells; it broke on the likeliest pattern, and fixing it needed
+fifth. The rule was tested in 22 of the 35 cells, the other 13 going silent, and holds in all 22; it broke on the likeliest pattern, and fixing it needed
 the pattern in the fit **and** a feature for how unusual the findings are, and even then it reaches
 only 93.6% against a 95% promise. Say that we could not fully fix it.
 

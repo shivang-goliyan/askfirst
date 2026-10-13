@@ -32,12 +32,33 @@ prompt would all help, and none of that was tried.
 **Take four fifths of the record away and the open model is about as confident as it was.** Our
 linear model's margin collapses by 83%; the general model's barely moves.
 
-That is precisely the failure this product was built to catch, found in the thing we were
-proposing to put underneath it. A refusal mechanism needs a confidence signal that *responds to
-evidence*. The softmax's response is badly scaled — forty points underconfident at 40% evidence,
-which is the whole of `2026-10-13-the-page-stops-asking.md` — but it responds. A signal that reads
-the same on a complete record and on a fifth of one cannot drive a refusal at all, however it is
-recalibrated, because there is nothing in it to calibrate.
+### An earlier version of this note said there was "nothing in it to calibrate". That was wrong.
+
+A reviewer checked the artifact and found the opposite: **within a single record size, its
+confidence separates right from wrong very well.**
+
+| record | overall | its own most-confident 30 | its least-confident 30 |
+|---|---|---|---|
+| complete | 35.3% | **93.3%** | 16.7% |
+| 40% of it | 20.7% | **80.0%** | 6.7% |
+| a fifth of it | 13.7% | **53.3%** | 6.7% |
+
+So selective prediction works on it. The claim had to be narrowed, and the narrower one is more
+useful: **its confidence ranks, but it does not transfer.** A cut-off chosen on complete records
+to deliver 80% precision delivers **54.7%** at 40% evidence and **53.3%** at a fifth:
+
+| cut-off chosen on | 100% | 40% | 20% |
+|---|---|---|---|
+| complete records | 80.0% | **54.7%** | **53.3%** |
+| 40% records | 92.1% | 80.0% | **43.8%** |
+
+(95% is unreachable for this model at any coverage, so the table asks for 80%.)
+
+That is the same disease our own softmax has — and `2026-10-13-the-page-stops-asking.md` is the
+whole story of fixing it, by conditioning the calibration on how many findings are in hand. The
+difference is the size of the handle: our margin falls 83% as the record thins, so there is a
+strong signal to condition on. This one falls 12%, so there is very little. It is a harder thing
+to calibrate, not an impossible one, and saying "impossible" was an overclaim.
 
 ## What that does to the argument for the hardware
 

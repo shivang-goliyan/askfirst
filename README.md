@@ -17,7 +17,7 @@ question: *is there enough here?* When there isn't, it refuses and names what to
 
 That ordering is deliberately a property of the questions rather than of the patient, and it is
 the whole finding: every patient-specific objective we tried lost to a coin, and this one beat
-them all by 24.3 points at three findings (13 to 29 across the three record sizes). The patient-specific numbers are still on the page beside it — what the
+them all by 28.6 points at three findings (16 to 33 across the three record sizes). The patient-specific numbers are still on the page beside it — what the
 current answer rests on, what each answer would settle, how often one more fact would change the
 decision — they just do not decide the order.
 
@@ -76,7 +76,7 @@ and that experimental plus predictive evidence could in principle resolve around
 
 The same ablation, asked of a different kind of evidence: **take one line out and see whether the
 call changes.** Here the removable line is a protein language model's score, and the variable is
-how much strength it is granted — because ACMG/AMP caps computational evidence at *supporting*
+how much strength it is granted — because *supporting* is where an uncalibrated predictor belongs
 and ClinGen had to recalibrate that slot downward when predictors were trusted past it.
 
 Real output, same as above:
@@ -121,7 +121,7 @@ thresholds.
 
 Three constraints on this, which are not negotiable:
 
-- **Supporting strength only.** ACMG places computational evidence in its weakest tier on
+- **Supporting strength only.** The 2015 ACMG/AMP framework used computational evidence at its weakest tier; ClinGen's 2022 recalibration permits more for predictors calibrated against a reference set, and this one has not been. So supporting is where it belongs on
   purpose. A score from this module can never be what resolves a variant, and will not be
   presented as though it were.
 - **Calibrated thresholds or none.** ClinGen recalibrated PP3/BP4 because predictors were being
@@ -159,18 +159,26 @@ outcomes rather than from a population marginal — scores 41.3%, worse than ask
 
 ## How it works
 
-1. The record is parsed into atomic fields — each symptom, each measurement, each evidence code.
-2. An open model scores the case. We keep the full distribution over outcomes, not just the text.
-3. Every field that *is* present is deleted in turn and the case re-scored. How far the
-   distribution moves is that field's influence. This builds a sensitivity map of the record.
-4. Fields that are *absent* are ranked by how many answers each question admits — measured to
-   beat ranking by expected information gain, which scored worse than asking at random — then
-   re-ranked by cost and turnaround time.
-5. If the outcome is unstable under ablation, askfirst refuses and returns the ranked gaps.
+1. **A record arrives**, as coded fields or as prose. If it is prose, an open model reads it into
+   fields — 72% of them, at 87% precision, which is the job that model is good at.
+2. **A fitted scorer returns a distribution** over outcomes. Not a sampled answer: the posterior,
+   because everything downstream is a function of it.
+3. **Two checks about the record itself**, neither of which depends on what did the scoring. How
+   much of the record is here, estimated to within 0.057 — below 35% it hands over whatever the
+   confidence says. And could this have come from a patient at all: no real record in 60,000 holds
+   more than 38 findings, so above 44 it refuses without scoring.
+4. **One check about the answer.** The margin is turned into P(this is right) by a calibration
+   fitted on how many findings are in hand and how unusual they are. Clear the bar you set, or
+   hand over.
+5. **Either way it reports what the answer rests on** — each present field deleted in turn and
+   re-scored — and **what to go and get**, widest question first.
 
-Step 2 is why this needs open weights. You cannot read a closed API's answer distribution or its
-internal state, so you cannot measure what its answer actually rests on. Step 3 is the compute
-cost: one case costs as many forward passes as it has fields, which is what the GPU is for.
+Step 5's ablation is what the page *shows* you. Steps 3 and 4 are what makes the call; an earlier
+version of this list said the ablation drove the refusal, and that stopped being true when the
+calibrated gate shipped.
+
+The open weights matter at steps 1 and 2: you cannot read a closed API's distribution, and you
+cannot ask it 208 yes/no questions about a note for the price of one shared prefix.
 
 ## The page does not ask you how complete your record is
 
@@ -187,7 +195,7 @@ floor. On 30,000 records of undeclared completeness it is **99.6% right on the 3
 So we stopped assuming they do. The same number of findings removed seven realistic ways — the
 follow-ups never happened, no history was available, the detail went and the screen stayed — and
 at a fifth of a record top-1 runs from **19.2% to 73.2% depending only on which fifth**. The
-calibrated refusal survives 33 of 35 cells and is fitted against all seven patterns; hold the
+calibrated refusal was tested in 22 of the 35 cells — the other 13 go silent — and holds in all 22 and is fitted against all seven patterns; hold the
 likeliest one out of the fit and it breaks by three points, which is the measured cost of
 calibrating against the wrong kind of missingness
 (`docs/results/2026-10-13-missing-not-at-random.md`).

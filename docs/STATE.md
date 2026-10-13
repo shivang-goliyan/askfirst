@@ -20,7 +20,7 @@ live case is the target precision. Write-up: `results/2026-10-13-the-page-stops-
 **And then the uniform-missingness assumption got tested** (13 Oct, 12:30). Every number before
 this hid evidence at random. Cut the same number of findings seven different realistic ways and
 top-1 at a fifth of a record runs from **19.2% to 73.2%** — "20% of a record" is not one thing.
-The calibrated rule survives 33 of 35 cells; its worst is 93.6% [91.2%, 95.4%] on the likeliest
+The calibrated rule was tested in 22 of the 35 cells — the other 13 go silent — and holds in all 22; its worst is 93.6% [91.2%, 95.4%] on the likeliest
 pattern of all. Hold that pattern out of the fit and it breaks properly: 92.5% [90.2%, 94.3%].
 **We could not fully fix that cell.** Fitting against the pattern and adding a feature for how
 unusual the findings are takes it from 91.5% to 93.6%, short of the 95% promised; each ingredient
@@ -134,7 +134,7 @@ than asking nothing at all** (41.3% against 42.7%, with the objective implemente
 P(value | record) through the outcomes, not a population marginal), because it is an expectation taken under the
 model's own beliefs and those beliefs are wrong on exactly the sparse records where advice matters.
 Ranking by **answer breadth** — log2 of how many answers a question admits — needs no beliefs and
-adds 13 to 29 points over a coin (24.3 at three findings). In clinical terms: characterise what you already know before
+adds 16 to 33 points over a coin (28.6 at three findings). In clinical terms: characterise what you already know before
 asking about one more symptom.
 
 Re-measured after three bugs turned up, all of them in our favour: a negative answer was switching

@@ -62,7 +62,8 @@ feature.
 
 **The calibration has to be fitted against the way records go short where it runs.** Measured:
 records do not go missing at random, and a calibration fitted on the wrong missingness pattern
-loses about two points of precision on the likeliest shape a rushed intake takes
+loses about **1.1 points** of precision on the likeliest shape a rushed intake takes — 92.5%
+against 93.6%, with intervals that overlap ([90.2%, 94.3%] against [91.2%, 95.4%])
 (`2026-10-13-missing-not-at-random.md`). Seven realistic patterns span a 54-point range in
 accuracy at the same nominal completeness.
 

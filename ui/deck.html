@@ -146,7 +146,7 @@
   </table>
   <p class="dim">It now says what it thinks instead of asking: <em>"only about 23% of a record —
   too little to judge the answer by, whatever the confidence says."</em> Tested against seven ways
-  a record goes short, not just the convenient one: it keeps the promise in 33 of 35 cells.</p>
+  a record goes short, not just the convenient one: the promise is tested in 22 of the 35 cells — the other 13 go silent, which is the floor working rather than a promise kept — and holds in all 22.</p>
   <div class="src">docs/results/2026-10-13-the-page-stops-asking.md</div>
 </section>
 
@@ -181,8 +181,9 @@
   <p>300 patients, 44,100 scored prompts on a rented GPU: a 3B open model gets
   <span class="bad">35.3%</span> on a complete record against our linear model's 99.6%. Take four
   fifths of the record away and <strong>its confidence barely moves</strong> — margin down 12%,
-  ours down 83%. A refusal needs a signal that responds to evidence; that one has nothing in it to
-  calibrate.</p>
+  ours down 83%. It still ranks its own answers well; what it cannot do is notice the batch got
+  harder. A cut-off set on complete records to deliver 80% delivers <span class="bad">54.7%</span>
+  at 40% evidence.</p>
   <p class="lede">What survives is measured: <strong>ESM-2 650M changes the safety conclusion</strong>
   the laptop-sized model gets wrong — 4 of 28 calls move at supporting strength, not 0 of 11.</p>
   <div class="src">src/askfirst/model.py — exact label scoring via text_offset, mean-normalised,
@@ -332,7 +333,7 @@
   <p class="lede">Price it at C$500 per thousand: a 7–19× return for them, and a gross margin a
   rounding error away from 100% at every volume.</p>
   <p><strong>And they cannot take it with them.</strong> The calibration has to be fitted to
-  <em>their</em> missingness — measured, worth two points of precision. The moat came out of a
+  <em>their</em> missingness — measured at 1.1 points, intervals overlapping. The moat came out of a
   limitation rather than a roadmap. <span class="dim">Nobody has bought it, there is no pilot, and
   the throughput is measured on synthetic patients. That is the gap.</span></p>
   <div class="src">docs/BUSINESS.md — including what would have to be true and is not yet ·
