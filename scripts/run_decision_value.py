@@ -35,7 +35,11 @@ from askfirst.softmax import SoftmaxScorer  # noqa: E402
 
 WEIGHTS = Path("src/askfirst/baked/ddxplus_softmax.npz")
 START = (2, 3, 5)          # findings in hand before the question
-POOL = 25                  # distractors mixed in with the fields the patient really has
+# Every field the record does not already have, which is what rank_gaps is handed in production.
+# It used to be "the fields this patient really has, plus 25 decoys", and a review pointed out
+# that this quietly guarantees every answerable question is on the shortlist — information the
+# app does not have. The old pool is kept behind --shortlist so the two can be compared.
+POOL = 25
 OUT = Path("docs/results/decision-value.json")
 
 
@@ -49,7 +53,7 @@ def marginal_gain(gap, schema, base_entropy):
     return spec.asked_rate * (base_entropy - answered)
 
 
-def main(path, cases=1000):
+def main(path, cases=1000, shortlist=False):
     random.seed(11)
     patients = [p for p in load_patients(path, limit=40000) if p["evidences"]]
     schema = load_schema("ddxplus")
@@ -63,8 +67,10 @@ def main(path, cases=1000):
 
     held = [p for p in patients[30000:] if len(p["evidences"]) >= 8]
     print(f"scorer: softmax, 99.6% top-1 on complete records")
-    print(f"{min(cases, len(held))} patients, one question allowed, "
-          f"{POOL} distractors in the candidate pool\n")
+    print(f"{min(cases, len(held))} patients, one question allowed, candidates = "
+          + (f"what the patient has plus {POOL} decoys"
+             if shortlist else f"every one of the {len(schema.fields)} fields not already in hand")
+          + "\n")
     print(f"{'start with':>11} {'no question':>12} {'ask at random':>14} "
           f"{'marginal bits':>14} {'true bits':>11} {'by breadth':>12} "
           f"{'breadth x rate':>16} {'oracle widest':>14}")
@@ -84,7 +90,11 @@ def main(path, cases=1000):
                 continue
 
             n += 1
-            pool = unseen + random.sample([f for f in schema.fields if f not in full], POOL)
+            if shortlist:
+                pool = unseen + random.sample(
+                    [f for f in schema.fields if f not in full], POOL)
+            else:
+                pool = [f for f in schema.fields if f not in reduced]
             gaps = rank_gaps(reduced, scorer, schema, candidates=pool,
                              conditional=conditional)
             base_entropy = entropy(scorer(reduced))
@@ -151,6 +161,8 @@ def main(path, cases=1000):
               f"breadth [{c['breadth'][0]:.1%}, {c['breadth'][1]:.1%}]  "
               f"breadth x rate [{c['likely'][0]:.1%}, {c['likely'][1]:.1%}]")
 
+    out["pool"] = ("patient's own fields plus decoys" if shortlist
+                   else "every field not already in the record")
     OUT.write_text(json.dumps({str(k): v for k, v in out.items()}, indent=2))
     print(f"\nwrote {OUT}")
     print("'marginal bits' weights each answer by how common it is in the population.")
@@ -162,4 +174,5 @@ def main(path, cases=1000):
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else "data/ddxplus/release_validate_patients",
-         int(sys.argv[2]) if len(sys.argv) > 2 else 1000)
+         int(sys.argv[2]) if len(sys.argv) > 2 else 1000,
+         shortlist="--shortlist" in sys.argv)

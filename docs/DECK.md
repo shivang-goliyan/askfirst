@@ -180,12 +180,20 @@ of which **182 are contested** — cases where the same knowledge base both supp
 support a call.
 
 On the page, live, with a strength dial: an ESM-2 score enters as one removable evidence item. At
-**supporting**, where an uncalibrated predictor belongs, **0 of 11 calls change**. At **clinical** strength, **5 of 11**
+**supporting**, **0 of 11 calls change**. At **clinical** strength, **5 of 11**
 change and the prediction ends up on top every time. Show **EGFR S768I / erlotinib** — documented
 sensitivity becoming "predicted damaging".
 
-Say the limit in the same breath: eleven groups is a demo, not a headline, and **171 of 182
-contested groups cannot take a computational vote at all**. Module A carries the number.
+Say two limits in the same breath, because both will be asked.
+
+The vote is **ours** — CIViC's A–E levels times a trust weight, with the predictor's label dropped
+in as a competitor. "Resistance" and "predicted damaging" are not answers to the same question.
+This demonstrates *an aggregation rule failing when an over-weighted predictor enters it*, not
+clinical calls being overturned. Saying that first is much stronger than being asked it.
+
+And the conclusion is model-dependent: **with ESM-2 650M, supporting strength moves 4 of 28 rather
+than 0 of 11**. The cap held because the small model was unsure. Eleven groups is a demo, not a
+headline. Module A carries the number.
 Link to point at: `askfirst.kgbnetwork.com/#level=B`.
 
 ## 11 — Who pays, with prices that came from somewhere
