@@ -1,0 +1,73 @@
+{
+ "target": 0.95,
+ "calibration_rows": 105000,
+ "test_rows": 105000,
+ "rules": {
+  "split-conformal, one threshold": {
+   "precision": 0.9451,
+   "coverage": 0.5777,
+   "answered": 60663,
+   "ci": [
+    0.9432,
+    0.9469
+   ]
+  },
+  "Mondrian, a threshold per group": {
+   "precision": 0.959,
+   "coverage": 0.5348,
+   "answered": 56152,
+   "ci": [
+    0.9574,
+    0.9606
+   ]
+  },
+  "ours: isotonic in-group + the floor": {
+   "precision": 0.995,
+   "coverage": 0.3511,
+   "answered": 36861,
+   "ci": [
+    0.9943,
+    0.9957
+   ]
+  },
+  "the floor alone, no calibration": {
+   "precision": 0.9357,
+   "coverage": 0.518,
+   "answered": 54385,
+   "ci": [
+    0.9336,
+    0.9377
+   ]
+  }
+ },
+ "held_out_pattern": "standard questions, no follow-ups",
+ "under_shift": {
+  "split-conformal, one threshold": {
+   "precision": 0.938,
+   "coverage": 0.518,
+   "answered": 7770,
+   "ci": [
+    0.9324,
+    0.9431
+   ]
+  },
+  "Mondrian, a threshold per group": {
+   "precision": 0.9268,
+   "coverage": 0.4971,
+   "answered": 7457,
+   "ci": [
+    0.9206,
+    0.9325
+   ]
+  },
+  "ours: isotonic in-group + the floor": {
+   "precision": 0.9889,
+   "coverage": 0.3011,
+   "answered": 4517,
+   "ci": [
+    0.9854,
+    0.9916
+   ]
+  }
+ }
+}

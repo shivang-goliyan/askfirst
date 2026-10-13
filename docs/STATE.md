@@ -144,6 +144,17 @@ Answer rate on its own scores 42.0%, below a coin — so breadth is the mechanis
 "questions that tend to get answered". Write-up:
 `results/2026-10-13-breadth-beats-information.md`.
 
+## Conformal prediction, named and measured against — 13 Oct
+
+Our rule is a Mondrian predictor (partition = findings in hand x how unusual they are) with an
+isotonic fit instead of a quantile, plus a record-level floor. Implemented the standard versions:
+in distribution **Mondrian beats us — 95.9% at 53.5% coverage against our 99.5% at 35.1%**. Under
+missingness shift (fit on six patterns, test on the seventh) **Mondrian falls to 92.7% and breaks
+its promise; ours holds at 98.9%**. Exchangeability is what conformal rests on and what the
+missingness work measured failing. Our over-delivery is a defect: the obvious fix is to keep the
+floor and swap isotonic for a per-group quantile, unmeasured and therefore not shipped.
+Write-up: `results/2026-10-13-why-not-conformal.md`.
+
 ## Dead ends, so nobody repeats them
 
 - **Flip probability as the ranking objective was actively harmful** — 18.8% against 26.0% for

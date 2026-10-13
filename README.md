@@ -234,6 +234,30 @@ failures](docs/results/) · [the metric, fixed in advance](docs/METRIC.md) · [d
 licences](docs/DATA.md) · [how it is deployed](docs/DEPLOY-APP.md) · [the build
 plan](docs/PLAN.md).
 
+## Why not conformal prediction?
+
+Because someone will ask, and the answer should be a measurement. Selective prediction with a
+precision target is conformal prediction's problem (Vovk, Gammerman & Shafer, 2005), and our rule
+is a **Mondrian predictor** — a threshold per group, the group being how many findings are in hand
+and how unusual they are — with an isotonic fit instead of a quantile, plus a record-level floor.
+
+Implemented the standard version against ours, 105,000 calibration and 105,000 test rows:
+
+| | precision | coverage |
+|---|---|---|
+| split-conformal, one threshold | 94.5% *(misses)* | 57.8% |
+| **Mondrian, per group** | **95.9%** | **53.5%** |
+| ours | 99.5% | 35.1% |
+
+**In distribution the standard tool beats us** — same bar, eighteen more points of coverage. Then
+fit on six missingness patterns and test on the seventh: **Mondrian falls to 92.7% and stops
+keeping its word; ours holds at 98.9%.** Conformal guarantees rest on exchangeability, and
+records do not go short the same way twice. The part that survives is the one conformal has no
+equivalent of — a refusal on a property of the *record* rather than of the score.
+
+The trade is robustness bought with coverage, and the over-delivery (99.5% when asked for 95%) is
+a defect we can name but have not fixed (`docs/results/2026-10-13-why-not-conformal.md`).
+
 ## Prior work
 
 A model that seeks missing clinical information before deciding is an established line of work,
