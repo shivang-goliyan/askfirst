@@ -16,8 +16,10 @@ one at a time, whose model produces a rich differential over many conditions.**
 > 95% target it cleared 258 people who needed a bed. It needs a task with room in it — 49
 > conditions and 223 findings, not a form and a yes/no. So a symptom-checker or a differential
 > engine is a buyer and acuity-prediction-from-vitals is not, and that is now a measurement rather
-> than a preference (`results/2026-10-13-the-real-queue-said-no.md`). Nurse triage lines, teleconsultation platforms, digital front doors, and the
-symptom-checker vendors who sell into them. Three properties make them the buyer:
+> than a preference (`results/2026-10-13-the-real-queue-said-no.md`).
+
+Concretely: teleconsultation platforms, digital front doors, and the symptom-checker vendors who
+sell into them. Three properties make them the buyer:
 
 - **They already have the cost.** A reviewed case costs them money today — C$10–27 per triage
   call (CCOHTA Technology Report 43, 2003). Nothing has to be invented for the saving to land.
@@ -25,6 +27,43 @@ symptom-checker vendors who sell into them. Three properties make them the buyer
   at the other end; a hospital EHR vendor does not, which is why they are not the first customer.
 - **They already carry the liability.** A confident wrong call is their problem, and the expected
   cost of one is $4,220 to $167,000 (`2026-10-13-what-it-is-worth.md`).
+
+## Who buys it, who uses it, and who never sees it
+
+These are three different people and conflating them is how a business case stops being credible.
+**askfirst is infrastructure, not an app.** Nobody logs into it. The page at
+askfirst.kgbnetwork.com is a demonstration so a judge can watch the behaviour without doing an
+integration; it is not the product's shape.
+
+| | who | what they do | what they care about |
+|---|---|---|---|
+| **buys** | the operator's clinical-operations owner | signs; owns the clinician-hours line and the liability | cost per reviewed case, and not being confidently wrong |
+| **uses** | the operator's platform or ML engineer | calls `POST /api/gate`; runs `fit_gate.py` on their history | that it drops in behind their existing model and that the fit holds |
+| **receives** | the triage nurse or clinician at the other end | reads the cases it hands over | a shorter queue, and knowing *why* each case arrived |
+| **benefits** | the patient | nothing — never touches it | fewer confident wrong answers about them |
+
+**The buyer and the user are not the same person and they want different things.** The buyer wants
+a number on a budget line: 455 records per 1,000 that never reach a person, at C$10–27 each. The
+engineer wants not to be blamed, which is why `fit_gate.py` holds 30% of their data back and
+**prints that the promise does not hold** rather than writing the file and looking pleased. A tool
+that made the engineer's fit look good and then broke in production would lose the account on the
+only axis that engineer is judged on.
+
+**The clinician is the one who would notice first if this were wrong**, and they are the role we
+have least evidence about. They receive a refusal, and what makes it usable rather than noise is
+the ranked list of what to go and get — breadth × answer rate, measured at 88.8% against 77.8%
+for asking nothing. Whether a real nurse finds that list sensible is unknown: no clinician has
+read a single output of this system. That is the largest untested assumption in this document and
+it is not a technical one.
+
+**Who is explicitly not the user**, now that it has been measured:
+
+- **A doctor uploading a report or a scan.** There is no image path, no OCR, nothing of the kind,
+  and the free-text path is an open model reading prose it also wrote (72% of findings recovered,
+  87.3% precision) rather than real clinical notes.
+- **A patient self-triaging.** That is the operator's own front end. We sit behind it.
+- **Anyone running a deterministic protocol** — no posterior, nothing to calibrate.
+- **Anyone predicting acuity from vitals** — ruled out on 72,004 real ED visits.
 
 ## The named operators who have this problem, and the published evidence that they do
 

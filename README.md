@@ -616,6 +616,14 @@ The defensibility came out of a limitation: the calibration has to be fitted aga
 records go short where it runs, and we measured that getting it wrong costs about 1.1 points of
 precision — on intervals that overlap, so it is a real effect we cannot size precisely yet. The deployed thing is fitted to one operator's intake behaviour and does not transfer.
 
+**Who uses it is not the same person as who buys it.** The buyer is the operator's
+clinical-operations owner, who owns the clinician-hours line. The *user* is their platform
+engineer — `POST /api/gate` and `scripts/fit_gate.py`, which is why that script holds 30% back and
+prints that the promise does not hold rather than writing the file and looking pleased. The
+clinician at the other end receives the handovers and never opens it. The patient never touches it
+at all. **askfirst is infrastructure, not an app**, and the live page is a demonstration rather
+than the product's shape (`docs/BUSINESS.md`).
+
 **Nobody has bought it, there is no pilot, and no approach has been made to anyone named above.**
 The throughput is measured on synthetic patients and the one real queue we tried it on said no.
 What the evidence above establishes is that this failure happens in production — not that anyone
