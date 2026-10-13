@@ -13,7 +13,13 @@ time.
 
 askfirst does not decide. It sits in front of the model that does, and answers a narrower
 question: *is there enough here?* When there isn't, it refuses and names what to go and find,
-ranked by how much each missing item would move the answer — and by what it costs to get.
+**widest question first** — and, where questions carry a price, what it costs to get.
+
+That ordering is deliberately a property of the questions rather than of the patient, and it is
+the whole finding: every patient-specific objective we tried lost to a coin, and this one beat
+them all by 24.6 points at three findings (13 to 29 across the three record sizes). The patient-specific numbers are still on the page beside it — what the
+current answer rests on, what each answer would settle, how often one more fact would change the
+decision — they just do not decide the order.
 
 Two domains, one engine.
 
@@ -68,22 +74,42 @@ nobody, and there are hundreds of thousands of them. Published work in 2026 foun
 external functional and population evidence resolved roughly 17% of a sample of such variants,
 and that experimental plus predictive evidence could in principle resolve around 75% of them.
 
-The field is good at asking *what happens if we add evidence*. askfirst asks the prospective
-version instead: **which single missing piece of evidence should you go and get first?**
+The same ablation, asked of a different kind of evidence: **take one line out and see whether the
+call changes.** Here the removable line is a protein language model's score, and the variable is
+how much strength it is granted — because ACMG/AMP caps computational evidence at *supporting*
+and ClinGen had to recalibrate that slot downward when predictors were trusted past it.
+
+Real output, same as above:
 
 ```
-BRCA2 c.7958T>C — currently UNCERTAIN SIGNIFICANCE
+$ curl -s askfirst.kgbnetwork.com/api/variants        # 11 contested groups the score can speak on
 
-  Evidence present:   PM2 (absent from controls), BP4 (computational: benign)
-  Evidence missing:   PS3 functional assay      would resolve with p = 0.68
-                      PP1 segregation data      would resolve with p = 0.41
-                      PS4 case-control          would resolve with p = 0.12
+EGFR S768I — Lung Adenocarcinoma — Erlotinib
 
-  Cheapest path to a classification:  PP1 — the family data may already exist
+  The evidence already in the group:
+    level C  Supports         Sensitivity/Response   rated 3/5   Hellmann et al., 2014
+    level C  Supports         Resistance             rated -/5   Lund-Iversen et al., 2012
+
+  ESM-2 says:  Predicted damaging   (llr -2.2614)
+
+  What the group concludes, by the strength that score is granted:
+    without it            Sensitivity/Response
+    E  supporting         Sensitivity/Response
+    D  case report        Sensitivity/Response
+    C  preclinical        Sensitivity/Response
+    B  clinical           Predicted damaging   <- the call changed
+    A  validated          Predicted damaging   <- the call changed
+
+  Across all 11 groups: 0 calls change at supporting strength,
+  5 at clinical strength — and every one of those 5 ends with the prediction on top.
 ```
 
 Same engine, different field schema. The schema is data, not code, which is why one project
 covers both.
+
+An earlier version of this section showed a BRCA2 variant with lines like *"PS3 functional assay
+— would resolve with p = 0.68"*. Nothing in this repo computes that, and no such case was ever
+run. It was written as an illustration before the module existed and it stayed far too long.
 
 
 ### Computing the computational evidence line
@@ -150,9 +176,9 @@ cost: one case costs as many forward passes as it has fields, which is what the 
 It used to. Measured: the scorer's margin is honest on a complete record and **40 points
 underconfident at 40% evidence**, so a threshold chosen on full records promises 95% precision and
 delivers 48% on a tenth of one. The app now calibrates P(right) against how many findings it has
-in hand, estimates how much of the record is missing to within 0.053, and refuses outright below a
-floor. On 30,000 records of undeclared completeness it is **99.6% right on the 34% it answers —
-38 wrong, against 9,874** if it answers everything
+in hand, estimates how much of the record is missing to within 0.057, and refuses outright below a
+floor. On 30,000 records of undeclared completeness it is **99.6% right on the 35% it answers —
+45 wrong, against 9,874** if it answers everything
 (`docs/results/2026-10-13-the-page-stops-asking.md`).
 
 ## Records do not go missing at random
@@ -218,9 +244,12 @@ and the comparison against it is the point rather than something to avoid:
   instead by how much a question *could* tell you scores 72.5%
   (`docs/results/2026-10-13-breadth-beats-information.md`).
 
-Those methods select from a question set, or prompt the model to ask. askfirst measures which
-*absent* field most destabilises the model's own answer distribution, and then prices the answer.
-The number we care about is that +22.3%, measured on their benchmark, against ours.
+Those methods select from a question set, or prompt the model to ask. askfirst scores every
+*absent* field against the model's own answer distribution and shows what each would settle — but
+it orders them by how many answers the question admits, because that measured better than any of
+the distribution-derived objectives we tried, including theirs. The honest statement of the
+difference is that **we went looking for a patient-specific ranking and found that a
+patient-independent one wins.**
 
 ## Data
 
@@ -266,4 +295,6 @@ ASKFIRST_VLLM_URL=http://127.0.0.1:8000/v1 docker run --rm -p 7860:7860 -e ASKFI
 ```
 
 The CPU path exists so the engine can be built and tested without a GPU. The served version runs
-an open model through vLLM on AMD MI300X.
+an open model through vLLM on AMD MI300X. **Nothing is attached today** — every number in this
+repo was produced on CPU, `/api/health` reports `model_endpoint: false`, and each response says
+what actually scored it.

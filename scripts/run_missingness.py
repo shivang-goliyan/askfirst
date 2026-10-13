@@ -127,9 +127,32 @@ def main(path):
     print("\n  ! is a promise broken with an interval to back it. 'silent' is the floor working.")
     print(f"  * is the pattern held out of the second fit.")
 
+    # Does fixing it need the pattern in the fit, the feature, or both? A Calibrator built with
+    # no answer-rate table scores every record at the same rarity, which collapses its key back
+    # to the record size alone — so the same class gives both arms of the comparison.
+    print(f"\nWhat it takes to keep the promise on {HELD_OUT!r} at 40% evidence:\n")
+    print(f"  {'pattern in the fit':>20} {'knows how unusual the findings are':>36} {'result':>9}")
+    ladder = []
+    here = [r for r in rows if r["way"] == HELD_OUT and r["frac"] == 0.4]
+    for has_pattern, pool in (("no", train), ("yes", look(model, fit, ways, names))):
+        for knows, table in (("no", {}), ("yes", rates)):
+            fitted = Calibrator(table).fit(
+                [(r["margin"], r["record"], r["right"]) for r in pool]).thin()
+            saw = Completeness(model.encode).fit([(r["record"], r["true_n"]) for r in pool])
+            answered = [r["right"] for r in here
+                        if saw(r["record"]) >= FLOOR and fitted(r["margin"], r["record"]) >= TARGET]
+            got = sum(answered) / len(answered) if answered else None
+            ladder.append({"pattern_in_fit": has_pattern, "rarity_feature": knows,
+                           "precision": round(got, 4) if got else None,
+                           "answered": len(answered)})
+            shown = f"{got:.1%}" if got else "silent"
+            print(f"  {has_pattern:>20} {knows:>36} {shown:>9}")
+    print(f"\n  Each ingredient helps a little and together they do not reach {TARGET:.0%}. This cell")
+    print("  is the honest limit of the method, not a thing we fixed.")
+
     OUT.write_text(json.dumps({
         "target": TARGET, "floor": FLOOR, "cases": len(test), "held_out": HELD_OUT,
-        "top1": top, "shipped": kept, "held_out_of_fit": missed,
+        "top1": top, "shipped": kept, "held_out_of_fit": missed, "ladder": ladder,
     }, indent=1))
     print(f"\nwrote {OUT}")
 

@@ -12,9 +12,9 @@ visitor pick a completeness level and read the threshold off that curve, which i
 deployment cannot know. Measured: the margin is honest on a full record and **40 points
 underconfident at 40% evidence**, so a threshold chosen on complete records promises 95% and
 delivers 48% on a tenth of one. Fixed with two pieces — an isotonic calibration on findings in
-hand, and a ridge estimate of how much of the record is missing (error 0.053) that refuses
-outright below 35%. On 30,000 records of undeclared completeness: **99.6% right, 38 wrong, on
-34.2% of cases**, against 67.1% and 9,874 wrong answering everything. The only dial left on the
+hand, and a ridge estimate of how much of the record is missing (error 0.057) that refuses
+outright below 35%. On 30,000 records of undeclared completeness: **99.6% right, 45 wrong, on
+34.9% of cases**, against 67.1% and 9,874 wrong answering everything. The only dial left on the
 live case is the target precision. Write-up: `results/2026-10-13-the-page-stops-asking.md`.
 
 **And then the uniform-missingness assumption got tested** (13 Oct, 12:30). Every number before
@@ -22,8 +22,12 @@ this hid evidence at random. Cut the same number of findings seven different rea
 top-1 at a fifth of a record runs from **19.6% to 73.2%** — "20% of a record" is not one thing.
 The calibrated rule survives 33 of 35 cells; its worst is 93.6% [91.2%, 95.4%] on the likeliest
 pattern of all. Hold that pattern out of the fit and it breaks properly: 92.5% [90.2%, 94.3%].
-Fixing it needed both the pattern in the fit *and* a feature for how unusual the findings are —
-either alone is worse than neither. Write-up: `results/2026-10-13-missing-not-at-random.md`.
+**We could not fully fix that cell.** Fitting against the pattern and adding a feature for how
+unusual the findings are takes it from 91.5% to 93.6%, short of the 95% promised; each ingredient
+helps a little and monotonically. An earlier version of that ladder claimed the fix worked and
+that one ingredient alone was worse than neither — it came from a scratch script, and when it was
+moved into `run_missingness.py` so anyone could reproduce it, the effect vanished. The corrected
+table and the retraction are both in `results/2026-10-13-missing-not-at-random.md`.
 
 **The prices were made up, so they got looked up** (13 Oct, 14:30). Every economics figure here
 priced a wrong answer at 100 and a handover at 5, and nobody had argued for either. Published:
@@ -105,7 +109,7 @@ What fixed it was deleting the clever part. Ranking by **expected information ga
 than asking nothing at all** (39.9% against 42.9%), because it is an expectation taken under the
 model's own beliefs and those beliefs are wrong on exactly the sparse records where advice matters.
 Ranking by **answer breadth** — log2 of how many answers a question admits — needs no beliefs and
-adds 25 to 29 points over a coin. In clinical terms: characterise what you already know before
+adds 13 to 29 points over a coin (24.6 at three findings). In clinical terms: characterise what you already know before
 asking about one more symptom.
 
 Re-measured after three bugs turned up, all of them in our favour: a negative answer was switching

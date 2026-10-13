@@ -67,31 +67,49 @@ Refit with *"standard questions, no follow-ups"* removed entirely, then test on 
 | fitted against all seven patterns | 93.6% | [91.2%, 95.4%] |
 | that pattern held out of the fit | **92.5%** | **[90.2%, 94.3%]** — excludes the target |
 
-And the ladder underneath it, measured while looking for a fix:
+And the ladder underneath it. **This table replaced an earlier one and the correction matters**,
+so the first version is below it.
 
 | the pattern is in the fit | the calibration knows how unusual the findings are | result |
 |---|---|---|
-| no | no | 91.2% |
-| no | yes | 91.0% |
-| yes | no | **89.9%** |
-| yes | yes | **95.3%** |
+| no | no | 91.5% |
+| no | yes | 92.5% |
+| yes | no | 92.9% |
+| yes | yes | **93.6%** |
 
-**Neither alone is enough.** Training on the pattern without a feature that can represent it is
-worse than not training on it. The feature without the data does nothing. Two mechanisms, and you
-need both — which is the third time this project has arrived there, after the ACMG strength cap
-needing an abstention beside it, and the calibration needing a completeness floor beside it.
+Each ingredient helps a little, they help more together, and **together they still do not reach
+95%.** The honest reading is that this cell is the limit of the method rather than something we
+fixed. The shipped rule under-delivers on the likeliest missingness pattern at 40% evidence by
+about a point and a half, with an interval of [91.2%, 95.4%] that still contains the target.
 
 The feature is how unusual the findings in hand are: the average of `1 − P(this question gets
 answered)` over the record. A record holding only the questions everyone gets asked says much
 less than one of the same size holding things a patient volunteered, and a count cannot tell them
-apart.
+apart. It is worth about a point, which is worth having and is not a fix.
+
+### The version of this table that was published first, and was wrong
+
+The first ladder here read 91.2 / 91.0 / **89.9** / **95.3**, and the paragraph under it claimed
+that training on the pattern without the feature was *worse than not training on it at all*, and
+that the two together restored the promise. Neither survives.
+
+Those numbers came from a throwaway probe that used a different subset of patterns for the
+held-out fit and different band edges, and was never run from the script in this repo. When the
+ladder was added to `run_missingness.py` so anyone could reproduce it, the effect vanished: the
+real relationship is monotonic and modest.
+
+A headline built on a script that only existed in a scratch directory is a headline nobody can
+check, including us. That is the whole failure mode this project is about, and it is the second
+time it has happened here — see the `max()` tie-break in
+`2026-10-13-breadth-beats-information.md`. The ladder is now computed by the same script that
+prints the tables above it.
 
 ## What this means for anyone deploying it
 
 **Fit the calibration against the way records go short where it will run.** Not against uniform
 thinning, which is what every version of this before today did. The cost of getting that wrong is
-measured above: about three points of precision on a promise of ninety-five, on the single
-likeliest shape a rushed intake takes.
+measured above: about two points of precision on a promise of ninety-five, on the single likeliest
+shape a rushed intake takes — and fitting it right recovers most but not all of that.
 
 The floor does the rest of the work. At a fifth of a record and below, every pattern goes silent,
 including the ones where top-1 is 73% and it would have been tempting to answer.

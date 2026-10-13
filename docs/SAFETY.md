@@ -24,7 +24,7 @@ flattered by a filter. The first version of this measurement was exactly that, a
 and replaced rather than shipped.
 
 It is still wrong sometimes, and the interface never hides that. The accuracy on answered cases is
-printed next to the answer, with its confidence interval, at whatever coverage the dial is set to.
+printed next to the answer, with its confidence interval, at whatever bar the dial is set to.
 
 ## 2. Sensitive information
 
@@ -58,8 +58,8 @@ fixed — the dial would have looked decorative while the server answered everyt
 
 The system does not make them. It never selects a treatment, a dose or a disposition; the outcome
 space is a label over a public dataset. Its only decision is **answer or hand over**, and that
-decision is tuned to be pessimistic: the measured optimum sits at 5-10% coverage, which means it
-refuses roughly nine cases in ten.
+decision is tuned to be pessimistic: holding a 95% bar, it answers about **35%** of a mixed stream
+and hands over the other two in three.
 
 Costs are asymmetric by design. A referral is cheap and a confident wrong answer is expensive, so
 the threshold is set from that asymmetry rather than from accuracy alone.

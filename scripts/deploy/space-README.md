@@ -17,8 +17,11 @@ question: **is there enough here?** When there isn't, it refuses, names what to 
 hands the case to a person.
 
 The curve on the page is measured on 1,500 held-out DDXPlus patients across 49 conditions.
-Answering every case gets 21.0% right. Answering only the most confident tenth gets 85.3% right
-and costs 94% less, because the wrong confident answers are the expensive ones.
+On a mixed stream of records of undeclared completeness, answering everything gets 67.1% right.
+Holding a 95% bar it answers about 35% of them at 99.6% and hands the rest to a person.
+
+(This file said "21.0% to 85.3%, 94% cheaper" until 13 Oct. That came from a naive Bayes that was
+retired the same day, and it survived here because this mirror is not deployed on every change.)
 
 Source, every measurement and every dead end: https://github.com/shivang-goliyan/askfirst
 

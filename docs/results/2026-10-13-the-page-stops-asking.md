@@ -45,34 +45,34 @@ grid is necessary, and now there is a number saying why** rather than a design d
 
 ## The fix, in two pieces, because one is not enough
 
-**Calibrate on findings in hand.** Not on completeness — nobody knows that — on the count, which
-every deployment has. An isotonic fit of P(right) against the margin, one per bucket of record
-size. That alone gets:
+**Calibrate on what is in hand.** Not on completeness — nobody knows that — on how many findings
+there are and how unusual they are, both of which every deployment has. An isotonic fit of
+P(right) against the margin, one per bucket. That alone gets:
 
 | record | precision | coverage |
 |---|---|---|
-| 100% | 99.9% | 97.2% |
-| 60% | 99.4% | 61.2% |
-| 40% | 98.8% | 23.5% |
-| 20% | **84.1%** | 1.4% |
-| 10% | silent | — |
+| 100% | 100.0% | 97.7% |
+| 60% | 99.4% | 63.9% |
+| 40% | 98.5% | 26.2% |
+| 20% | **84.0%** | 2.2% |
+| 10% | **52.6%** | 0.3% |
 
-It keeps its word at three levels and is correctly silent at the thinnest. It breaks at 20%, and
+It keeps its word at the three fullest levels and breaks at both thin ones. It breaks at 20%, and
 the reason is structural: three findings might be three of three — a simple presentation, complete
 — or three of fifteen. The count cannot tell them apart.
 
 **Estimate how much is missing, and refuse below a floor.** Ridge regression from the record to
 how many findings this patient would have had, which is a property of the illness rather than of
-the intake, and so is learnable from the findings that did arrive. **Mean error 0.053 on a 0–1
+the intake, and so is learnable from the findings that did arrive. **Mean error 0.057 on a 0–1
 scale.** Refuse outright below 35% estimated completeness, whatever the confidence says:
 
-| record | precision | coverage | 95% interval |
-|---|---|---|---|
-| 100% | 99.9% | 96.9% | [99.85%, 99.98%] |
-| 60% | 99.4% | 58.4% | [99.05%, 99.59%] |
-| 40% | 98.6% | 15.6% | [97.63%, 99.18%] |
-| 20% | silent | — | |
-| 10% | silent | — | |
+| record | precision | coverage | answered | 95% interval |
+|---|---|---|---|---|
+| 100% | 100.0% | 97.4% | 5,845 | [99.9%, 100.0%] |
+| 60% | 99.4% | 61.0% | 3,659 | [99.0%, 99.6%] |
+| 40% | 98.2% | 16.2% | 971 | [97.1%, 98.8%] |
+| 20% | — | 0.02% | **1** | one answered case, and it was wrong |
+| 10% | silent | — | 0 | |
 
 **Two mechanisms, and you need both** — the same conclusion module B reached from the other end,
 where capping a predictor's strength only works if it also declines to speak when it has little
@@ -85,9 +85,9 @@ to say.
 | | right | wrong | answered |
 |---|---|---|---|
 | answer everything | 67.1% | **9,874** | 100% |
-| this rule | **99.6%** | **38** | 34.2% |
+| this rule | **99.6%** | **45** | 34.9% |
 
-95% interval on the precision: [99.49%, 99.73%]. It hands over two cases in three and gets 38
+95% interval on the precision: [99.43%, 99.68%]. It hands over two cases in three and gets 45
 wrong instead of 9,874, with nobody telling it anything about any of them.
 
 ## What changed in the product

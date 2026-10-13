@@ -58,8 +58,8 @@ across them. On a complete record the product is nearly pointless, and the page 
 problem, not an input to it. The scorer's confidence turns out to be honest on a complete record
 and 40 points underconfident at 40% evidence, so a cut-off chosen on full records promises 95%
 precision and delivers 48% on a tenth of one. It now calibrates against how many findings it has
-in hand, estimates how much of the record is missing to within 0.053, and refuses outright below a
-floor. On 30,000 records of undeclared completeness: **99.6% right, 38 wrong, on the 34% of cases
+in hand, estimates how much of the record is missing to within 0.057, and refuses outright below a
+floor. On 30,000 records of undeclared completeness: **99.6% right, 45 wrong, on the 35% of cases
 it chooses to answer** — against 67.1% and 9,874 wrong if it answers everything.
 
 **And it was tested against records that do not go missing at random**, which is what every

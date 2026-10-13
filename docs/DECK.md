@@ -110,8 +110,8 @@ the margin is honest on a full record and **40 points underconfident at 40% evid
 cut-off chosen on complete records promises 95% and delivers **48%** on a tenth of one.
 
 Two pieces, because one measured insufficient: calibrate on **findings in hand** (observable where
-the fraction is not), and **estimate how much of the record is missing** (error 0.053), refusing
-outright below a floor. On 30,000 records of undeclared completeness: **99.6% right, 38 wrong, 34%
+the fraction is not), and **estimate how much of the record is missing** (error 0.057), refusing
+outright below a floor. On 30,000 records of undeclared completeness: **99.6% right, 45 wrong, 35%
 answered** against 67.1% and 9,874.
 
 The line to say out loud: *the page now tells you what it thinks instead of asking you.*
@@ -119,8 +119,8 @@ The line to say out loud: *the page now tells you what it thinks instead of aski
 Then the robustness half: records do not go missing at random, and we tested seven ways they
 actually go short. Accuracy at a fifth of a record runs **19.6% to 73.2%** depending only on which
 fifth. The rule holds in 33 of 35 cells; it broke on the likeliest pattern, and fixing it needed
-the pattern in the fit **and** a feature for how unusual the findings are — training on it without
-the feature measured *worse* than not training on it.
+the pattern in the fit **and** a feature for how unusual the findings are, and even then it reaches
+only 93.6% against a 95% promise. Say that we could not fully fix it.
 
 ## 7a — What we got wrong, 1 of 2: the measurements
 
@@ -140,8 +140,8 @@ on a screen, which is its own kind of signal.
 - The table of four ranking objectives, three of them below a coin, ending at 72.5% for the one
   that needs no beliefs at all.
 - **Records do not go missing at random.** Seven realistic patterns; 19.6% to 73.2% at a fifth of a
-  record. The refusal broke on the likeliest one, and fixing it needed the pattern in the fit
-  *and* a feature for how unusual the findings are.
+  record. The refusal broke on the likeliest one and we could not fully fix it — 91.5% to 93.6%
+  against a 95% promise. An earlier ladder said we had; it came from a scratch script.
 
 Not on the slide, still in the repo, say it if asked: cheap-proposes-then-model-ablates caps the
 system near 32% because shortlist recall at k=20 is 31.8%. DDXPlus is synthetic. Not clinically
@@ -223,5 +223,6 @@ Close on the live URL and invite them to try to make it answer something it shou
 - Dark, plain, one accent colour. The numbers are the design.
 - Slide 4 is the hero — one table, big type, nothing else on it.
 - Screenshots come from the deployed URL, not localhost. A judge will notice.
-- Cover image: the completeness selector at "20% in" with "39.9% → 73.5%" legible at thumbnail size.
+- Cover image: built, `docs/assets/cover.png`, rendered from `ui/cover.html`. A record with most
+  of its fields greyed out, "not answering yet", and the one thing to go and get.
 - No slide that says "AI-powered". The mechanism is specific; name it.

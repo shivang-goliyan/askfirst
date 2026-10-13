@@ -603,5 +603,31 @@
     "answered": 0
    }
   }
- }
+ },
+ "ladder": [
+  {
+   "pattern_in_fit": "no",
+   "rarity_feature": "no",
+   "precision": 0.9155,
+   "answered": 497
+  },
+  {
+   "pattern_in_fit": "no",
+   "rarity_feature": "yes",
+   "precision": 0.9246,
+   "answered": 650
+  },
+  {
+   "pattern_in_fit": "yes",
+   "rarity_feature": "no",
+   "precision": 0.9292,
+   "answered": 537
+  },
+  {
+   "pattern_in_fit": "yes",
+   "rarity_feature": "yes",
+   "precision": 0.936,
+   "answered": 547
+  }
+ ]
 }

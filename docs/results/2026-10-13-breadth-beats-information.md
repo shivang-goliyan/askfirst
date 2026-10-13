@@ -30,7 +30,7 @@ Two things to take from that table.
 than leaving the record alone, at all three starting sizes, with intervals that do not touch. It
 picks a question, you go and get the answer, and the decision gets *worse*.
 
-**Ranking by `log2(number of answers the question admits)` adds 24 to 29 points over a coin**, and
+**Ranking by `log2(number of answers the question admits)` adds 13 to 29 points over a coin** — 24.6 at three findings, 29.2 at two, 13.5 at five, and
 lands within 2 points of an oracle that is told which questions this patient can actually answer.
 
 ## Why the principled objective loses
@@ -100,6 +100,27 @@ caught its own error before publication rather than after.
 
 Four attempts, three of them worse than a coin, and the winner is a property of the question rather
 than anything learned. That pattern is now the most reliable finding in this project.
+
+## The order is the same for every patient, and that is the point
+
+Worth stating outright rather than leaving for a reviewer to notice: `breadth × answer rate` are
+both properties of the *question*, so the top of the "go get" list is identical for a 79-year-old
+with COPD, a 30-year-old in atrial fibrillation and a 53-year-old having an asthma attack. We
+checked on the live API; all three return the same first four questions.
+
+That is not a bug being excused. It is the result. Four patient-specific objectives were tried —
+flip probability, pathology-conditioned discrimination, expected information gain, answer rate —
+and three of them lost to a coin. **We went looking for a patient-specific ranking and found that
+a patient-independent one wins**, on this benchmark, by 24.6 points at three findings.
+
+What *is* patient-specific is everything shown beside the order: what the current answer rests on,
+what each answer would settle in bits, how often one more fact would change the decision. Those
+move case by case. The ordering does not, and a judge who clicks two patients will see that
+immediately, so it belongs in the write-up rather than in their mouth.
+
+It also means the advice half does not need an open model at all. The refusal half does — the
+calibration, the ablation and the sensitivity map are all functions of the full distribution —
+and conflating the two would overstate why the hardware matters.
 
 ## What this does not say
 

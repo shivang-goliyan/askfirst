@@ -38,22 +38,26 @@ def entropy(dist):
 def answer_breadth(spec):
     """How much a question COULD tell you: log2 of the number of answers it admits.
 
-    This is what decides the order, and it beat every cleverer objective we tried. 1,000
+    This is what decides the order, and it beat every cleverer objective we tried. 4,000
     held-out patients, three findings in hand, one question allowed, 25 fields the patient does
     not have mixed into the candidate pool:
 
-        no question                      41.7%
-        ask at random                    46.2%
-        ask by expected information      38.2%   <- worse than asking nothing
-        ask whatever usually answers     42.8%   <- also worse than random
-        ask the widest question          66.9%
-        widest, weighted by answer rate  72.7%
-        (upper bound: widest question the patient can actually answer, 70.2%)
+        no question                      42.9%
+        ask at random                    47.9%
+        ask by expected information      39.9%   <- worse than asking nothing
+        ask whatever usually answers     42.0%   <- also worse than random
+        ask the widest question          71.6%
+        widest, weighted by answer rate  72.5%
+        (upper bound: widest question the patient can actually answer, 74.3%)
 
-    Expected information gain sums P(value) x H(outcome | value) using the model's own beliefs,
-    and on a sparse record those beliefs are wrong — so maximising expected information under a
-    miscalibrated model is worse than guessing. How much a question could tell you needs no
-    beliefs at all. In clinical terms: characterise the pain before asking about one more symptom.
+    Because both terms are properties of the QUESTION, the resulting order is the same for every
+    patient. That is the finding rather than an oversight: four patient-specific objectives were
+    tried and three lost to a coin.
+
+    What this computes is not the literature's expected information gain. P(value) here is the
+    fitted marginal, not P(value | record) taken from the model, so the quantity can come out
+    negative and a true mutual information cannot. It is a marginal-prior approximation, and the
+    comparison above should be read as against that rather than against a faithful BALAR.
 
     Answer rate on its own is worth nothing, which is the ablation that says breadth is really
     the mechanism and not a proxy for "questions that tend to get answered".
@@ -169,8 +173,8 @@ def rank_gaps(record, scorer, schema, candidates=None):
 
     # Breadth, discounted by how often the question comes back with anything; expected
     # information only breaks ties. Ranking by expected information gain measured WORSE than
-    # asking nothing at all (38.2% against 41.7%), and worse than a coin (46.2%). Breadth alone
-    # gives 66.9% and breadth x answer rate gives 72.7% — better even than being told which
+    # asking nothing at all (39.9% against 42.9%), and worse than a coin (47.9%). Breadth alone
+    # gives 71.6% and breadth x answer rate gives 72.5%, against 74.3% for being told which
     # questions this patient can answer. The bits are still computed and still shown; they just
     # do not decide the order, because they are an expectation taken under beliefs that are
     # wrong on exactly the sparse records where the advice matters.
