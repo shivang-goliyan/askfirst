@@ -44,8 +44,11 @@ def test_curve_figures_quoted_right():
 
 
 def test_advice_figures_quoted_right():
+    """The arms we actually headline. "bits" is the marginal-prior version, kept in the
+    experiment for comparison but no longer the one quoted — "truebits" is the objective as the
+    literature states it, and that is what the claim is made against."""
     row = load("decision-value.json")["3"]
-    for key in ("none", "random", "bits", "likely"):
+    for key in ("none", "random", "truebits", "likely"):
         figure = pct(row[key])
         hits = [n for n, b in text(*SHOP).items() if figure in b]
         assert hits, f"nothing in the shop window quotes {key} = {figure}"

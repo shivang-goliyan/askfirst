@@ -199,8 +199,8 @@
     <tr><th>what we ranked questions by</th><th>score</th><th>against</th></tr>
     <tr><td>flip probability — most likely to change the answer</td><td class="bad">18.8%</td><td>26.0% random</td></tr>
     <tr><td>pathology-conditioned discrimination</td><td class="bad">14.7%</td><td>20.0% at k=10</td></tr>
-    <tr><td><strong>expected information gain</strong> — the literature's, implemented faithfully</td><td class="bad">41.0%</td><td>47.9% random, 42.9% silence</td></tr>
-    <tr class="key"><td>how many answers the question even admits</td><td>72.2%</td><td>47.9% random</td></tr>
+    <tr><td><strong>expected information gain</strong> — the literature's, implemented faithfully</td><td class="bad">41.3%</td><td>43.7% random, 42.7% silence</td></tr>
+    <tr class="key"><td>how many answers the question even admits</td><td>72.3%</td><td>43.7% random</td></tr>
   </table>
   <p>The winner is a property of the question, not of anything the model believes. That pattern is
   the most reliable finding in this project.</p>
@@ -269,7 +269,10 @@
   over-weighted predictor enters it</em> — not clinical calls being overturned.</p>
   <p><span class="hot">And it is model-dependent: with ESM-2 650M, supporting strength moves 4 of
   28, not 0 of 11.</span> The cap held because the small model was unsure, not because the cap was
-  sufficient. Eleven groups is a demonstration; all eleven are on the page.</p>
+  sufficient.</p>
+  <p class="dim">Eleven groups is a demonstration, not a headline, and all eleven are on the page.
+  <strong>171 of 182 contested groups cannot take a computational vote at all</strong> with the
+  35M model — a number that itself shrinks as the model gets better.</p>
   <div class="src">askfirst.kgbnetwork.com/#level=B — docs/results/2026-10-13-computational-line-ablation.md</div>
 </section>
 

@@ -114,12 +114,12 @@ Write-up: `results/2026-10-13-computational-line-ablation.md`.
 
 ## The advice works too, as of 13 Oct
 
-One question, from a record cut to three findings, 4,000 held-out patients: **42.9% without it,
-47.9% asking at random, 72.2% asking what the engine says.** Intervals [46.3%, 49.4%] against
+One question, from a record cut to three findings, 4,000 held-out patients: **42.7% without it,
+43.7% asking at random, 72.3% asking what the engine says.** Intervals [46.3%, 49.4%] against
 [71.1%, 73.8%]. An oracle told which questions this patient can actually answer gets 74.3%.
 
 What fixed it was deleting the clever part. Ranking by **expected information gain measured worse
-than asking nothing at all** (41.0% against 42.9%, with the objective implemented faithfully —
+than asking nothing at all** (41.3% against 42.7%, with the objective implemented faithfully —
 P(value | record) through the outcomes, not a population marginal), because it is an expectation taken under the
 model's own beliefs and those beliefs are wrong on exactly the sparse records where advice matters.
 Ranking by **answer breadth** — log2 of how many answers a question admits — needs no beliefs and

@@ -141,7 +141,7 @@ on a screen, which is its own kind of signal.
 
 ## 7b — What we got wrong, 2 of 2: the objectives and the assumption
 
-- The table of four ranking objectives, three of them below a coin, ending at 72.2% for the one
+- The table of four ranking objectives, three of them below a coin, ending at 72.3% for the one
   that needs no beliefs at all.
 - **Records do not go missing at random.** Seven realistic patterns; 19.2% to 73.2% at a fifth of a
   record. The refusal broke on the likeliest one and we could not fully fix it — 91.5% to 93.6%

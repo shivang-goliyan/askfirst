@@ -42,12 +42,12 @@ def answer_breadth(spec):
     held-out patients, three findings in hand, one question allowed, 25 fields the patient does
     not have mixed into the candidate pool:
 
-        no question                      42.9%
-        ask at random                    47.9%
+        no question                      42.7%
+        ask at random                    43.7%
         ask by expected information      39.9%   <- worse than asking nothing
         ask whatever usually answers     42.0%   <- also worse than random
-        ask the widest question          71.4%
-        widest, weighted by answer rate  72.2%
+        ask the widest question          60.7%
+        widest, weighted by answer rate  72.3%
         (upper bound: widest question the patient can actually answer, 74.3%)
 
     Because both terms are properties of the QUESTION, the resulting order is the same for every
@@ -198,8 +198,8 @@ def rank_gaps(record, scorer, schema, candidates=None, conditional=None):
 
     # Breadth, discounted by how often the question comes back with anything; expected
     # information only breaks ties. Ranking by expected information gain measured WORSE than
-    # asking nothing at all (39.9% against 42.9%), and worse than a coin (47.9%). Breadth alone
-    # gives 71.4% and breadth x answer rate gives 72.2%, against 74.3% for being told which
+    # asking nothing at all (41.3% against 42.7%), and worse than a coin (43.7%). Breadth alone
+    # gives 60.7% and breadth x answer rate gives 72.3%, against 74.3% for being told which
     # questions this patient can answer. The bits are still computed and still shown; they just
     # do not decide the order, because they are an expectation taken under beliefs that are
     # wrong on exactly the sparse records where the advice matters.

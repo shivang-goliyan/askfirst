@@ -69,7 +69,7 @@ accuracy at a fifth of a record runs from 19.2% to 73.2% depending only on which
 refusal rule keeps its promise in 33 of 35 cells, and the two it does not are in the write-up.
 
 **The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:
-42.9% without it, 47.9% asking at random, **72.2% asking what the engine says**. The ranking rule
+42.7% without it, 43.7% asking at random, **72.3% asking what the engine says**. The ranking rule
 is `log2(number of answers the question admits)`, weighted by how often the question gets answered
 at all. In clinical terms: characterise what you already know before asking about one more symptom.
 
@@ -84,7 +84,7 @@ bar puts 1.7 there and still takes 35% of the queue off a person's desk.**
 
 **What we got wrong, with dates on it.** Four ranking objectives were tried and three lost to a
 coin — including expected information gain, the objective the literature uses, which measured worse
-than asking nothing at all (39.9% against 42.9%). Then three bugs turned up in that measurement,
+than asking nothing at all (41.3% against 42.7%). Then three bugs turned up in that measurement,
 every one of them in our favour, and fixing them made the objective we beat *worse*. All of it is
 in `docs/results/`, dated, in the order it happened.
 

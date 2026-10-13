@@ -14,15 +14,21 @@ to a handful of findings, **one question allowed**. The candidate pool is everyt
 actually has that we have not seen, plus 25 fields they do not have, so a strategy is not rewarded
 for knowing which questions have answers.
 
-| findings in hand | no question | ask at random | expected information, **as the literature states it** | expected information, population marginals | whatever usually answers | whatever *this patient* can answer | by answer breadth | breadth × rate | *oracle* |
-|---|---|---|---|---|---|---|---|---|---|
-| 2 | 26.5% | 32.0% | **23.6%** | 22.8% | 24.1% | 50.2% | 60.5% | **61.8%** | *63.8%* |
-| 3 | 42.9% | 47.9% | **41.0%** | 39.9% | 41.8% | 64.2% | 71.4% | **72.2%** | *74.2%* |
-| 5 | 70.3% | 72.9% | **69.5%** | 68.1% | 70.3% | 83.2% | 86.1% | **86.6%** | *87.4%* |
+| findings in hand | no question | ask at random | expected information, **as the literature states it** | whatever *this patient* can answer | by answer breadth | **breadth × rate (ships)** | *oracle* |
+|---|---|---|---|---|---|---|---|
+| 2 | 27.7% | 28.5% | **25.5%** | 44.7% | 46.7% | **61.6%** | *63.0%* |
+| 3 | 42.7% | 43.7% | **41.3%** | 60.9% | 60.7% | **72.3%** | *74.7%* |
+| 5 | 69.9% | 70.4% | **68.0%** | 81.9% | 80.2% | **86.7%** | *87.6%* |
 
-95% intervals at three findings (n=4,000): no question [41.3%, 44.4%], random [46.3%, 49.4%],
-expected information [39.5%, 42.6%], answerable [62.7%, 65.6%], breadth [70.0%, 72.8%],
-breadth × rate [70.7%, 73.5%].
+95% intervals at three findings (n=4,000): random [42.2%, 45.2%], expected information
+[39.8%, 42.8%], breadth [59.1%, 62.2%], breadth × rate [70.9%, 73.7%].
+
+**Candidates are every one of the 223 fields not already in the record**, which is what the app
+ranks over. An earlier version of this table used a shortlist — the fields this patient really
+has plus 25 decoys — which quietly guaranteed every answerable question was on the list. Both
+reviewers caught it. The harder pool makes random collapse (43.7% against 47.9%), makes breadth
+alone fall eight points, and makes **the shipped order rise**, because the answer-rate term
+finally has something to filter.
 
 Two things to take from that table.
 
@@ -64,10 +70,14 @@ most of the discriminating signal. Ranking by breadth finds them without being t
 
 Breadth × answer rate is the order the engine ships. The obvious objection is that the rate term
 is doing the work — that this is really "ask whatever usually gets answered" in disguise. It is
-not: **the population answer rate on its own scores 41.8%, below a coin's 47.9% and below asking
-nothing at all.** Breadth alone gets 71.4%. The product is worth about one further point with
-overlapping intervals, so the multiplier is kept because it never measured worse, not because it
-is established.
+not: **the population answer rate on its own scores 41.1%, below a coin and below asking nothing
+at all.** Breadth alone gets 60.7%, and the product gets **72.3%**.
+
+That multiplier is worth **11.6 points**, with intervals that do not touch — [59.1%, 62.2%]
+against [70.9%, 73.7%]. An earlier version of this note said it was worth about one point and was
+"kept because it never measured worse". That was an artifact of the shortlisted candidate pool,
+which had already removed most of the unanswerable questions the rate term exists to filter. On
+the real pool it is half the rule.
 
 **But a conditional answer rate is a different thing, and it is not worthless.** Asking whatever
 *this patient* is likeliest to be able to answer — P(the question returns anything | record),
@@ -129,9 +139,9 @@ caught its own error before publication rather than after.
 1. **Flip probability** — 18.8% against 26.0% for random. Actively harmful. Selects for volatility.
 2. **Pathology-conditioned discrimination** — 14.7% against 20.0% at k=10. "What separates
    hypotheses" is not "what is missing from this record".
-3. **Expected information gain** — 39.9% against 47.9% for random and 42.9% for asking nothing.
+3. **Expected information gain** — 39.9% against 43.7% for random and 42.7% for asking nothing.
    The principled choice the literature uses, and the only one that is worse than silence.
-4. **Answer breadth** — 71.4%, or 72.2% weighted by how often the question gets answered. No model
+4. **Answer breadth** — 60.7%, or 72.3% weighted by how often the question gets answered. No model
    beliefs involved.
 
 Four attempts, three of them worse than a coin, and the winner is a property of the question rather
