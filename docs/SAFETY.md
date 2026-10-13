@@ -98,6 +98,12 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
   calibrates against how many findings it has, estimates how much of the record is missing, and
   refuses outright below a floor — two mechanisms, because one measured insufficient. On a mixed
   stream it is 99.6% right on the 34% of cases it answers, against 67.1% answering everything.
+- **An impossible record is refused as impossible.** Tick all 223 boxes and the shipped model used
+  to answer "Pneumonia" at a calibrated 0.96 — the calibration had only ever seen subsets of real
+  records, so a superset ran off the end of it. The largest record in the fitting data holds 37
+  findings; anything above 44 is now refused with that stated. The response still shows what the
+  calibration would have claimed, as the evidence for why the check exists
+  (`docs/results/2026-10-13-trying-to-break-it.md`).
 - It will never print "100% likely to be right". The calibration's top block sits at exactly 1.0
   and the display is capped below it on purpose.
 - **Records do not go missing at random, and we stopped pretending they do.** Seven realistic

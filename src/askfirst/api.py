@@ -70,6 +70,30 @@ class Case(BaseModel):
     target: float = 0.95
 
 
+SCALARS = (str, int, float, bool)
+
+
+def clean(record, schema):
+    """Keep what the schema knows and what the scorer can actually hold.
+
+    Anything else used to reach the scorer and come back as a 503 reading
+    "Scoring failed: unhashable type: 'dict'", which is a stack trace wearing a coat."""
+    kept, ignored = {}, []
+    for name, value in (record or {}).items():
+        if name not in schema.fields:
+            ignored.append(name)
+            continue
+        items = value if isinstance(value, list) else [value]
+        if any(not isinstance(v, SCALARS) and v is not None for v in items):
+            raise HTTPException(
+                422,
+                f"{name!r} came in as {type(value).__name__}. A finding is a value or a list of "
+                "values, not something nested.",
+            )
+        kept[name] = value
+    return kept, ignored
+
+
 def unpack(baked, schema):
     """Baked priors arrive as one probability per declared value, in order, because JSON turns
     an integer value into a string key and half the DDXPlus fields are numbered scales."""
@@ -228,6 +252,10 @@ def why(answering, decision):
     # is the one sentence this product must never print
     odds = decision["chance_right"]
     said = "better than 99%" if odds >= 0.995 else f"about {odds:.0%}"
+    if not decision["could_be_a_patient"]:
+        return (f"{decision['findings']} findings in one record. The largest record in the data "
+                f"this was fitted on holds 37, so this did not come from a patient and nothing "
+                f"measured here applies to it.")
     if answering:
         return f"{said} likely to be right, which clears the {decision['target']:.0%} asked for"
     if not decision["enough_record"]:
@@ -267,13 +295,15 @@ def assess(case: Case):
     """Score a record, decide whether to answer, and say what to go and get if not."""
     schema = schema_for(case.domain)
     scorer, which = pick_scorer(schema)
+    record, ignored = clean(case.record, schema)
+    target = min(1.0, max(0.0, case.target))
 
     try:
-        dist = scorer(case.record)
+        dist = scorer(record)
     except Exception as e:
         raise HTTPException(503, f"Scoring failed: {e}") from e
 
-    gaps = rank_gaps(case.record, scorer, schema)
+    gaps = rank_gaps(record, scorer, schema)
     confidence = max(dist.values()) if dist else 0.0
     threshold = threshold_for(case.coverage, case.kept)
     # the cut-off was measured against the softmax. A model on a GPU has its own confidence
@@ -282,24 +312,29 @@ def assess(case: Case):
 
     rule = rule_for(schema, scorer) if calibrated else None
     if rule:
-        from .calibrate import FLOOR
+        from .calibrate import CEILING, FLOOR
         cal, done = rule
-        complete = done(case.record)
-        chance = cal(confidence, case.record)
-        answering = complete >= FLOOR and chance >= case.target
+        complete = done(record)
+        chance = cal(confidence, record)
+        plausible = len(record) <= CEILING
+        answering = plausible and complete >= FLOOR and chance >= target
         decision = {
             "rule": "calibrated",
-            "target": case.target,
+            "target": target,
             "chance_right": round(chance, 4),
             "completeness": round(complete, 4),
             "floor": FLOOR,
             "enough_record": complete >= FLOOR,
+            "findings": len(record),
+            "ceiling": CEILING,
+            "could_be_a_patient": plausible,
         }
     else:
         answering = confidence >= threshold
         decision = {"rule": "threshold read off the baked curve", "target": None,
                     "chance_right": None, "completeness": None, "floor": None,
-                    "enough_record": None}
+                    "enough_record": None, "findings": len(record), "ceiling": None,
+                    "could_be_a_patient": True}
 
     ranked = sorted(dist.items(), key=lambda kv: -kv[1])[:5]
     return {
@@ -310,8 +345,9 @@ def assess(case: Case):
         "confidence": round(confidence, 4),
         "threshold": round(threshold, 4),
         "threshold_calibrated": calibrated,
+        "ignored_fields": ignored,
         "entropy_bits": round(entropy(dist), 3),
-        "one_more_fact_flips": most_telling_gap(case.record, scorer, schema, gaps),
+        "one_more_fact_flips": most_telling_gap(record, scorer, schema, gaps),
         "answer": (
             {"key": ranked[0][0], "label": schema.label_for_outcome(ranked[0][0])}
             if answering and ranked else None
@@ -328,7 +364,7 @@ def assess(case: Case):
                 "question": schema.fields[i.field].question or i.field,
                 "influence": round(i.shift, 4),
             }
-            for i in sensitivity_map(case.record, scorer, schema)[:6]
+            for i in sensitivity_map(record, scorer, schema)[:6]
         ],
     }
 

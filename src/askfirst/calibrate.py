@@ -29,6 +29,12 @@ BUCKETS = ((1, 2), (3, 4), (5, 7), (8, 11), (12, 99))
 # things a patient volunteered, and without this the calibration cannot tell them apart.
 RARITY = (0.55, 0.7, 0.82, 0.92)
 FLOOR = 0.35      # estimated completeness below which it hands over whatever the confidence says
+# The largest record among the 30,000 patients the scorer was fitted on holds 37 findings, and
+# the largest in all 60,000 holds 38. A record with more than this did not come from a patient.
+# It matters because the calibration has only ever seen SUBSETS of real records — a superset is
+# off the end of everything it knows, and it extrapolates cheerfully: tick all 223 boxes and the
+# shipped model answered "Pneumonia" at a calibrated 0.96.
+CEILING = 44
 
 
 def isotonic(xs, ys):

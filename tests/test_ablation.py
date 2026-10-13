@@ -239,3 +239,25 @@ def test_thin_records_are_not_settled():
     schema = load_schema("ddxplus")
     model = SoftmaxScorer.load("src/askfirst/baked/ddxplus_softmax.npz", schema)
     assert 0.0 <= most_telling_gap({"E_55": "present"}, model, schema) <= 1.0
+
+
+def test_impossible_records_refused():
+    """No patient in 60,000 holds more than 38 findings; 223 is not a patient."""
+    from askfirst.calibrate import CEILING
+    schema = load_schema("ddxplus")
+    assert CEILING > 38
+    assert len(schema.fields) > CEILING
+
+
+def test_nested_values_rejected():
+    from fastapi import HTTPException
+    from askfirst.api import clean
+    schema = load_schema("ddxplus")
+    kept, ignored = clean({"E_55": "present", "made_up": 1}, schema)
+    assert kept == {"E_55": "present"} and ignored == ["made_up"]
+    try:
+        clean({"E_55": {"a": 1}}, schema)
+    except HTTPException as e:
+        assert "nested" in e.detail
+    else:
+        raise AssertionError("a dict is not a finding")
