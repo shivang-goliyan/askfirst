@@ -8,6 +8,7 @@ Only headline figures are covered. Asserting every number in every document woul
 fail for an honest rounding change, which trains people to ignore it."""
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -26,7 +27,20 @@ def load(name):
 
 
 def text(*names):
-    return {n: (ROOT / n).read_text() for n in names}
+    """HTML comes back with its stylesheet removed. A colour like --hot:#ff9f45 contains "45",
+    which is how this suite once passed a deck that quoted 38 where the artifact said 45."""
+    out = {}
+    for name in names:
+        body = (ROOT / name).read_text()
+        if name.endswith(".html"):
+            body = re.sub(r"<style>.*?</style>", "", body, flags=re.S)
+        out[name] = body
+    return out
+
+
+def quotes(body, figure):
+    """The figure as a reader would see it, not as a substring of something else."""
+    return re.search(rf"(?<![\d.]){re.escape(figure)}(?![\d.%])", body) is not None
 
 
 def pct(x, places=1):
@@ -40,7 +54,7 @@ def test_curve_figures_quoted_right():
         rows = curve["levels"][level]
         figure = pct(rows[-1]["accuracy"])
         for name, body in text(*where).items():
-            assert figure in body, f"{name} is missing the answer-everything figure {figure} at {level}"
+            assert quotes(body, figure), f"{name} is missing the answer-everything figure {figure} at {level}"
 
 
 def test_advice_figures_quoted_right():
@@ -50,7 +64,7 @@ def test_advice_figures_quoted_right():
     row = load("decision-value.json")["3"]
     for key in ("none", "random", "truebits", "likely"):
         figure = pct(row[key])
-        hits = [n for n, b in text(*SHOP).items() if figure in b]
+        hits = [n for n, b in text(*SHOP).items() if quotes(b, figure)]
         assert hits, f"nothing in the shop window quotes {key} = {figure}"
 
 
@@ -90,9 +104,11 @@ def test_calibration_figures_quoted_right():
     mixed = cal["mixed_stream"]
     for name, body in text("README.md", "docs/STATE.md", "ui/deck.html",
                            "docs/SUBMISSION.md", "docs/DECK.md").items():
-        assert str(mixed["wrong"]) in body, f"{name} has a stale wrong-answer count"
-        assert f"{cal['completeness_error']:.3f}" in body, (
+        assert quotes(body, str(mixed["wrong"])), f"{name} has a stale wrong-answer count"
+        assert quotes(body, f"{cal['completeness_error']:.3f}"), (
             f"{name} has a stale completeness error")
+        # and the number it used to say, which must not survive anywhere
+        assert not quotes(body, "38 wrong"), f"{name} still says 38 wrong"
 
 
 def test_the_floor_and_ceiling_are_stated():

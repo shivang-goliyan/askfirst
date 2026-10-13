@@ -1,0 +1,41 @@
+{
+ "instance": "e2-standard-2",
+ "usd_per_hour": 0.067,
+ "vcpu": 2,
+ "cases_per_level": 200,
+ "by_level": [
+  {
+   "kept": 1.0,
+   "findings": 15.5,
+   "cpu_ms": 39.9,
+   "usd_per_1000": 0.000371
+  },
+  {
+   "kept": 0.6,
+   "findings": 8.9,
+   "cpu_ms": 44.6,
+   "usd_per_1000": 0.000415
+  },
+  {
+   "kept": 0.4,
+   "findings": 5.8,
+   "cpu_ms": 45.6,
+   "usd_per_1000": 0.000424
+  },
+  {
+   "kept": 0.2,
+   "findings": 2.7,
+   "cpu_ms": 53.2,
+   "usd_per_1000": 0.000495
+  },
+  {
+   "kept": 0.1,
+   "findings": 1.2,
+   "cpu_ms": 51.2,
+   "usd_per_1000": 0.000477
+  }
+ ],
+ "mean_cpu_ms": 46.9,
+ "mean_usd_per_1000": 0.000436,
+ "worst_cpu_ms": 53.2
+}

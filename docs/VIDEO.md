@@ -56,7 +56,7 @@ a time, until it stops answering.
 >
 > Thirty thousand records, nobody saying how complete any of them are. Answer everything: sixty-seven
 > percent right, nine thousand eight hundred and seventy-four wrong. This rule: ninety-nine point six
-> percent right, thirty-eight wrong, on the third of cases it chooses to answer.
+> percent right, forty-five wrong, on the third of cases it chooses to answer.
 
 **1:35-1:55 — what to go and get, and the thing we got wrong**
 
