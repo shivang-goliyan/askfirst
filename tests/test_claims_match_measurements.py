@@ -123,7 +123,9 @@ def test_cost_to_serve_quoted_right():
     held either number. Nothing caught it because the cost line had no assertion."""
     cost = load("cost-to-serve.json")
     usd = f"${cost['mean_usd_per_1000']:.4f}"
-    ms = f"{cost['mean_cpu_ms']:.0f} ms"
+    # one decimal on purpose: the mean landed on 44.5 and "%.0f" renders that as 44 while any
+    # reader writes 45, which is a disagreement about rounding masquerading as a drift
+    ms = f"{cost['mean_cpu_ms']:.1f} ms"
     for name, body in text("README.md", "ui/deck.html", "docs/BUSINESS.md").items():
         assert quotes(body, usd), f"{name} does not quote the measured cost {usd}"
         assert ms in body, f"{name} does not quote the measured {ms} per assessment"
@@ -175,7 +177,11 @@ def test_portability_figures_quoted_right():
         assert f"{row['cells_kept']} of {row['cells']}" in flat, (
             f"README does not say {row['cells_kept']} of {row['cells']}")
     assert quotes(body, pct(ours["worst_precision"])), "README lost our worst cell"
-    sat = next(s["saturation"] for s in port["scorers"] if s["saturation"]["gap"] is not None)
+    # the neighbour vote specifically — it is the scorer whose saturation makes the argument,
+    # and after the scorer was refitted our own one saturates too, with no gap inside the pile
+    sat = next(s["saturation"] for s in port["scorers"]
+               if s["scorer"].startswith("nearest-neighbour"))
+    assert sat["gap"] is not None, "the neighbour vote no longer saturates; rewrite the section"
     assert quotes(body, pct(sat["share"])), "README lost the share of saturated rows"
     assert quotes(body, pct(sat["thin"]["accuracy"])), "README lost the thin-record accuracy"
 

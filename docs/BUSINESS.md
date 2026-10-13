@@ -132,7 +132,7 @@ cannot take it with them** — see below.
 | review capacity returned | **C$3,500 – C$9,500** at C$10–27 a call |
 | **cost to serve** | **$0.0004** |
 
-The cost line is the one that is easy to miss. An assessment is 47 ms of CPU — 53 ms on the
+The cost line is the one that is easy to miss. An assessment is 44.5 ms of CPU — 47 ms on the
 thinnest records, which are the slowest because the gate does more work before giving up — with
 no GPU, no model call and 142 MB resident. On the commodity instance this is already deployed to,
 a thousand assessments cost **four hundredths of one cent**. The product that returns thousands of dollars of

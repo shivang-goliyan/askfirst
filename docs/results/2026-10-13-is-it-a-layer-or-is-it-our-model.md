@@ -145,3 +145,33 @@ It is not evidence the gate works on a real queue; that is the next experiment a
 pre-registered. And the 21 cells come from 1,200 patients viewed 35 ways, so the cells are not
 independent of each other — the intervals are clustered on patients but the *count* of 20 of 21
 is not an independent 21-trial result.
+
+---
+
+## Re-measured 14 October, after the scorer was refitted
+
+One of the three scorers here — the shipped logistic regression — was retrained on records with
+holes the next morning. The headline did not move and two of the rows did.
+
+| rule, 3 scorers × 7 folds | before | after |
+|---|---|---|
+| one global threshold | 9 of 21 | **7 of 21** |
+| a threshold per group (Mondrian partition) | 10 of 21 | **13 of 21** |
+| a threshold per group + our floor | 14 of 21 | **15 of 21** |
+| **the gate** | **20 of 21** | **20 of 21** |
+
+Ordering, isolated: **+0.02** points on the logistic regression (was −0.05), **+10.60** on the
+naive Bayes, **+0.01** on the neighbour vote. The conclusion is unchanged and sharper — the
+calibration buys ordering on exactly one of the three scorers, and it is the one whose confidence
+is worst.
+
+Two things are worth noting because they cut against us.
+
+**The per-group threshold improved more than we did.** 10 of 21 to 13 of 21, because the better
+scorer it now shares with us is easier to threshold. Our 20 of 21 did not move, so the gap
+narrowed from ten cells to seven.
+
+**And our own scorer now saturates.** 31.8% of rows at 0.999 or above, up from 3.7% — but inside
+that pile thin and full records are both right every time, a 0.0-point gap, where the neighbour
+vote still shows 8.2 points. So saturation on its own is not the tell; saturation *with a gap
+inside it* is, and that only happens to a model that was not trained for thin records.

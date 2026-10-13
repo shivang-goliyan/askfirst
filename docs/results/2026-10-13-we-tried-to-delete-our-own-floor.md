@@ -120,3 +120,42 @@ not thought to look for, and showed that the better the scorer gets, the worse a
 behaves.
 
 Both outcomes are more useful than the confirmation we would have got by not asking.
+
+---
+
+## Re-measured 14 October, against the scorer this experiment produced
+
+The experiment above found that training on records with holes was worth 14.8 points. That was
+shipped the next morning, which means every arm here had to be run again — and the finding about
+the floor got considerably worse for the floor.
+
+| arm, seven folds, the hole-trained scorer | folds kept | worst fold | mean coverage |
+|---|---|---|---|
+| **no floor at all** | 7 of 7 | 99.5% | **61.1%** |
+| a bare count, smallest that holds (picked n=0) | 7 of 7 | 99.5% | 61.1% |
+| `findings / mean record size` | 7 of 7 | 99.5% | 44.5% |
+| a count giving up the same coverage (n=5) | 7 of 7 | 99.5% | 47.9% |
+| **the learned ridge — what ships** | 7 of 7 | 99.5% | 47.2% |
+
+**The floor now costs fourteen points of coverage and the worst fold does not move: 99.5% either
+way.** Yesterday it cost four points and bought 0.9. A count of findings does marginally better
+than the regression.
+
+The mechanism is clear enough in hindsight. The floor existed to catch records the calibration
+would misjudge, and the calibration misjudged thin records because the scorer had never seen one.
+Fix the scorer and the calibration declines thin records on its own, leaving the floor to decline
+records that were going to be declined anyway — at a cost of 140 cases per 1,000 going to a person
+who did not need to see them.
+
+It is still on. The reasons are in the README and only one of them is a measurement: it rescues a
+badly-shaped rule (a per-group threshold goes from 13 of 21 scorer-fold cells to 15 of 21 with it),
+it runs unfitted for a stranger's model, and answering a two-finding record because the arithmetic
+cleared a bar is the behaviour this product exists to refuse. That last one is a judgement, it is
+the one actually keeping the floor in the product, and the table above is the price of it.
+
+**And the augmentation result held up on the control.** Same row count as the shipped scorer,
+81.9% against 67.1% answering everything, so it is the holes and not the extra data. A bare
+threshold on the better scorer still keeps the promise in **1 of 7** folds while answering 79% of
+the stream: making the model better made the naive rule more dangerous, which is the most
+counter-intuitive thing measured in this project and the one we would most like a reviewer to
+check.

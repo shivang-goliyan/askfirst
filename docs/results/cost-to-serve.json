@@ -7,35 +7,35 @@
   {
    "kept": 1.0,
    "findings": 15.5,
-   "cpu_ms": 39.9,
-   "usd_per_1000": 0.000371
+   "cpu_ms": 39.2,
+   "usd_per_1000": 0.000365
   },
   {
    "kept": 0.6,
    "findings": 8.9,
-   "cpu_ms": 44.6,
-   "usd_per_1000": 0.000415
+   "cpu_ms": 43.7,
+   "usd_per_1000": 0.000407
   },
   {
    "kept": 0.4,
    "findings": 5.8,
-   "cpu_ms": 45.6,
-   "usd_per_1000": 0.000424
+   "cpu_ms": 45.4,
+   "usd_per_1000": 0.000423
   },
   {
    "kept": 0.2,
    "findings": 2.7,
-   "cpu_ms": 53.2,
-   "usd_per_1000": 0.000495
+   "cpu_ms": 47.0,
+   "usd_per_1000": 0.000438
   },
   {
    "kept": 0.1,
    "findings": 1.2,
-   "cpu_ms": 51.2,
-   "usd_per_1000": 0.000477
+   "cpu_ms": 47.3,
+   "usd_per_1000": 0.00044
   }
  ],
- "mean_cpu_ms": 46.9,
- "mean_usd_per_1000": 0.000436,
- "worst_cpu_ms": 53.2
+ "mean_cpu_ms": 44.5,
+ "mean_usd_per_1000": 0.000414,
+ "worst_cpu_ms": 47.3
 }

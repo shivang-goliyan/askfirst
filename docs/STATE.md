@@ -2,8 +2,19 @@
 
 ## Resume here
 
-Everything is built except **the AMD run, the video and the demo**. 60 commits, 66 tests, 24 dated
+Everything is built except **the AMD run, the video and the demo**. 62 commits, 66 tests, 25 dated
 write-ups in `results/`, clean tree, all endpoints live.
+
+**14 Oct: the scorer was refitted on records with holes, and three published findings did not
+survive it.** `results/2026-10-14-the-scorer-now-expects-holes.md` is the one to read. Nothing
+given up on a complete record (99.6%), thirty-three points gained at a fifth of one (40.2% →
+73.3%), and per 1,000 records at a 95% promise **455 never reach a person against 352, with 0.1
+answered wrongly against 1.7.** What it cost: the motivating "40 points underconfident" became
+8.2; "expected information gain loses to a coin and then to silence" is **retracted** (it reaches
+85.5% once the scorer has seen a thin record, against 77.8% for asking nothing); and the
+completeness floor now costs **fourteen points of coverage for no measurable gain** on our own
+scorer, so it stays on a judgement rather than a measurement. Every dated write-up from before
+14 Oct carries a note saying its prose was measured against the previous scorer.
 
 **The evening of 13 Oct was a second review round, and it went badly for several published
 claims.** Read these five before anything else, because four of them are retractions:

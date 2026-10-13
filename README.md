@@ -361,10 +361,10 @@ fold; a cell counts as held only when the bootstrap *lower* bound clears 94.5%.
 
 | rule | cells where the 95% promise held | worst cell | mean coverage |
 |---|---|---|---|
-| one global threshold | 9 of 21 | 89.9% | 43.0% |
-| a threshold per group (Mondrian partition) | 10 of 21 | 89.8% | 47.9% |
-| a threshold per group + **our** completeness floor | 14 of 21 | 87.0% | 36.6% |
-| **the gate** | **20 of 21** | **96.0%** | 29.5% |
+| one global threshold | 7 of 21 | 89.9% | 51.0% |
+| a threshold per group (Mondrian partition) | 13 of 21 | 89.8% | 54.3% |
+| a threshold per group + **our** completeness floor | 15 of 21 | 87.0% | 38.2% |
+| **the gate** | **20 of 21** | **96.0%** | 33.1% |
 
 The one cell it misses is the naive Bayes under random thinning — 96.0% [93.6%, 98.2%] on 275
 accepted rows, underpowered rather than broken, and reported as a failure anyway.
@@ -375,7 +375,7 @@ key — so the difference is ordering and nothing else:
 
 | scorer | ranked by the calibration | ranked by the raw margin | ordering alone |
 |---|---|---|---|
-| logistic regression (ours) | 99.20% | 99.25% | **−0.05 points** |
+| logistic regression (ours) | 99.75% | 99.73% | **+0.02 points** |
 | naive Bayes | 99.29% *(keeps the promise)* | 88.69% *(breaks it)* | **+10.60 points** |
 | nearest-neighbour vote | 99.73% | 99.72% | **+0.01 points** |
 
@@ -389,10 +389,17 @@ which cannot separate the calibration's ordering from the floor's refusals. Isol
 the +2.8 we had claimed on the neighbour vote — that was entirely the floor — and turned +9.9 on
 the naive Bayes into +10.6.
 
-The mechanical reason, shown rather than argued: the neighbour scorer pins its confidence at
-exactly 1.00 on **54.5% of rows**, and inside that one pile accuracy runs **91.8%** on four
-findings or fewer against **100%** on twelve or more. An 8.2-point spread inside a single number.
-A threshold sees that number; the gate sees the record.
+The mechanical reason, shown rather than argued: the neighbour scorer's confidence sits at 0.999
+or above on **54.5% of rows**, and inside that one pile accuracy runs **91.8%** on four findings
+or fewer against **100%** on twelve or more. An 8.2-point spread inside what is, to a threshold, a
+single number. A threshold sees the number; the gate reads the record.
+
+Worth noting what *does not* happen: after refitting, our own scorer saturates on 31.8% of rows
+too — and inside its pile thin and full records are both right every time, a 0.0-point gap. A
+saturated confidence is only a warning sign when the model has not been trained for thin records.
+That is the same conditional as everywhere else here.
+
+
 
 It costs coverage — 29.5% against 47.9% — and we over-deliver precision when asked for 95%,
 which is the open engineering item (`docs/results/2026-10-13-is-it-a-layer-or-is-it-our-model.md`).
@@ -443,20 +450,33 @@ Two questions from a reviewer, both designed to remove parts of this rather than
 
 | arm | folds kept | worst fold | mean coverage |
 |---|---|---|---|
-| **no floor at all** — just the calibration and the ceiling | **7 of 7** | 97.5% | **40.3%** |
-| a bare count, smallest that holds on the fit split | 7 of 7 | 97.5% | 40.3% *(it picked n=0)* |
-| `findings / mean record size`, same 0.35 floor | 7 of 7 | 98.3% | 34.3% |
-| a count giving up the same coverage (n=4) | 7 of 7 | 98.0% | 36.8% |
-| **the learned ridge** — what ships | 7 of 7 | 98.4% | 36.4% |
+| **no floor at all** — just the calibration and the ceiling | **7 of 7** | 99.5% | **61.1%** |
+| a bare count, smallest that holds on the fit split | 7 of 7 | 99.5% | 61.1% *(it picked n=0)* |
+| `findings / mean record size`, same 0.35 floor | 7 of 7 | 99.5% | 44.5% |
+| a count giving up the same coverage (n=5) | 7 of 7 | 99.5% | 47.9% |
+| **the learned ridge** — what ships | 7 of 7 | 99.5% | 47.2% |
 
-The calibration alone keeps the promise in all seven folds and answers **more** cases than we do.
-The floor costs four points of coverage and buys 0.9 points of worst-fold precision, and counting
-the findings does nearly as well as the regression. **So the claim that the floor is what keeps
-the promise is withdrawn** — in this README, in `calibrate.py`'s docstring, and in the write-up
-that first made it. It stays in because answering a two-finding record on the strength of
-arithmetic is the behaviour this exists to refuse, which is a judgement, not a measurement; and
-because it is the half that runs for a stranger's scorer unfitted, and the piece doing the work on
-the saturated one.
+Read that row by row. The calibration **alone** keeps the promise in all seven folds at **61.1%**
+coverage. Adding our floor takes it to 47.2% and the worst fold does not move: **99.5% either
+way.** On our own scorer the completeness floor now costs **fourteen points of coverage and buys
+nothing measurable** — and counting the findings (n=5) does marginally better than the regression.
+
+That is worse for the floor than it looked yesterday, when it cost four points and bought 0.9.
+Refitting the scorer on records with holes is what did it: a scorer that is honest on a thin
+record already declines thin records through the calibration, so the floor has nothing left to
+catch.
+
+**So the claim that the floor is what keeps the promise is withdrawn** — here, in `calibrate.py`'s
+docstring, and in the write-up that first made it. It is still on by default, for three reasons
+and one of them is not a measurement:
+
+1. It rescues a badly-shaped rule — a per-group threshold goes from 13 of 21 scorer-fold cells to
+   15 of 21 when it is given the floor.
+2. It is the half that runs for a stranger's scorer with nothing fitted.
+3. Answering a two-finding record because the arithmetic cleared a bar is the behaviour this
+   product exists to refuse. That is a judgement, and at 140 cases per 1,000 going to a person
+   who did not need to see them it is an expensive one. `FLOOR` is one constant in
+   `calibrate.py`; the table above is what turning it off would buy.
 
 **Does training the scorer on records with holes make the gate unnecessary?** It makes the gate
 considerably more valuable:
@@ -571,7 +591,7 @@ from **85.7% to 51.9%** sensitivity on emergencies while specificity rose 82.1% 
 
 Per 1,000 records at a 95% bar: **455 never reach a person**, 0.13 are answered wrongly against
 176 if everything is answered, **C$4,546–12,274 of review capacity returned**, and a **cost to
-serve of $0.0004** — an assessment is 47 ms of CPU with no GPU and no model call. Priced at C$500
+serve of $0.0004** — an assessment is 44.5 ms of CPU with no GPU and no model call. Priced at C$500
 per thousand that is a 7–19× return for the buyer at close to 100% gross margin.
 
 The defensibility came out of a limitation: the calibration has to be fitted against the way

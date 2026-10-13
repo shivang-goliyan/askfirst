@@ -10,97 +10,97 @@
    "scorer": "logistic regression",
    "note": "the shipped scorer, underconfident as the record thins",
    "test_rows": 42000,
-   "answer_everything": 0.6707,
+   "answer_everything": 0.8259,
    "in_distribution": [
     {
      "rule": "one global threshold",
-     "precision": 0.946,
-     "coverage": 0.572,
-     "answered": 24025,
+     "precision": 0.9456,
+     "coverage": 0.8099,
+     "answered": 34015,
      "ci": [
-      0.94,
-      0.9513
+      0.9395,
+      0.9512
      ],
      "keeps_promise": false
     },
     {
      "rule": "a threshold per group (Mondrian partition)",
-     "precision": 0.959,
-     "coverage": 0.5334,
-     "answered": 22404,
+     "precision": 0.9701,
+     "coverage": 0.7416,
+     "answered": 31147,
      "ci": [
-      0.9536,
-      0.9636
+      0.9655,
+      0.9742
      ],
      "keeps_promise": true
     },
     {
      "rule": "a threshold per group + the same floor",
-     "precision": 0.9682,
-     "coverage": 0.4632,
-     "answered": 19454,
+     "precision": 0.9811,
+     "coverage": 0.5152,
+     "answered": 21639,
      "ci": [
-      0.9638,
-      0.9724
+      0.9769,
+      0.9852
      ],
      "keeps_promise": true
     },
     {
      "rule": "ours: isotonic in-group + the floor",
-     "precision": 0.992,
-     "coverage": 0.3618,
-     "answered": 15196,
+     "precision": 0.9975,
+     "coverage": 0.4676,
+     "answered": 19641,
      "ci": [
-      0.9879,
-      0.9949
+      0.9961,
+      0.9987
      ],
      "keeps_promise": true
     },
     {
      "rule": "the floor alone, no calibration",
-     "precision": 0.9337,
+     "precision": 0.9786,
      "coverage": 0.5184,
      "answered": 21774,
      "ci": [
-      0.9275,
-      0.9393
+      0.9739,
+      0.9828
      ],
-     "keeps_promise": false
+     "keeps_promise": true
     }
    ],
    "at_matched_coverage": [
     {
      "rule": "the raw margin ranking, stopped at our coverage",
-     "precision": 0.9937,
-     "coverage": 0.3618,
-     "answered": 15196,
+     "precision": 1.0,
+     "coverage": 0.4676,
+     "answered": 19641,
      "ci": [
-      0.99,
-      0.9966
+      1.0,
+      1.0
      ],
      "keeps_promise": true,
      "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
     },
     {
      "rule": "inside the floor, ranked by the calibration",
-     "precision": 0.992,
-     "coverage": 0.3618,
-     "answered": 15196,
+     "precision": 0.9975,
+     "coverage": 0.4676,
+     "answered": 19641,
      "ci": [
-      0.9883,
-      0.995
+      0.9962,
+      0.9987
      ],
      "keeps_promise": true,
      "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
     },
     {
      "rule": "inside the floor, ranked by the raw margin",
-     "precision": 0.9925,
-     "coverage": 0.3618,
-     "answered": 15196,
+     "precision": 0.9973,
+     "coverage": 0.4676,
+     "answered": 19641,
      "ci": [
-      0.988,
-      0.9957
+      0.9957,
+      0.9988
      ],
      "keeps_promise": true,
      "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
@@ -111,93 +111,93 @@
      "rules": [
       {
        "rule": "one global threshold",
-       "precision": 0.9563,
-       "coverage": 0.5605,
-       "answered": 3363,
+       "precision": 0.9453,
+       "coverage": 0.8048,
+       "answered": 4829,
        "ci": [
-        0.948,
-        0.964
+        0.9374,
+        0.9526
        ],
-       "keeps_promise": true
+       "keeps_promise": false
       },
       {
        "rule": "a threshold per group (Mondrian partition)",
-       "precision": 0.968,
-       "coverage": 0.5265,
-       "answered": 3159,
+       "precision": 0.9727,
+       "coverage": 0.7388,
+       "answered": 4433,
        "ci": [
-        0.96,
-        0.9752
+        0.9664,
+        0.9785
        ],
        "keeps_promise": true
       },
       {
        "rule": "a threshold per group + the same floor",
-       "precision": 0.9757,
-       "coverage": 0.453,
-       "answered": 2718,
+       "precision": 0.9873,
+       "coverage": 0.5128,
+       "answered": 3077,
        "ci": [
-        0.9699,
-        0.9823
+        0.9823,
+        0.9916
        ],
        "keeps_promise": true
       },
       {
        "rule": "ours: isotonic in-group + the floor",
-       "precision": 0.991,
-       "coverage": 0.3702,
-       "answered": 2221,
+       "precision": 0.9979,
+       "coverage": 0.4722,
+       "answered": 2833,
        "ci": [
-        0.9862,
-        0.995
+        0.9957,
+        0.9996
        ],
        "keeps_promise": true
       },
       {
        "rule": "the floor alone, no calibration",
-       "precision": 0.9355,
+       "precision": 0.9845,
        "coverage": 0.5168,
        "answered": 3101,
        "ci": [
-        0.9279,
-        0.945
+        0.9795,
+        0.9897
        ],
-       "keeps_promise": false
+       "keeps_promise": true
       }
      ],
      "at_matched_coverage": [
       {
        "rule": "the raw margin ranking, stopped at our coverage",
-       "precision": 0.9941,
-       "coverage": 0.3702,
-       "answered": 2221,
+       "precision": 1.0,
+       "coverage": 0.4722,
+       "answered": 2833,
        "ci": [
-        0.9906,
-        0.9978
+        1.0,
+        1.0
        ],
        "keeps_promise": true,
        "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
       },
       {
        "rule": "inside the floor, ranked by the calibration",
-       "precision": 0.991,
-       "coverage": 0.3702,
-       "answered": 2221,
+       "precision": 0.9979,
+       "coverage": 0.4722,
+       "answered": 2833,
        "ci": [
-        0.9868,
-        0.995
+        0.9958,
+        0.9997
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
       },
       {
        "rule": "inside the floor, ranked by the raw margin",
-       "precision": 0.9928,
-       "coverage": 0.3702,
-       "answered": 2221,
+       "precision": 0.9975,
+       "coverage": 0.4722,
+       "answered": 2833,
        "ci": [
-        0.9888,
-        0.9964
+        0.9954,
+        0.999
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
@@ -208,93 +208,93 @@
      "rules": [
       {
        "rule": "one global threshold",
-       "precision": 0.9377,
-       "coverage": 0.5615,
-       "answered": 3369,
+       "precision": 0.9468,
+       "coverage": 0.8398,
+       "answered": 5039,
        "ci": [
-        0.9275,
-        0.9464
+        0.9388,
+        0.9542
        ],
        "keeps_promise": false
       },
       {
        "rule": "a threshold per group (Mondrian partition)",
-       "precision": 0.9528,
-       "coverage": 0.5403,
-       "answered": 3242,
+       "precision": 0.9654,
+       "coverage": 0.7988,
+       "answered": 4793,
        "ci": [
-        0.9429,
-        0.9607
+        0.9585,
+        0.9716
        ],
-       "keeps_promise": false
+       "keeps_promise": true
       },
       {
        "rule": "a threshold per group + the same floor",
-       "precision": 0.9699,
-       "coverage": 0.465,
-       "answered": 2790,
+       "precision": 0.9877,
+       "coverage": 0.5268,
+       "answered": 3161,
        "ci": [
-        0.9627,
-        0.976
+        0.9826,
+        0.9926
        ],
        "keeps_promise": true
       },
       {
        "rule": "ours: isotonic in-group + the floor",
-       "precision": 0.9975,
-       "coverage": 0.329,
-       "answered": 1974,
+       "precision": 0.9973,
+       "coverage": 0.4992,
+       "answered": 2995,
        "ci": [
-        0.9954,
-        0.9995
+        0.995,
+        0.999
        ],
        "keeps_promise": true
       },
       {
        "rule": "the floor alone, no calibration",
-       "precision": 0.9419,
+       "precision": 0.987,
        "coverage": 0.5275,
        "answered": 3165,
        "ci": [
-        0.9325,
-        0.9505
+        0.9819,
+        0.992
        ],
-       "keeps_promise": false
+       "keeps_promise": true
       }
      ],
      "at_matched_coverage": [
       {
        "rule": "the raw margin ranking, stopped at our coverage",
-       "precision": 0.998,
-       "coverage": 0.329,
-       "answered": 1974,
+       "precision": 1.0,
+       "coverage": 0.4992,
+       "answered": 2995,
        "ci": [
-        0.9959,
-        0.9995
+        1.0,
+        1.0
        ],
        "keeps_promise": true,
        "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
       },
       {
        "rule": "inside the floor, ranked by the calibration",
-       "precision": 0.9975,
-       "coverage": 0.329,
-       "answered": 1974,
+       "precision": 0.9973,
+       "coverage": 0.4992,
+       "answered": 2995,
        "ci": [
-        0.9954,
-        0.9995
+        0.9946,
+        0.999
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
       },
       {
        "rule": "inside the floor, ranked by the raw margin",
-       "precision": 0.9975,
-       "coverage": 0.329,
-       "answered": 1974,
+       "precision": 0.998,
+       "coverage": 0.4992,
+       "answered": 2995,
        "ci": [
-        0.9949,
-        0.9995
+        0.996,
+        0.9997
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
@@ -305,56 +305,56 @@
      "rules": [
       {
        "rule": "one global threshold",
-       "precision": 0.9529,
-       "coverage": 0.6903,
-       "answered": 4142,
+       "precision": 0.9474,
+       "coverage": 0.8435,
+       "answered": 5061,
        "ci": [
-        0.943,
-        0.9626
+        0.9385,
+        0.9566
        ],
        "keeps_promise": false
       },
       {
        "rule": "a threshold per group (Mondrian partition)",
-       "precision": 0.9634,
-       "coverage": 0.614,
-       "answered": 3684,
+       "precision": 0.969,
+       "coverage": 0.7462,
+       "answered": 4477,
        "ci": [
-        0.9538,
-        0.9714
+        0.9609,
+        0.9766
        ],
        "keeps_promise": true
       },
       {
        "rule": "a threshold per group + the same floor",
-       "precision": 0.9705,
-       "coverage": 0.491,
-       "answered": 2946,
+       "precision": 0.9743,
+       "coverage": 0.5187,
+       "answered": 3112,
        "ci": [
-        0.9626,
-        0.9776
+        0.967,
+        0.9807
        ],
        "keeps_promise": true
       },
       {
        "rule": "ours: isotonic in-group + the floor",
-       "precision": 0.987,
-       "coverage": 0.3712,
-       "answered": 2227,
+       "precision": 0.9975,
+       "coverage": 0.4597,
+       "answered": 2758,
        "ci": [
-        0.9803,
-        0.9928
+        0.9956,
+        0.9993
        ],
        "keeps_promise": true
       },
       {
        "rule": "the floor alone, no calibration",
-       "precision": 0.9552,
+       "precision": 0.9725,
        "coverage": 0.521,
        "answered": 3126,
        "ci": [
-        0.9458,
-        0.9639
+        0.9647,
+        0.9792
        ],
        "keeps_promise": true
       }
@@ -362,36 +362,36 @@
      "at_matched_coverage": [
       {
        "rule": "the raw margin ranking, stopped at our coverage",
-       "precision": 0.9919,
-       "coverage": 0.3712,
-       "answered": 2227,
+       "precision": 1.0,
+       "coverage": 0.4597,
+       "answered": 2758,
        "ci": [
-        0.987,
-        0.996
+        1.0,
+        1.0
        ],
        "keeps_promise": true,
        "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
       },
       {
        "rule": "inside the floor, ranked by the calibration",
-       "precision": 0.987,
-       "coverage": 0.3712,
-       "answered": 2227,
+       "precision": 0.9975,
+       "coverage": 0.4597,
+       "answered": 2758,
        "ci": [
-        0.9794,
-        0.9933
+        0.9953,
+        0.9989
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
       },
       {
        "rule": "inside the floor, ranked by the raw margin",
-       "precision": 0.9883,
-       "coverage": 0.3712,
-       "answered": 2227,
+       "precision": 0.9949,
+       "coverage": 0.4597,
+       "answered": 2758,
        "ci": [
-        0.9826,
-        0.9942
+        0.9921,
+        0.9975
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
@@ -402,56 +402,56 @@
      "rules": [
       {
        "rule": "one global threshold",
-       "precision": 0.9596,
-       "coverage": 0.5893,
-       "answered": 3536,
+       "precision": 0.9515,
+       "coverage": 0.793,
+       "answered": 4758,
        "ci": [
-        0.952,
-        0.9669
+        0.9435,
+        0.9584
        ],
-       "keeps_promise": true
+       "keeps_promise": false
       },
       {
        "rule": "a threshold per group (Mondrian partition)",
-       "precision": 0.9724,
-       "coverage": 0.5503,
-       "answered": 3302,
+       "precision": 0.9764,
+       "coverage": 0.7188,
+       "answered": 4313,
        "ci": [
-        0.9654,
-        0.979
+        0.9705,
+        0.9813
        ],
        "keeps_promise": true
       },
       {
        "rule": "a threshold per group + the same floor",
-       "precision": 0.9806,
-       "coverage": 0.4638,
-       "answered": 2783,
+       "precision": 0.9901,
+       "coverage": 0.5067,
+       "answered": 3040,
        "ci": [
-        0.9749,
-        0.9864
+        0.9855,
+        0.9945
        ],
        "keeps_promise": true
       },
       {
        "rule": "ours: isotonic in-group + the floor",
-       "precision": 0.993,
-       "coverage": 0.3835,
-       "answered": 2301,
+       "precision": 0.9982,
+       "coverage": 0.4663,
+       "answered": 2798,
        "ci": [
-        0.9882,
-        0.9969
+        0.9967,
+        0.9993
        ],
        "keeps_promise": true
       },
       {
        "rule": "the floor alone, no calibration",
-       "precision": 0.9534,
+       "precision": 0.987,
        "coverage": 0.5113,
        "answered": 3068,
        "ci": [
-        0.9453,
-        0.9624
+        0.9823,
+        0.9918
        ],
        "keeps_promise": true
       }
@@ -459,36 +459,36 @@
      "at_matched_coverage": [
       {
        "rule": "the raw margin ranking, stopped at our coverage",
-       "precision": 0.9939,
-       "coverage": 0.3835,
-       "answered": 2301,
+       "precision": 1.0,
+       "coverage": 0.4663,
+       "answered": 2798,
        "ci": [
-        0.9895,
-        0.9978
+        1.0,
+        1.0
        ],
        "keeps_promise": true,
        "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
       },
       {
        "rule": "inside the floor, ranked by the calibration",
-       "precision": 0.993,
-       "coverage": 0.3835,
-       "answered": 2301,
+       "precision": 0.9982,
+       "coverage": 0.4663,
+       "answered": 2798,
        "ci": [
-        0.9885,
-        0.997
+        0.9964,
+        0.9996
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
       },
       {
        "rule": "inside the floor, ranked by the raw margin",
-       "precision": 0.993,
-       "coverage": 0.3835,
-       "answered": 2301,
+       "precision": 0.9975,
+       "coverage": 0.4663,
+       "answered": 2798,
        "ci": [
-        0.988,
-        0.9973
+        0.9957,
+        0.9993
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
@@ -499,93 +499,93 @@
      "rules": [
       {
        "rule": "one global threshold",
-       "precision": 0.9162,
-       "coverage": 0.5153,
-       "answered": 3092,
+       "precision": 0.9151,
+       "coverage": 0.8243,
+       "answered": 4946,
        "ci": [
-        0.9044,
-        0.9285
+        0.9049,
+        0.9253
        ],
        "keeps_promise": false
       },
       {
        "rule": "a threshold per group (Mondrian partition)",
-       "precision": 0.9128,
-       "coverage": 0.5197,
-       "answered": 3118,
+       "precision": 0.956,
+       "coverage": 0.7393,
+       "answered": 4436,
        "ci": [
-        0.9034,
-        0.9217
+        0.9484,
+        0.9629
        ],
-       "keeps_promise": false
+       "keeps_promise": true
       },
       {
        "rule": "a threshold per group + the same floor",
-       "precision": 0.9265,
-       "coverage": 0.467,
-       "answered": 2802,
+       "precision": 0.9775,
+       "coverage": 0.5333,
+       "answered": 3200,
        "ci": [
-        0.916,
-        0.935
+        0.9707,
+        0.9834
        ],
-       "keeps_promise": false
+       "keeps_promise": true
       },
       {
        "rule": "ours: isotonic in-group + the floor",
-       "precision": 0.9907,
-       "coverage": 0.3417,
-       "answered": 2050,
+       "precision": 0.9966,
+       "coverage": 0.4892,
+       "answered": 2935,
        "ci": [
-        0.9859,
-        0.9942
+        0.9942,
+        0.9986
        ],
        "keeps_promise": true
       },
       {
        "rule": "the floor alone, no calibration",
-       "precision": 0.8764,
+       "precision": 0.9764,
        "coverage": 0.5367,
        "answered": 3220,
        "ci": [
-        0.8655,
-        0.8883
+        0.9693,
+        0.9825
        ],
-       "keeps_promise": false
+       "keeps_promise": true
       }
      ],
      "at_matched_coverage": [
       {
        "rule": "the raw margin ranking, stopped at our coverage",
-       "precision": 0.9927,
-       "coverage": 0.3417,
-       "answered": 2050,
+       "precision": 1.0,
+       "coverage": 0.4892,
+       "answered": 2935,
        "ci": [
-        0.9888,
-        0.996
+        1.0,
+        1.0
        ],
        "keeps_promise": true,
        "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
       },
       {
        "rule": "inside the floor, ranked by the calibration",
-       "precision": 0.9907,
-       "coverage": 0.3417,
-       "answered": 2050,
+       "precision": 0.9966,
+       "coverage": 0.4892,
+       "answered": 2935,
        "ci": [
-        0.9862,
-        0.9951
+        0.9938,
+        0.9986
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
       },
       {
        "rule": "inside the floor, ranked by the raw margin",
-       "precision": 0.9932,
-       "coverage": 0.3417,
-       "answered": 2050,
+       "precision": 0.998,
+       "coverage": 0.4892,
+       "answered": 2935,
        "ci": [
-        0.9893,
-        0.9966
+        0.9962,
+        0.9993
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
@@ -596,56 +596,56 @@
      "rules": [
       {
        "rule": "one global threshold",
-       "precision": 0.9379,
-       "coverage": 0.5103,
-       "answered": 3062,
+       "precision": 0.9162,
+       "coverage": 0.6582,
+       "answered": 3949,
        "ci": [
-        0.928,
-        0.9478
+        0.9064,
+        0.9261
        ],
        "keeps_promise": false
       },
       {
        "rule": "a threshold per group (Mondrian partition)",
-       "precision": 0.9281,
-       "coverage": 0.4958,
-       "answered": 2975,
+       "precision": 0.9437,
+       "coverage": 0.5955,
+       "answered": 3573,
        "ci": [
-        0.9185,
-        0.9385
+        0.9344,
+        0.953
        ],
        "keeps_promise": false
       },
       {
        "rule": "a threshold per group + the same floor",
-       "precision": 0.9286,
-       "coverage": 0.474,
-       "answered": 2844,
+       "precision": 0.9487,
+       "coverage": 0.5235,
+       "answered": 3141,
        "ci": [
-        0.9189,
-        0.9382
+        0.9406,
+        0.9574
        ],
        "keeps_promise": false
       },
       {
        "rule": "ours: isotonic in-group + the floor",
-       "precision": 0.9836,
-       "coverage": 0.336,
-       "answered": 2016,
+       "precision": 0.9951,
+       "coverage": 0.412,
+       "answered": 2472,
        "ci": [
-        0.9759,
-        0.9903
+        0.9922,
+        0.998
        ],
        "keeps_promise": true
       },
       {
        "rule": "the floor alone, no calibration",
-       "precision": 0.8883,
+       "precision": 0.9401,
        "coverage": 0.5313,
        "answered": 3188,
        "ci": [
-        0.8757,
-        0.8997
+        0.9311,
+        0.9491
        ],
        "keeps_promise": false
       }
@@ -653,36 +653,36 @@
      "at_matched_coverage": [
       {
        "rule": "the raw margin ranking, stopped at our coverage",
-       "precision": 0.9861,
-       "coverage": 0.336,
-       "answered": 2016,
+       "precision": 0.9984,
+       "coverage": 0.412,
+       "answered": 2472,
        "ci": [
-        0.979,
-        0.992
+        0.9968,
+        0.9996
        ],
        "keeps_promise": true,
        "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
       },
       {
        "rule": "inside the floor, ranked by the calibration",
-       "precision": 0.9836,
-       "coverage": 0.336,
-       "answered": 2016,
+       "precision": 0.9951,
+       "coverage": 0.412,
+       "answered": 2472,
        "ci": [
-        0.9757,
-        0.991
+        0.9926,
+        0.9976
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
       },
       {
        "rule": "inside the floor, ranked by the raw margin",
-       "precision": 0.9861,
-       "coverage": 0.336,
-       "answered": 2016,
+       "precision": 0.9951,
+       "coverage": 0.412,
+       "answered": 2472,
        "ci": [
-        0.9792,
-        0.9916
+        0.9919,
+        0.998
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
@@ -693,56 +693,56 @@
      "rules": [
       {
        "rule": "one global threshold",
-       "precision": 0.9544,
-       "coverage": 0.5852,
-       "answered": 3511,
+       "precision": 0.9813,
+       "coverage": 0.9202,
+       "answered": 5521,
        "ci": [
-        0.9458,
-        0.9623
+        0.9762,
+        0.9859
        ],
        "keeps_promise": true
       },
       {
        "rule": "a threshold per group (Mondrian partition)",
-       "precision": 0.951,
-       "coverage": 0.5787,
-       "answered": 3472,
+       "precision": 0.9879,
+       "coverage": 0.8432,
+       "answered": 5059,
        "ci": [
-        0.9423,
-        0.9585
+        0.9833,
+        0.9923
        ],
-       "keeps_promise": false
+       "keeps_promise": true
       },
       {
        "rule": "a threshold per group + the same floor",
-       "precision": 0.9686,
-       "coverage": 0.4878,
-       "answered": 2927,
+       "precision": 0.9922,
+       "coverage": 0.5125,
+       "answered": 3075,
        "ci": [
-        0.9614,
-        0.9747
+        0.9875,
+        0.9964
        ],
        "keeps_promise": true
       },
       {
        "rule": "ours: isotonic in-group + the floor",
-       "precision": 0.9884,
-       "coverage": 0.4157,
-       "answered": 2494,
+       "precision": 0.9957,
+       "coverage": 0.5028,
+       "answered": 3017,
        "ci": [
-        0.9841,
-        0.992
+        0.9926,
+        0.9987
        ],
        "keeps_promise": true
       },
       {
        "rule": "the floor alone, no calibration",
-       "precision": 0.9559,
+       "precision": 0.9919,
        "coverage": 0.5175,
        "answered": 3105,
        "ci": [
-        0.9471,
-        0.9632
+        0.9872,
+        0.9964
        ],
        "keeps_promise": true
       }
@@ -750,36 +750,36 @@
      "at_matched_coverage": [
       {
        "rule": "the raw margin ranking, stopped at our coverage",
-       "precision": 0.9976,
-       "coverage": 0.4157,
-       "answered": 2494,
+       "precision": 1.0,
+       "coverage": 0.5028,
+       "answered": 3017,
        "ci": [
-        0.9955,
-        0.9992
+        1.0,
+        1.0
        ],
        "keeps_promise": true,
        "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
       },
       {
        "rule": "inside the floor, ranked by the calibration",
-       "precision": 0.9884,
-       "coverage": 0.4157,
-       "answered": 2494,
+       "precision": 0.9957,
+       "coverage": 0.5028,
+       "answered": 3017,
        "ci": [
-        0.9842,
-        0.9927
+        0.993,
+        0.9983
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
       },
       {
        "rule": "inside the floor, ranked by the raw margin",
-       "precision": 0.9956,
-       "coverage": 0.4157,
-       "answered": 2494,
+       "precision": 0.9967,
+       "coverage": 0.5028,
+       "answered": 3017,
        "ci": [
-        0.9928,
-        0.998
+        0.9937,
+        0.9987
        ],
        "keeps_promise": true,
        "note": "same eligible pool, same size, only the sort key differs \u2014 this is the row that isolates ordering from the floor"
@@ -788,13 +788,16 @@
     }
    },
    "saturation": {
-    "share": 0.0372,
-    "thin": null,
-    "full": {
-     "rows": 1477,
+    "share": 0.3176,
+    "thin": {
+     "rows": 297,
      "accuracy": 1.0
     },
-    "gap": null
+    "full": {
+     "rows": 7434,
+     "accuracy": 1.0
+    },
+    "gap": 0.0
    }
   },
   {
@@ -2382,28 +2385,28 @@
  ],
  "across_scorers_and_folds": {
   "one global threshold": {
-   "cells_kept": 9,
+   "cells_kept": 7,
    "cells": 21,
    "worst_precision": 0.8989,
-   "mean_coverage": 0.4302
+   "mean_coverage": 0.5098
   },
   "a threshold per group (Mondrian partition)": {
-   "cells_kept": 10,
+   "cells_kept": 13,
    "cells": 21,
    "worst_precision": 0.898,
-   "mean_coverage": 0.4786
+   "mean_coverage": 0.5431
   },
   "a threshold per group + the same floor": {
-   "cells_kept": 14,
+   "cells_kept": 15,
    "cells": 21,
    "worst_precision": 0.8704,
-   "mean_coverage": 0.3661
+   "mean_coverage": 0.3819
   },
   "ours: isotonic in-group + the floor": {
    "cells_kept": 20,
    "cells": 21,
    "worst_precision": 0.96,
-   "mean_coverage": 0.2946
+   "mean_coverage": 0.3305
   }
  }
 }
