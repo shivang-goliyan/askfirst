@@ -88,6 +88,18 @@ than asking nothing at all (41.3% against 42.7%). Then three bugs turned up in t
 every one of them in our favour, and fixing them made the objective we beat *worse*. All of it is
 in `docs/results/`, dated, in the order it happened.
 
+**It does not need a form.** The engine scores structured findings; the world produces prose. An
+open model reads one into the other — 72% of findings recovered from a nurse's note at 87%
+precision. It is wrong often enough to matter, which is the point: scored from the note instead
+of the record it answers 34% of cases rather than 41% at the same bar and introduces **zero wrong
+answers**. What the reader misses makes the record look thinner, and a thinner record is exactly
+what the gate refuses. The error becomes caution instead of a confident mistake. That is the
+product's claim surviving a degraded input path rather than a clean one.
+
+**And it is checkable.** `./scripts/verify.sh` rebuilds every baked artifact from the public data
+in four minutes, diffs each against what is committed, and fails naming any document that quotes a
+figure the artifacts do not support. It passes byte for byte.
+
 **A second domain.** The same engine on variant interpretation. An ESM-2 score enters a contested
 CIViC group as one removable evidence item, and the strength it is granted is a dial on the page.
 At *supporting*, where ACMG/AMP caps computational evidence, 0 of 11 calls change. At *clinical*
@@ -99,6 +111,20 @@ clinical actionability, not ACMG classification. Eleven groups is a demonstratio
 Nothing here is clinically validated and no clinician has reviewed any output.
 
 ## AMD — TO BE WRITTEN ON THE GPU DAY
+
+**Rehearsed, so the AMD day is measurement rather than discovery.** Three experiments were run on
+a rented commodity GPU first, with nothing baked into a measured result, exactly as the vLLM
+client was rehearsed against a fake server before any hour was spent:
+
+- **ESM-2 650M against the shipped 35M.** Sign-error rate 21.9% → 6.6%, and the Module B
+  conclusion changes: 4 of 28 contested calls move at supporting strength rather than 0 of 11.
+  The cap held because the small model was unsure, not because the cap was sufficient. *This is
+  the AMD workload with a measured reason to exist — a model that needs the hardware, producing
+  an artifact that ships, changing a safety finding.*
+- **The open model as a scorer — it loses.** 35.3% against the fitted softmax's 99.6%, and its
+  confidence falls only 12% when four fifths of the record is removed, where ours falls 83%. This
+  killed a line the deck had been using, and we would rather have found it than been shown it.
+- **The open model as a reader — it wins**, which is the job above.
 
 **Do not submit with this section as a placeholder.** It needs the measured numbers, not a
 description of an intention. What goes here, from `docs/GPU-DAY.md`:
