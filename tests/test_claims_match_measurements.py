@@ -238,3 +238,17 @@ def test_the_floor_is_priced_not_asserted():
     assert quotes(body, f"{extra:.2f}"), f"README does not quote the {extra:.2f} extra wrong"
     assert sweep["picked_on"].startswith("the second split"), (
         "the floor is no longer chosen on a split of its own")
+
+
+def test_the_frontier_comparison_is_not_hand_typed():
+    """Our side of that comparison was hardcoded from the paid run and went stale the moment the
+    scorer changed. It is derived now, and this pins the two things that must stay true of it:
+    our column matches the artifact, and nobody has quietly turned it into an accuracy contest."""
+    cmp = load("gate-vs-frontier.json")
+    ours = cmp["ours"]["0.4"]
+    body = text("docs/results/2026-10-13-a-frontier-model-offered-the-door.md")[
+        "docs/results/2026-10-13-a-frontier-model-offered-the-door.md"]
+    assert ours["shown"] in body, f"the write-up does not quote our column, {ours['shown']}"
+    assert quotes(body, pct(ours["abstains"])), "the write-up lost our abstention rate"
+    assert "rigged race" in body, "the disclaimer about not comparing top-1 has gone"
+    assert "not an accuracy contest" in cmp["note"]

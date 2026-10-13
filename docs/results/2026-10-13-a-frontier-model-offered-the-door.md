@@ -1,5 +1,21 @@
 # We offered a frontier model the door, and measured how often it took it — 13 October 2026
 
+> **Our column was recomputed on 14 October and the frontier column was not.** The gate side of
+> every table below was hardcoded from the paid run, and it went stale the moment the scorer was
+> refitted on records with holes. `scripts/run_gate_vs_frontier.py` now derives it from the same
+> deterministic slice the paid calls used, so the comparison cannot drift again:
+>
+> | at 40% of a record | abstains | answers | right when it answers |
+> |---|---|---|---|
+> | the frontier model, effort low | 7.5% | 92.5% | 15.1% |
+> | the frontier model, effort high | 2.7% | 97.3% | 4.1% |
+> | this gate, **as of 14 Oct** | 53.5% | 46.5% | **93 of 93** |
+> | this gate, as this file first said | 83.8% | 16.2% | 98.2% |
+>
+> The gate now answers **three times** as much of that level and got all of it right. The frontier
+> numbers are unchanged — those were 750 paid calls and they are not being made again. Nothing
+> about this is a diagnosis comparison; see the first paragraph.
+
 **This is not an accuracy contest and nothing here claims we beat Claude at diagnosis.** Our
 scorer is fitted on 30,000 labelled patients from this exact generator; Claude is zero-shot with
 a two-line prompt. Comparing top-1 between them would be a rigged race and any judge would say so

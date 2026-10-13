@@ -246,25 +246,32 @@ plan](docs/PLAN.md).
 
 ## We offered a frontier model the door
 
-Not an accuracy contest — ours is fitted on 30,000 labelled patients from this generator and
-Claude is zero-shot, so comparing top-1 would be a rigged race. The fair question is who knows to
-stop. 200 held-out patients, `claude-opus-5-5`, every call offering `INSUFFICIENT` as a real
-answer and telling it not to guess:
+**Not an accuracy contest, and nothing here claims we beat a frontier model at diagnosis.** Our
+scorer is fitted on 30,000 labelled patients from this exact generator and the model is zero-shot
+with a two-line prompt — comparing top-1 would be a rigged race and any judge would say so in one
+sentence. The fair question is the one this product is about: given the same thinning record and
+an explicit way out, who knows to stop?
 
-| same 150 patients, 40% of a record | abstains | right when it answers |
-|---|---|---|
-| Claude Opus 5.5, effort low | 8.0% | 14.5% |
-| Claude Opus 5.5, effort high | **2.7%** | **4.1%** |
-| this gate | **83.8%** | **98.2%** |
+200 held-out patients, `claude-opus-5-5`, every call offering `INSUFFICIENT` as a first-class
+answer and told not to guess. 750 calls, $3.20.
 
-Abstention does climb as the record thins — 0% → 7.5% → 35% — which is better than the published
-GPT-5 figure and better than we predicted. It is still off by an order of magnitude: at a fifth of
-a record it answers two cases in three while being right in one case in 125. And raising the
-effort made it abstain **less**, so it is not a thinking-budget problem
-(`docs/results/2026-10-13-a-frontier-model-offered-the-door.md`).
+| at 40% of a record | abstains | answers | right when it answers |
+|---|---|---|---|
+| the frontier model, effort low | 7.5% | 92.5% | **15.1%** |
+| the frontier model, **effort high** | **2.7%** | 97.3% | **4.1%** |
+| this gate | 53.5% | 46.5% | **93 of 93** |
 
-This is not a claim that we diagnose better than Claude. It is a gate; Claude is the kind of thing
-it gates; and the better the model behind it, the more the gate is worth.
+It takes the door 0% of the time on a complete record and 7.5% at 40% evidence — answering 92.5%
+of the time while right 15.1%. **And more deliberation made it worse**: at high effort it abstained
+*less* (2.7%) and was right *less* (4.1%). Whatever the reluctance to say "insufficient" is, it is
+not a thinking-budget problem.
+
+Our column is recomputed from the same deterministic slice rather than typed in
+(`scripts/run_gate_vs_frontier.py`), because it was hardcoded once and went stale the moment the
+scorer was refitted.
+
+This is not a claim that we diagnose better than a frontier model. It is a gate; a frontier model
+is the kind of thing it gates; and the better the model behind it, the more the gate is worth.
 
 ## Why not conformal prediction?
 

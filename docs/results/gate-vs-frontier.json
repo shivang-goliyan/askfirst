@@ -1,0 +1,101 @@
+{
+ "note": "A refusal comparison, not an accuracy contest. Our scorer is fitted on 30,000 labelled patients from this generator and the frontier model is zero-shot; comparing top-1 would be a rigged race and is not done here.",
+ "target": 0.95,
+ "cases": 200,
+ "levels": [
+  1.0,
+  0.4,
+  0.2
+ ],
+ "frontier_model": "claude-opus-5-5",
+ "frontier_calls": 600,
+ "frontier_usd": 2.55,
+ "frontier": {
+  "1.0": {
+   "cases": 200,
+   "answered": 200,
+   "right": 112,
+   "abstains": 0.0,
+   "answers": 1.0,
+   "right_when_answering": 0.56,
+   "shown": "56.0%"
+  },
+  "0.4": {
+   "cases": 200,
+   "answered": 185,
+   "right": 28,
+   "abstains": 0.075,
+   "answers": 0.925,
+   "right_when_answering": 0.1514,
+   "shown": "15.1%"
+  },
+  "0.2": {
+   "cases": 200,
+   "answered": 130,
+   "right": 1,
+   "abstains": 0.35,
+   "answers": 0.65,
+   "right_when_answering": 0.0077,
+   "shown": "0.8%"
+  }
+ },
+ "ours": {
+  "1.0": {
+   "cases": 200,
+   "answered": 192,
+   "right": 192,
+   "abstains": 0.04,
+   "answers": 0.96,
+   "right_when_answering": 1.0,
+   "shown": "192 of 192"
+  },
+  "0.4": {
+   "cases": 200,
+   "answered": 93,
+   "right": 93,
+   "abstains": 0.535,
+   "answers": 0.465,
+   "right_when_answering": 1.0,
+   "shown": "93 of 93"
+  },
+  "0.2": {
+   "cases": 200,
+   "answered": 0,
+   "right": 0,
+   "abstains": 1.0,
+   "answers": 0.0,
+   "right_when_answering": null,
+   "shown": "nothing answered"
+  }
+ },
+ "at_effort_high": {
+  "level": 0.4,
+  "frontier_low": {
+   "cases": 200,
+   "answered": 185,
+   "right": 28,
+   "abstains": 0.075,
+   "answers": 0.925,
+   "right_when_answering": 0.1514,
+   "shown": "15.1%"
+  },
+  "frontier_high": {
+   "cases": 150,
+   "answered": 146,
+   "right": 6,
+   "abstains": 0.0267,
+   "answers": 0.9733,
+   "right_when_answering": 0.0411,
+   "shown": "4.1%"
+  },
+  "ours": {
+   "cases": 200,
+   "answered": 93,
+   "right": 93,
+   "abstains": 0.535,
+   "answers": 0.465,
+   "right_when_answering": 1.0,
+   "shown": "93 of 93"
+  }
+ }
+}
