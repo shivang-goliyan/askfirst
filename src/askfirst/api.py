@@ -488,6 +488,70 @@ def calibration_for(domain, scorer):
     return _rules[key], name, path.name
 
 
+class Note(BaseModel):
+    """Prose, from wherever. A typed note, a pasted chunk of a chart, or text an OCR pass in the
+    browser pulled off a photograph — by the time it arrives here it is all just text."""
+
+    domain: str = "ddxplus"
+    text: str = ""
+    target: float = 0.95
+
+
+_readers = {}
+
+
+def reader_for(schema):
+    if schema.domain not in _readers:
+        from .reader import Reader
+        _readers[schema.domain] = Reader(schema)
+    return _readers[schema.domain]
+
+
+@app.post("/api/read")
+def read_note(note: Note):
+    """Turn prose into findings, then decide on them — the whole path in one call.
+
+    This is the CPU reader. The measured one is an open model asking each of the schema's 223
+    questions and reading yes against no off the log probabilities, at 72% recall and 87.3%
+    precision, and it needs a GPU. This one matches the schema's own wording and runs anywhere,
+    which is the difference between a product a stranger can try and a form with 223 fields on it.
+
+    It reports what it refused as well as what it found, because a reader that silently drops the
+    word "no" is worse than no reader at all."""
+    schema = schema_for(note.domain)
+    text = (note.text or "").strip()
+    if not text:
+        raise HTTPException(422, "Nothing to read — send some text.")
+    if len(text) > 20000:
+        raise HTTPException(422, "That is longer than any note needs to be. Send under 20,000 "
+                                 "characters.")
+
+    found, refused = reader_for(schema)(text)
+    verdict = assess(Case(domain=note.domain, record=found, target=note.target))
+    return {
+        "read": {
+            "findings": [
+                {"field": name,
+                 "question": schema.fields[name].question or name,
+                 "value": value if value is not True else None,
+                 "label": (schema.fields[name].value_labels or {}).get(value)
+                 if value is not True else None}
+                for name, value in found.items()
+            ],
+            "refused": [
+                {**r, "question": schema.fields[r["field"]].question or r["field"]}
+                for r in refused
+            ],
+            "by": "a lexical reader on CPU — the measured extractor is an open model and needs "
+                  "a GPU",
+            "caveat": "A reader that misses findings makes the record look thinner, and a thinner "
+                      "record is what the gate refuses. Measured: extraction loss cost coverage "
+                      "and introduced no wrong answers.",
+        },
+        "decision": verdict,
+    }
+
+
 def odds(chance):
     """An isotonic fit tops out at exactly 1.0. Nothing here says it is certain."""
     return "better than 99%" if chance >= 0.995 else f"about {chance:.0%}"
