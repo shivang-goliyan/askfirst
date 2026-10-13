@@ -1,5 +1,26 @@
 # Where this stands
 
+## Resume here
+
+Everything is built except **the AMD run, the video and the demo**. 52 commits, 46 tests, 20 dated
+write-ups in `results/`, clean tree, all endpoints live.
+
+    ./scripts/verify.sh      # 4 min: rebuilds every artifact from public data, passes byte-for-byte
+
+**The AMD day, in order** (`GPU-DAY.md`): serve the model, re-run ESM-2 650M on MI300X and bake
+those scores, re-run the variant ablation, swap the baked notes for live extraction, capture one
+`rocprofv3` trace. All of it is rehearsed — see the rehearsal notes below — so the day is
+measurement rather than discovery.
+
+**Rehearsals were run on rented NVIDIA and on the Anthropic API. Nothing from them is baked into a
+measured result**, and the three `rehearsal-*.json` artifacts are labelled as such. Modal has no
+AMD GPUs; it was used the way `scripts/fake_vllm.py` was used.
+
+**Not done, and honest about it:** MedQA was pre-registered as the cross-check and never run
+(`results/2026-10-13-the-cross-check-we-did-not-run.md`), so every number here is DDXPlus-only. No
+clinician has reviewed any output. There is no customer and no pilot.
+
+
 **Live at https://askfirst.kgbnetwork.com** since 12 Oct — CPU only, no GPU attached, which is the point: the headline curve is baked and cannot go dark. Redeploy with `./scripts/deploy/vm.sh`; see [DEPLOY-APP.md](DEPLOY-APP.md).
 
 The live case on that page is now the real thing: twelve held-out DDXPlus patients scored by the
