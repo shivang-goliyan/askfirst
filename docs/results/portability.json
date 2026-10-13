@@ -1,0 +1,1833 @@
+{
+ "target": 0.95,
+ "patients_each_split": 1200,
+ "scorer_train_patients": 30000,
+ "ways": 7,
+ "neighbour_index": 12000,
+ "ci_kind": "bootstrap over patients, 400 draws",
+ "scorers": [
+  {
+   "scorer": "logistic regression",
+   "note": "the shipped scorer, underconfident as the record thins",
+   "test_rows": 42000,
+   "answer_everything": 0.6707,
+   "in_distribution": [
+    {
+     "rule": "one global threshold",
+     "precision": 0.946,
+     "coverage": 0.572,
+     "answered": 24025,
+     "ci": [
+      0.94,
+      0.9513
+     ],
+     "keeps_promise": false
+    },
+    {
+     "rule": "a threshold per group (Mondrian partition)",
+     "precision": 0.959,
+     "coverage": 0.5334,
+     "answered": 22404,
+     "ci": [
+      0.9536,
+      0.9636
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "a threshold per group + the same floor",
+     "precision": 0.9682,
+     "coverage": 0.4632,
+     "answered": 19454,
+     "ci": [
+      0.9638,
+      0.9724
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "ours: isotonic in-group + the floor",
+     "precision": 0.992,
+     "coverage": 0.3618,
+     "answered": 15196,
+     "ci": [
+      0.9879,
+      0.9949
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "the floor alone, no calibration",
+     "precision": 0.9337,
+     "coverage": 0.5184,
+     "answered": 21774,
+     "ci": [
+      0.9275,
+      0.9393
+     ],
+     "keeps_promise": false
+    }
+   ],
+   "at_matched_coverage": [
+    {
+     "rule": "the raw margin ranking, stopped at our coverage",
+     "precision": 0.9937,
+     "coverage": 0.3618,
+     "answered": 15196,
+     "ci": [
+      0.99,
+      0.9966
+     ],
+     "keeps_promise": true,
+     "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    }
+   ],
+   "leave_one_pattern_out": {
+    "at random": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9563,
+       "coverage": 0.5605,
+       "answered": 3363,
+       "ci": [
+        0.948,
+        0.964
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.968,
+       "coverage": 0.5265,
+       "answered": 3159,
+       "ci": [
+        0.96,
+        0.9752
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9757,
+       "coverage": 0.453,
+       "answered": 2718,
+       "ci": [
+        0.9699,
+        0.9823
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.991,
+       "coverage": 0.3702,
+       "answered": 2221,
+       "ci": [
+        0.9862,
+        0.995
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9355,
+       "coverage": 0.5168,
+       "answered": 3101,
+       "ci": [
+        0.9279,
+        0.945
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9941,
+       "coverage": 0.3702,
+       "answered": 2221,
+       "ci": [
+        0.9906,
+        0.9978
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "the detail goes, the screen stays": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9377,
+       "coverage": 0.5615,
+       "answered": 3369,
+       "ci": [
+        0.9275,
+        0.9464
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9528,
+       "coverage": 0.5403,
+       "answered": 3242,
+       "ci": [
+        0.9429,
+        0.9607
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9699,
+       "coverage": 0.465,
+       "answered": 2790,
+       "ci": [
+        0.9627,
+        0.976
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9975,
+       "coverage": 0.329,
+       "answered": 1974,
+       "ci": [
+        0.9954,
+        0.9995
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9419,
+       "coverage": 0.5275,
+       "answered": 3165,
+       "ci": [
+        0.9325,
+        0.9505
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.998,
+       "coverage": 0.329,
+       "answered": 1974,
+       "ci": [
+        0.9959,
+        0.9995
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "only the detail survives": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9529,
+       "coverage": 0.6903,
+       "answered": 4142,
+       "ci": [
+        0.943,
+        0.9626
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9634,
+       "coverage": 0.614,
+       "answered": 3684,
+       "ci": [
+        0.9538,
+        0.9714
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9705,
+       "coverage": 0.491,
+       "answered": 2946,
+       "ci": [
+        0.9626,
+        0.9776
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.987,
+       "coverage": 0.3712,
+       "answered": 2227,
+       "ci": [
+        0.9803,
+        0.9928
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9552,
+       "coverage": 0.521,
+       "answered": 3126,
+       "ci": [
+        0.9458,
+        0.9639
+       ],
+       "keeps_promise": true
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9919,
+       "coverage": 0.3712,
+       "answered": 2227,
+       "ci": [
+        0.987,
+        0.996
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "no history, symptoms only": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9596,
+       "coverage": 0.5893,
+       "answered": 3536,
+       "ci": [
+        0.952,
+        0.9669
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9724,
+       "coverage": 0.5503,
+       "answered": 3302,
+       "ci": [
+        0.9654,
+        0.979
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9806,
+       "coverage": 0.4638,
+       "answered": 2783,
+       "ci": [
+        0.9749,
+        0.9864
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.993,
+       "coverage": 0.3835,
+       "answered": 2301,
+       "ci": [
+        0.9882,
+        0.9969
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9534,
+       "coverage": 0.5113,
+       "answered": 3068,
+       "ci": [
+        0.9453,
+        0.9624
+       ],
+       "keeps_promise": true
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9939,
+       "coverage": 0.3835,
+       "answered": 2301,
+       "ci": [
+        0.9895,
+        0.9978
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "history only, nothing current": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9162,
+       "coverage": 0.5153,
+       "answered": 3092,
+       "ci": [
+        0.9044,
+        0.9285
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9128,
+       "coverage": 0.5197,
+       "answered": 3118,
+       "ci": [
+        0.9034,
+        0.9217
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9265,
+       "coverage": 0.467,
+       "answered": 2802,
+       "ci": [
+        0.916,
+        0.935
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9907,
+       "coverage": 0.3417,
+       "answered": 2050,
+       "ci": [
+        0.9859,
+        0.9942
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.8764,
+       "coverage": 0.5367,
+       "answered": 3220,
+       "ci": [
+        0.8655,
+        0.8883
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9927,
+       "coverage": 0.3417,
+       "answered": 2050,
+       "ci": [
+        0.9888,
+        0.996
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "standard questions, no follow-ups": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9379,
+       "coverage": 0.5103,
+       "answered": 3062,
+       "ci": [
+        0.928,
+        0.9478
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9281,
+       "coverage": 0.4958,
+       "answered": 2975,
+       "ci": [
+        0.9185,
+        0.9385
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9286,
+       "coverage": 0.474,
+       "answered": 2844,
+       "ci": [
+        0.9189,
+        0.9382
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9836,
+       "coverage": 0.336,
+       "answered": 2016,
+       "ci": [
+        0.9759,
+        0.9903
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.8883,
+       "coverage": 0.5313,
+       "answered": 3188,
+       "ci": [
+        0.8757,
+        0.8997
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9861,
+       "coverage": 0.336,
+       "answered": 2016,
+       "ci": [
+        0.979,
+        0.992
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "only what was volunteered": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9544,
+       "coverage": 0.5852,
+       "answered": 3511,
+       "ci": [
+        0.9458,
+        0.9623
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.951,
+       "coverage": 0.5787,
+       "answered": 3472,
+       "ci": [
+        0.9423,
+        0.9585
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9686,
+       "coverage": 0.4878,
+       "answered": 2927,
+       "ci": [
+        0.9614,
+        0.9747
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9884,
+       "coverage": 0.4157,
+       "answered": 2494,
+       "ci": [
+        0.9841,
+        0.992
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9559,
+       "coverage": 0.5175,
+       "answered": 3105,
+       "ci": [
+        0.9471,
+        0.9632
+       ],
+       "keeps_promise": true
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9976,
+       "coverage": 0.4157,
+       "answered": 2494,
+       "ci": [
+        0.9955,
+        0.9992
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    }
+   },
+   "saturation": {
+    "share": 0.0372,
+    "thin": null,
+    "full": {
+     "rows": 1477,
+     "accuracy": 1.0
+    },
+    "gap": null
+   }
+  },
+  {
+   "scorer": "naive Bayes",
+   "note": "overconfident, because it multiplies dependent findings",
+   "test_rows": 42000,
+   "answer_everything": 0.2918,
+   "in_distribution": [
+    {
+     "rule": "one global threshold",
+     "precision": 0.9719,
+     "coverage": 0.044,
+     "answered": 1850,
+     "ci": [
+      0.9518,
+      0.9889
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "a threshold per group (Mondrian partition)",
+     "precision": 0.9468,
+     "coverage": 0.1572,
+     "answered": 6601,
+     "ci": [
+      0.9354,
+      0.9577
+     ],
+     "keeps_promise": false
+    },
+    {
+     "rule": "a threshold per group + the same floor",
+     "precision": 0.9489,
+     "coverage": 0.1133,
+     "answered": 4760,
+     "ci": [
+      0.9359,
+      0.961
+     ],
+     "keeps_promise": false
+    },
+    {
+     "rule": "ours: isotonic in-group + the floor",
+     "precision": 0.9929,
+     "coverage": 0.0808,
+     "answered": 3394,
+     "ci": [
+      0.9894,
+      0.996
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "the floor alone, no calibration",
+     "precision": 0.3267,
+     "coverage": 0.5184,
+     "answered": 21774,
+     "ci": [
+      0.3128,
+      0.3422
+     ],
+     "keeps_promise": false
+    }
+   ],
+   "at_matched_coverage": [
+    {
+     "rule": "the raw margin ranking, stopped at our coverage",
+     "precision": 0.8936,
+     "coverage": 0.0808,
+     "answered": 3394,
+     "ci": [
+      0.8649,
+      0.9181
+     ],
+     "keeps_promise": false,
+     "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    }
+   ],
+   "leave_one_pattern_out": {
+    "at random": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.94,
+       "coverage": 0.025,
+       "answered": 150,
+       "ci": [
+        0.902,
+        0.9737
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9261,
+       "coverage": 0.0812,
+       "answered": 487,
+       "ci": [
+        0.9018,
+        0.9495
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9265,
+       "coverage": 0.068,
+       "answered": 408,
+       "ci": [
+        0.8986,
+        0.953
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.96,
+       "coverage": 0.0458,
+       "answered": 275,
+       "ci": [
+        0.9356,
+        0.9823
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.2628,
+       "coverage": 0.5168,
+       "answered": 3101,
+       "ci": [
+        0.2412,
+        0.2845
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.8291,
+       "coverage": 0.0458,
+       "answered": 275,
+       "ci": [
+        0.7782,
+        0.8714
+       ],
+       "keeps_promise": false,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "the detail goes, the screen stays": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9934,
+       "coverage": 0.1013,
+       "answered": 608,
+       "ci": [
+        0.9853,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9643,
+       "coverage": 0.3173,
+       "answered": 1904,
+       "ci": [
+        0.9538,
+        0.9753
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9667,
+       "coverage": 0.2605,
+       "answered": 1563,
+       "ci": [
+        0.9558,
+        0.9781
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9991,
+       "coverage": 0.1877,
+       "answered": 1126,
+       "ci": [
+        0.9973,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.637,
+       "coverage": 0.5275,
+       "answered": 3165,
+       "ci": [
+        0.6234,
+        0.6502
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9556,
+       "coverage": 0.1877,
+       "answered": 1126,
+       "ci": [
+        0.9432,
+        0.9661
+       ],
+       "keeps_promise": false,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "only the detail survives": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.8989,
+       "coverage": 0.0148,
+       "answered": 89,
+       "ci": [
+        0.8315,
+        0.9551
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.984,
+       "coverage": 0.0313,
+       "answered": 188,
+       "ci": [
+        0.9626,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.984,
+       "coverage": 0.0313,
+       "answered": 188,
+       "ci": [
+        0.9626,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 1.0,
+       "coverage": 0.023,
+       "answered": 138,
+       "ci": [
+        1.0,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.1283,
+       "coverage": 0.521,
+       "answered": 3126,
+       "ci": [
+        0.114,
+        0.1441
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.7754,
+       "coverage": 0.023,
+       "answered": 138,
+       "ci": [
+        0.7042,
+        0.8394
+       ],
+       "keeps_promise": false,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "no history, symptoms only": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.913,
+       "coverage": 0.0153,
+       "answered": 92,
+       "ci": [
+        0.8478,
+        0.9674
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9686,
+       "coverage": 0.053,
+       "answered": 318,
+       "ci": [
+        0.9486,
+        0.9847
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9693,
+       "coverage": 0.0435,
+       "answered": 261,
+       "ci": [
+        0.9482,
+        0.9887
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 1.0,
+       "coverage": 0.0292,
+       "answered": 175,
+       "ci": [
+        1.0,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.1783,
+       "coverage": 0.5113,
+       "answered": 3068,
+       "ci": [
+        0.1617,
+        0.1958
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.8,
+       "coverage": 0.0292,
+       "answered": 175,
+       "ci": [
+        0.7457,
+        0.8555
+       ],
+       "keeps_promise": false,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "history only, nothing current": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9824,
+       "coverage": 0.0473,
+       "answered": 284,
+       "ci": [
+        0.9642,
+        0.9964
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9212,
+       "coverage": 0.1608,
+       "answered": 965,
+       "ci": [
+        0.8988,
+        0.9452
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9249,
+       "coverage": 0.1198,
+       "answered": 719,
+       "ci": [
+        0.902,
+        0.9427
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9874,
+       "coverage": 0.0795,
+       "answered": 477,
+       "ci": [
+        0.9768,
+        0.9958
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.4034,
+       "coverage": 0.5367,
+       "answered": 3220,
+       "ci": [
+        0.3822,
+        0.4252
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9119,
+       "coverage": 0.0795,
+       "answered": 477,
+       "ci": [
+        0.8802,
+        0.9366
+       ],
+       "keeps_promise": false,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "standard questions, no follow-ups": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9022,
+       "coverage": 0.0153,
+       "answered": 92,
+       "ci": [
+        0.8387,
+        0.957
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9854,
+       "coverage": 0.0343,
+       "answered": 206,
+       "ci": [
+        0.9676,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9886,
+       "coverage": 0.0292,
+       "answered": 175,
+       "ci": [
+        0.9713,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 1.0,
+       "coverage": 0.0232,
+       "answered": 139,
+       "ci": [
+        1.0,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.1095,
+       "coverage": 0.5313,
+       "answered": 3188,
+       "ci": [
+        0.0948,
+        0.1239
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.8633,
+       "coverage": 0.0232,
+       "answered": 139,
+       "ci": [
+        0.8,
+        0.9203
+       ],
+       "keeps_promise": false,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "only what was volunteered": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9802,
+       "coverage": 0.0843,
+       "answered": 506,
+       "ci": [
+        0.9676,
+        0.9902
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.898,
+       "coverage": 0.4427,
+       "answered": 2656,
+       "ci": [
+        0.8791,
+        0.9121
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.8704,
+       "coverage": 0.2713,
+       "answered": 1628,
+       "ci": [
+        0.8503,
+        0.8919
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9601,
+       "coverage": 0.1922,
+       "answered": 1153,
+       "ci": [
+        0.9484,
+        0.9716
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.5614,
+       "coverage": 0.5175,
+       "answered": 3105,
+       "ci": [
+        0.5446,
+        0.5782
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9263,
+       "coverage": 0.1922,
+       "answered": 1153,
+       "ci": [
+        0.9103,
+        0.9402
+       ],
+       "keeps_promise": false,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    }
+   },
+   "saturation": {
+    "share": 0.0002,
+    "thin": null,
+    "full": null,
+    "gap": null
+   }
+  },
+  {
+   "scorer": "nearest-neighbour vote",
+   "note": "saturated; 12,000-patient index",
+   "test_rows": 42000,
+   "answer_everything": 0.7844,
+   "in_distribution": [
+    {
+     "rule": "one global threshold",
+     "precision": 0.9446,
+     "coverage": 0.6784,
+     "answered": 28493,
+     "ci": [
+      0.9403,
+      0.9489
+     ],
+     "keeps_promise": false
+    },
+    {
+     "rule": "a threshold per group (Mondrian partition)",
+     "precision": 0.948,
+     "coverage": 0.728,
+     "answered": 30574,
+     "ci": [
+      0.9411,
+      0.9537
+     ],
+     "keeps_promise": false
+    },
+    {
+     "rule": "a threshold per group + the same floor",
+     "precision": 0.9684,
+     "coverage": 0.5035,
+     "answered": 21145,
+     "ci": [
+      0.9621,
+      0.9751
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "ours: isotonic in-group + the floor",
+     "precision": 0.9973,
+     "coverage": 0.4332,
+     "answered": 18193,
+     "ci": [
+      0.9959,
+      0.9987
+     ],
+     "keeps_promise": true
+    },
+    {
+     "rule": "the floor alone, no calibration",
+     "precision": 0.9555,
+     "coverage": 0.5184,
+     "answered": 21774,
+     "ci": [
+      0.9484,
+      0.9626
+     ],
+     "keeps_promise": true
+    }
+   ],
+   "at_matched_coverage": [
+    {
+     "rule": "the raw margin ranking, stopped at our coverage",
+     "precision": 0.9692,
+     "coverage": 0.4332,
+     "answered": 18193,
+     "ci": [
+      0.9652,
+      0.9728
+     ],
+     "keeps_promise": true,
+     "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+    }
+   ],
+   "leave_one_pattern_out": {
+    "at random": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9311,
+       "coverage": 0.6865,
+       "answered": 4119,
+       "ci": [
+        0.9226,
+        0.9389
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9481,
+       "coverage": 0.7158,
+       "answered": 4295,
+       "ci": [
+        0.9391,
+        0.9563
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9692,
+       "coverage": 0.5033,
+       "answered": 3020,
+       "ci": [
+        0.9615,
+        0.9774
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9962,
+       "coverage": 0.4385,
+       "answered": 2631,
+       "ci": [
+        0.9936,
+        0.9985
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.959,
+       "coverage": 0.5168,
+       "answered": 3101,
+       "ci": [
+        0.9497,
+        0.969
+       ],
+       "keeps_promise": true
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9985,
+       "coverage": 0.4385,
+       "answered": 2631,
+       "ci": [
+        0.9966,
+        0.9996
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "the detail goes, the screen stays": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9,
+       "coverage": 0.8032,
+       "answered": 4819,
+       "ci": [
+        0.8914,
+        0.9088
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9333,
+       "coverage": 0.8052,
+       "answered": 4831,
+       "ci": [
+        0.9244,
+        0.9417
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9774,
+       "coverage": 0.5245,
+       "answered": 3147,
+       "ci": [
+        0.9699,
+        0.9847
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9982,
+       "coverage": 0.4562,
+       "answered": 2737,
+       "ci": [
+        0.9964,
+        0.9996
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9744,
+       "coverage": 0.5275,
+       "answered": 3165,
+       "ci": [
+        0.9668,
+        0.9821
+       ],
+       "keeps_promise": true
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 1.0,
+       "coverage": 0.4562,
+       "answered": 2737,
+       "ci": [
+        1.0,
+        1.0
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "only the detail survives": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.995,
+       "coverage": 0.599,
+       "answered": 3594,
+       "ci": [
+        0.9925,
+        0.9973
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9737,
+       "coverage": 0.6842,
+       "answered": 4105,
+       "ci": [
+        0.9672,
+        0.98
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9683,
+       "coverage": 0.4998,
+       "answered": 2999,
+       "ci": [
+        0.9596,
+        0.9766
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9984,
+       "coverage": 0.4262,
+       "answered": 2557,
+       "ci": [
+        0.9969,
+        1.0
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9517,
+       "coverage": 0.521,
+       "answered": 3126,
+       "ci": [
+        0.9411,
+        0.9612
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 1.0,
+       "coverage": 0.4262,
+       "answered": 2557,
+       "ci": [
+        1.0,
+        1.0
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "no history, symptoms only": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9247,
+       "coverage": 0.6797,
+       "answered": 4078,
+       "ci": [
+        0.9175,
+        0.9331
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.956,
+       "coverage": 0.6937,
+       "answered": 4162,
+       "ci": [
+        0.9478,
+        0.9632
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9755,
+       "coverage": 0.4958,
+       "answered": 2975,
+       "ci": [
+        0.9668,
+        0.9826
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9962,
+       "coverage": 0.436,
+       "answered": 2616,
+       "ci": [
+        0.9939,
+        0.9985
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9612,
+       "coverage": 0.5113,
+       "answered": 3068,
+       "ci": [
+        0.9517,
+        0.9703
+       ],
+       "keeps_promise": true
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9973,
+       "coverage": 0.436,
+       "answered": 2616,
+       "ci": [
+        0.995,
+        0.9989
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "history only, nothing current": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9024,
+       "coverage": 0.676,
+       "answered": 4056,
+       "ci": [
+        0.8914,
+        0.9133
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9018,
+       "coverage": 0.7413,
+       "answered": 4448,
+       "ci": [
+        0.8911,
+        0.9119
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9521,
+       "coverage": 0.529,
+       "answered": 3174,
+       "ci": [
+        0.9419,
+        0.9614
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.997,
+       "coverage": 0.4428,
+       "answered": 2657,
+       "ci": [
+        0.9947,
+        0.9989
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9457,
+       "coverage": 0.5367,
+       "answered": 3220,
+       "ci": [
+        0.9355,
+        0.9551
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.991,
+       "coverage": 0.4428,
+       "answered": 2657,
+       "ci": [
+        0.9871,
+        0.9943
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "standard questions, no follow-ups": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9849,
+       "coverage": 0.4207,
+       "answered": 2524,
+       "ci": [
+        0.9798,
+        0.9895
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.919,
+       "coverage": 0.57,
+       "answered": 3420,
+       "ci": [
+        0.9065,
+        0.9293
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9269,
+       "coverage": 0.497,
+       "answered": 2982,
+       "ci": [
+        0.9151,
+        0.9374
+       ],
+       "keeps_promise": false
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9894,
+       "coverage": 0.392,
+       "answered": 2352,
+       "ci": [
+        0.9852,
+        0.9932
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.8984,
+       "coverage": 0.5313,
+       "answered": 3188,
+       "ci": [
+        0.8855,
+        0.9096
+       ],
+       "keeps_promise": false
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9898,
+       "coverage": 0.392,
+       "answered": 2352,
+       "ci": [
+        0.9853,
+        0.9936
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    },
+    "only what was volunteered": {
+     "rules": [
+      {
+       "rule": "one global threshold",
+       "precision": 0.9797,
+       "coverage": 0.8543,
+       "answered": 5126,
+       "ci": [
+        0.9755,
+        0.9837
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group (Mondrian partition)",
+       "precision": 0.9734,
+       "coverage": 0.8945,
+       "answered": 5367,
+       "ci": [
+        0.9665,
+        0.9785
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "a threshold per group + the same floor",
+       "precision": 0.9828,
+       "coverage": 0.5132,
+       "answered": 3079,
+       "ci": [
+        0.9748,
+        0.9893
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "ours: isotonic in-group + the floor",
+       "precision": 0.9975,
+       "coverage": 0.4662,
+       "answered": 2797,
+       "ci": [
+        0.9953,
+        0.9993
+       ],
+       "keeps_promise": true
+      },
+      {
+       "rule": "the floor alone, no calibration",
+       "precision": 0.9813,
+       "coverage": 0.5175,
+       "answered": 3105,
+       "ci": [
+        0.9732,
+        0.9876
+       ],
+       "keeps_promise": true
+      }
+     ],
+     "at_matched_coverage": [
+      {
+       "rule": "the raw margin ranking, stopped at our coverage",
+       "precision": 0.9993,
+       "coverage": 0.4662,
+       "answered": 2797,
+       "ci": [
+        0.9982,
+        1.0
+       ],
+       "keeps_promise": true,
+       "note": "cut-off read off the test ranking, which no deployable rule can do \u2014 this flatters the baseline on purpose"
+      }
+     ]
+    }
+   },
+   "saturation": {
+    "share": 0.5451,
+    "thin": {
+     "rows": 7655,
+     "accuracy": 0.9178
+    },
+    "full": {
+     "rows": 6899,
+     "accuracy": 1.0
+    },
+    "gap": 0.0822
+   }
+  }
+ ],
+ "across_scorers_and_folds": {
+  "one global threshold": {
+   "cells_kept": 9,
+   "cells": 21,
+   "worst_precision": 0.8989,
+   "mean_coverage": 0.4302
+  },
+  "a threshold per group (Mondrian partition)": {
+   "cells_kept": 10,
+   "cells": 21,
+   "worst_precision": 0.898,
+   "mean_coverage": 0.4786
+  },
+  "a threshold per group + the same floor": {
+   "cells_kept": 14,
+   "cells": 21,
+   "worst_precision": 0.8704,
+   "mean_coverage": 0.3661
+  },
+  "ours: isotonic in-group + the floor": {
+   "cells_kept": 20,
+   "cells": 21,
+   "worst_precision": 0.96,
+   "mean_coverage": 0.2946
+  }
+ }
+}

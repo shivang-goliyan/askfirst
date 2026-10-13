@@ -93,6 +93,13 @@ So the honest claim is narrower than "our calibration is more accurate". It is: 
 never the hard part. Choosing where to stop it, on a record whose shape you have not seen before,
 is the hard part, and it is the part that fails silently.**
 
+> **Narrowed too far, corrected two hours later.** That paragraph is a fact about *this* scorer,
+> not about the calibration. Run the identical comparison against two scorers whose confidence is
+> shaped differently and the calibration buys **+9.9 points at matched coverage** on an
+> overconfident naive Bayes — where the raw ranking breaks the promise — and **+2.8** on a
+> saturated nearest-neighbour vote. It buys nothing on ours because ours already ranks well.
+> `2026-10-13-is-it-a-layer-or-is-it-our-model.md`.
+
 ## What this costs in coverage, stated plainly
 
 We take 36.0% of the queue where a per-group threshold takes 54.3%. At a 95% bar we are leaving

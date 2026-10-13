@@ -289,9 +289,13 @@ when that threshold is given our floor as well (worst 92.7%). Neither piece is s
 own — the floor alone keeps 3 of 7.
 
 One row of that experiment costs us something: stop the **raw, uncalibrated margin ranking** at
-exactly our coverage and it is equally precise (99.46% against 99.45%). The calibration is not
-buying ordering. What it buys is a stopping point chosen *without* seeing the answers — and every
-rule above that had to choose blind, except ours, broke the promise at least twice in seven folds.
+exactly our coverage and it is equally precise (99.46% against 99.45%). On *this* scorer the
+calibration is not buying ordering — what it buys is a stopping point chosen *without* seeing the
+answers, and every rule above that had to choose blind, except ours, broke the promise at least
+twice in seven folds. Run the same row against two differently-shaped scorers and that flips: the
+calibration buys **+9.9 points at matched coverage** on an overconfident naive Bayes and **+2.8**
+on a saturated neighbour vote (next section). It buys nothing here because our own scorer already
+ranks well, which is not a thing a buyer knows about theirs in advance.
 
 These baselines are selective prediction over a Mondrian partition, not conformal prediction
 sets, and they carry no conformal guarantee; calling them conformal was sloppy and is corrected
@@ -329,6 +333,47 @@ it orders them by how many answers the question admits, because that measured be
 the distribution-derived objectives we tried, including theirs. The honest statement of the
 difference is that **we went looking for a patient-specific ranking and found that a
 patient-independent one wins.**
+
+## Is it a layer, or is it just our model?
+
+The other sentence that sinks this is "your gate is fitted to your own scorer, so it is a model".
+So we refitted it against two scorers it was not designed for, picked for *how their confidence
+is wrong* rather than how good they are: a naive Bayes that is **overconfident** because it
+multiplies dependent findings, and a nearest-neighbour vote whose confidence **saturates** at
+1.00 and stays there. All three see identical features, so only the inductive bias differs.
+
+**3 scorers × 7 leave-one-pattern-out folds = 21 cells.** Every rule refitted per scorer and per
+fold; a cell counts as held only when the bootstrap *lower* bound clears 94.5%.
+
+| rule | cells where the 95% promise held | worst cell | mean coverage |
+|---|---|---|---|
+| one global threshold | 9 of 21 | 89.9% | 43.0% |
+| a threshold per group (Mondrian partition) | 10 of 21 | 89.8% | 47.9% |
+| a threshold per group + **our** completeness floor | 14 of 21 | 87.0% | 36.6% |
+| **the gate** | **20 of 21** | **96.0%** | 29.5% |
+
+The one cell it misses is the naive Bayes under random thinning — 96.0% [93.6%, 98.2%] on 275
+accepted rows, underpowered rather than broken, and reported as a failure anyway.
+
+**And what the calibration buys turns out to depend on the scorer.** Stop the raw uncalibrated
+margin ranking at exactly the gate's coverage, letting it pick that cut-off on the test set:
+
+| scorer | the gate | raw margin, same coverage | the calibration buys |
+|---|---|---|---|
+| logistic regression (ours) | 99.2% @ 36.2% | 99.4% | **−0.2 points** |
+| naive Bayes | 99.3% @ 8.1% | 89.4% *(breaks)* | **+9.9 points** |
+| nearest-neighbour vote | 99.7% @ 43.3% | 96.9% | **+2.8 points** |
+
+So: the better your model's confidence already is, the less this buys you — and **nobody
+deploying a triage model knows in advance which case they are in.** That is the product.
+
+The mechanical reason, shown rather than argued: the neighbour scorer pins its confidence at
+exactly 1.00 on **54.5% of rows**, and inside that one pile accuracy runs **91.8%** on four
+findings or fewer against **100%** on twelve or more. An 8.2-point spread inside a single number.
+A threshold sees that number; the gate sees the record.
+
+It costs coverage — 29.5% against 47.9% — and we over-deliver precision when asked for 95%,
+which is the open engineering item (`docs/results/2026-10-13-is-it-a-layer-or-is-it-our-model.md`).
 
 ## Someone else's model can use it in two curls
 

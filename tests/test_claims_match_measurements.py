@@ -160,3 +160,21 @@ def test_the_missingness_grid_is_counted_honestly():
             f"{name} does not say {clear} of {len(cells)} cells clear the bar")
         assert "holds in all 22" not in body or "never supported" in body, (
             f"{name} still claims the rule holds in all 22 cells")
+
+
+def test_portability_figures_quoted_right():
+    """Three scorers is the answer to "it is just your model", so the count has to match the
+    artifact — and the cell it fails has to stay in the shop window."""
+    port = load("portability.json")
+    tally = port["across_scorers_and_folds"]
+    ours = tally["ours: isotonic in-group + the floor"]
+    rival = tally["a threshold per group + the same floor"]
+    body = text("README.md")["README.md"]
+    flat = re.sub(r"\s+", " ", re.sub(r"\*+|</?strong>|</?em>", "", body))
+    for row in (ours, rival):
+        assert f"{row['cells_kept']} of {row['cells']}" in flat, (
+            f"README does not say {row['cells_kept']} of {row['cells']}")
+    assert quotes(body, pct(ours["worst_precision"])), "README lost our worst cell"
+    sat = next(s["saturation"] for s in port["scorers"] if s["saturation"]["gap"] is not None)
+    assert quotes(body, pct(sat["share"])), "README lost the share of saturated rows"
+    assert quotes(body, pct(sat["thin"]["accuracy"])), "README lost the thin-record accuracy"
