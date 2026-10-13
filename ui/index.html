@@ -34,6 +34,13 @@
         font-size:12px;padding:5px 10px;border-radius:14px;cursor:pointer}
   .chip.on{border-color:var(--accent);color:var(--accent)}
   .prov{font-size:11px;color:var(--dim);margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+  .off td{opacity:.32}
+  .tick{width:26px;cursor:pointer;user-select:none;color:var(--good)}
+  .off .tick{color:var(--dim)}
+  tr.row{cursor:pointer}
+  .truth{font-size:12px;color:var(--dim);margin:10px 0 4px}
+  .truth button{border:0;background:none;color:var(--accent);font:inherit;font-size:12px;
+                cursor:pointer;padding:0;text-decoration:underline}
   .note{font-size:12px;color:var(--dim);margin-top:12px}
   .bad{color:var(--bad)} .good{color:var(--good)} .warn{color:var(--warn)} .acc{color:var(--accent)}
 </style>
@@ -62,7 +69,11 @@
   </div>
 
   <div class="panel">
-    <h2>A case, live</h2>
+    <h2>A case, live &mdash; take findings away and watch it stop answering</h2>
+    <div class="chips" id="domains"></div>
+    <div class="note" id="caseNote" style="margin:2px 0 12px"></div>
+    <div class="chips" id="who"></div>
+    <div id="findings"></div>
     <div class="chips" id="chips"></div>
     <div id="verdict"></div>
     <div id="detail"></div>
@@ -82,13 +93,26 @@ const pct = x => (x*100).toFixed(1) + '%';
 let ORDER = 'bits', LAST = null, LASTCOV = 0.25;
 let KEPT = '0.4';
 let CURVE = null, PICKED = {};
+let DOMAIN = 'ddxplus', CASES = null, WHO = 0, SHOWN = false;
+const DROPPED = new Set();
 
+// The costed domain is hand-built on purpose: DDXPlus prices every question the same, so the
+// cheapest-first ordering has nothing to chew on there.
 const FIELDS = [
   ['heart_rate','high','heart rate high'], ['blood_pressure','normal','BP normal'],
   ['temperature','fever','fever'], ['spo2','low','low oxygen'],
   ['smoker',true,'smoker'], ['prior_mi',true,'previous heart attack'],
   ['ecg','ischaemic','ECG ischaemic'], ['troponin','raised','troponin raised'],
 ];
+
+function patient(){ return CASES && CASES.patients[WHO]; }
+
+function record(){
+  if (DOMAIN === 'clinical' || !patient()) return PICKED;
+  const out = {};
+  for (const f of patient().findings) if (!DROPPED.has(f.field)) out[f.field] = f.value;
+  return out;
+}
 
 function curve(){ return (CURVE.levels && CURVE.levels[KEPT]) || CURVE.rows || []; }
 
@@ -129,14 +153,67 @@ function render(i){
   drawChart(i);
 }
 
-function chips(){
-  $('#chips').innerHTML = FIELDS.map(([k,v,label],n)=>
-    `<button class="chip${PICKED[k]!==undefined?' on':''}" data-i="${n}">${label}</button>`).join('');
-  $('#chips').querySelectorAll('.chip').forEach(b => b.onclick = () => {
-    const [k,v] = FIELDS[+b.dataset.i];
-    if (PICKED[k] !== undefined) delete PICKED[k]; else PICKED[k] = v;
-    chips(); assess();
+const DOMAINS = [
+  ['ddxplus', 'a real held-out patient'],
+  ['clinical', 'a case where tests cost money'],
+];
+
+function domains(){
+  $('#domains').innerHTML = DOMAINS.map(([k,label]) =>
+    `<button class="chip${k===DOMAIN?' on':''}" data-k="${k}">${label}</button>`).join('');
+  $('#domains').querySelectorAll('button').forEach(b => b.onclick = () => {
+    DOMAIN = b.dataset.k; SHOWN = false; DROPPED.clear();
+    domains(); picker(); assess();
   });
+}
+
+function picker(){
+  const live = DOMAIN === 'ddxplus' && patient();
+  $('#chips').style.display = live ? 'none' : 'flex';
+  $('#who').style.display = live ? 'flex' : 'none';
+  $('#findings').innerHTML = '';
+
+  if (!live) {
+    $('#caseNote').innerHTML = `Nine tests and three questions, each with a price and a wait. `
+      + `Scored by a hand-written baseline &mdash; it exists to exercise the cost-aware `
+      + `ordering, and none of the measured numbers on this page come from it.`;
+    $('#chips').innerHTML = FIELDS.map(([k,v,label],n)=>
+      `<button class="chip${PICKED[k]!==undefined?' on':''}" data-i="${n}">${label}</button>`).join('');
+    $('#chips').querySelectorAll('.chip').forEach(b => b.onclick = () => {
+      const [k] = FIELDS[+b.dataset.i];
+      if (PICKED[k] !== undefined) delete PICKED[k]; else PICKED[k] = FIELDS[+b.dataset.i][1];
+      picker(); assess();
+    });
+    return;
+  }
+
+  const p = patient();
+  $('#caseNote').innerHTML = `${CASES.patients.length} patients the model has never seen &mdash; `
+    + `${CASES.held_out}. Click a finding to take it away.`;
+  $('#who').innerHTML = CASES.patients.map((q,i) =>
+    `<button class="chip${i===WHO?' on':''}" data-i="${i}">${q.sex}, ${q.age}</button>`).join('');
+  $('#who').querySelectorAll('button').forEach(b => b.onclick = () => {
+    WHO = +b.dataset.i; SHOWN = false; DROPPED.clear(); picker(); assess();
+  });
+
+  const rows = p.findings.map(f => {
+    const off = DROPPED.has(f.field);
+    return `<tr class="row${off?' off':''}" data-f="${f.field}">
+      <td class="tick">${off?'&#9675;':'&#9679;'}</td><td>${f.question}</td>
+      <td style="color:var(--accent)">${f.label}</td></tr>`;
+  }).join('');
+  const kept = p.findings.length - DROPPED.size;
+  $('#findings').innerHTML = `<table>${rows}</table>
+    <div class="truth">${kept} of ${p.findings.length} findings in hand &middot;
+      ${SHOWN ? `the real condition was <strong>${p.truth}</strong>`
+              : `<button id="reveal">show what the condition actually was</button>`}</div>`;
+  $('#findings').querySelectorAll('tr.row').forEach(tr => tr.onclick = () => {
+    const f = tr.dataset.f;
+    if (DROPPED.has(f)) DROPPED.delete(f); else DROPPED.add(f);
+    picker(); assess();
+  });
+  const show = $('#reveal');
+  if (show) show.onclick = () => { SHOWN = true; picker(); };
 }
 
 async function assess(){
@@ -144,7 +221,7 @@ async function assess(){
   let r;
   try {
     const res = await fetch('/api/assess', {method:'POST', headers:{'content-type':'application/json'},
-      body: JSON.stringify({domain:'clinical', record:PICKED, coverage:cov, kept:KEPT})});
+      body: JSON.stringify({domain:DOMAIN, record:record(), coverage:cov, kept:KEPT})});
     if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
     r = await res.json();
   } catch (e) {
@@ -169,32 +246,45 @@ function draw(r, cov){
       ${r.threshold.toFixed(3)} at ${pct(cov)} coverage &middot;
       ${r.entropy_bits} bits of uncertainty &middot; sufficiency ${r.sufficiency}/100</div>`;
 
-  const gaps = (ORDER === 'cost' ? r.go_get_by_cost : r.go_get).map(g => `<tr>
+  const costed = DOMAIN === 'clinical';
+  const byCost = costed && ORDER === 'cost';
+  const price = g => costed
+    ? `<td class="num">${g.cost}</td><td class="num">${g.delay}</td>` : '';
+  const gaps = (byCost ? r.go_get_by_cost : r.go_get).map(g => `<tr>
       <td>${g.question}</td>
+      <td class="num">${g.answers}</td>
       <td class="num">${g.info_gain_bits >= 0 ? '+' : ''}${g.info_gain_bits.toFixed(3)}</td>
-      <td class="num">${g.cost}</td><td class="num">${g.delay}</td>
+      ${price(g)}
       <td>${g.if_this ? `if <strong>${g.if_this.label}</strong> &rarr; ${g.if_this.then}`
                       : '<span style="color:var(--dim)">would not change it</span>'}</td></tr>`).join('');
   const rests = r.rests_on.filter(x=>x.influence>0).map(x => `<tr><td>${x.question}</td>
       <td class="num">${x.influence.toFixed(3)}</td></tr>`).join('');
 
-  const byCost = ORDER === 'cost';
+  const toggle = costed ? `
+      <button class="chip${byCost?'':' on'}" id="o-bits">widest first</button>
+      <button class="chip${byCost?' on':''}" id="o-cost">cheapest that still helps</button>` : '';
+  const head = costed
+    ? '<th class="num">cost</th><th class="num">mins</th>' : '';
   $('#detail').innerHTML = `
-    <h2 style="margin-top:20px">Go get
-      <button class="chip${byCost?'':' on'}" id="o-bits">best information first</button>
-      <button class="chip${byCost?' on':''}" id="o-cost">cheapest that still helps</button>
-    </h2>
-    <table><tr><th>what to obtain</th><th class="num">bits</th><th class="num">cost</th>
-      <th class="num">mins</th><th>and if it comes back</th></tr>${gaps}</table>
+    <h2 style="margin-top:20px">Go get ${toggle}</h2>
+    <table><tr><th>what to obtain</th><th class="num">answers</th><th class="num">bits</th>
+      ${head}<th>and if it comes back</th></tr>${gaps}</table>
     <div class="note">${byCost
       ? 'Bits per unit of cost &mdash; after dropping anything that settles less than a quarter of what the best option settles. Cheapness only breaks ties between useful questions.'
-      : 'Ranked by how much each answer would settle the case, in bits, regardless of price.'}</div>
+      : 'Ordered by how many answers the question admits, not by the bits. Ranking by expected '
+        + 'information gain measured <span class="warn">worse than asking nothing at all</span> '
+        + '(39.9% against 42.9%); this order gets 72.5%. The bits are shown because they are '
+        + 'what we expected to work.'}</div>
     ${rests ? `<h2 style="margin-top:20px">What the answer currently rests on</h2>
       <table><tr><th>already known</th><th class="num">influence</th></tr>${rests}</table>` : ''}`;
-  $('#prov').textContent = `Scored by: ${r.scored_by}`;
-  const set = o => () => { ORDER = o; draw(LAST, LASTCOV); };
-  $('#o-bits').onclick = set('bits');
-  $('#o-cost').onclick = set('cost');
+  $('#prov').textContent = `Scored by: ${r.scored_by}`
+    + (r.threshold_calibrated ? ' — and the cut-off was measured against this same model'
+                              : ' — the cut-off was measured against the softmax, not this scorer');
+  if (costed) {
+    const set = o => () => { ORDER = o; draw(LAST, LASTCOV); };
+    $('#o-bits').onclick = set('bits');
+    $('#o-cost').onclick = set('cost');
+  }
 }
 
 const LEVEL_LABEL = {'1.0':'complete', '0.6':'60% in', '0.4':'40% in', '0.2':'20% in', '0.1':'10% in'};
@@ -222,7 +312,19 @@ function levels(){
 }
 
 (async () => {
-  chips();
+  domains();
+  try {
+    const res = await fetch('/api/cases');
+    if (!res.ok) throw new Error('not baked');
+    CASES = await res.json();
+  } catch (e) {
+    // no baked patients in this build, so fall back to the costed case rather than posting
+    // clinical fields at the ddxplus schema and getting nonsense back
+    CASES = null;
+    DOMAIN = 'clinical';
+    domains();
+  }
+  picker();
   try {
     CURVE = await (await fetch('/api/curve')).json();
     const all = curve();

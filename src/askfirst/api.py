@@ -28,7 +28,11 @@ from .ablation import (
 from .model import Endpoint, ModelScorer
 from .schema import load_schema
 
-BAKED = Path(__file__).parent / "baked" / "curve.json"
+BAKE = Path(__file__).parent / "baked"
+BAKED = BAKE / "curve.json"
+CASES = BAKE / "cases.json"
+WEIGHTS = BAKE / "ddxplus_softmax.npz"
+PRIORS = BAKE / "ddxplus_priors.json"
 
 
 def find_ui():
@@ -46,6 +50,7 @@ UI = find_ui()
 
 app = FastAPI(title="askfirst", docs_url="/api/docs")
 _schemas = {}
+_scorers = {}
 
 
 class Case(BaseModel):
@@ -57,27 +62,60 @@ class Case(BaseModel):
     kept: str = "0.4"
 
 
+def unpack(baked, schema):
+    """Baked priors arrive as one probability per declared value, in order, because JSON turns
+    an integer value into a string key and half the DDXPlus fields are numbered scales."""
+    out = {}
+    for name, row in baked.items():
+        spec = schema.fields.get(name)
+        if spec is None or len(row) != len(spec.values):
+            continue
+        out[name] = dict(zip(spec.values, row))
+    return out
+
+
 def schema_for(domain):
     if domain not in _schemas:
         try:
-            _schemas[domain] = load_schema(domain)
+            schema = load_schema(domain)
         except FileNotFoundError as e:
             raise HTTPException(404, str(e)) from e
+        if domain == "ddxplus" and PRIORS.exists():
+            # counted off the same patients the scorer was fitted on. Without them the ranker
+            # treats "do you have a rare symptom" as a coin flip and rates the question as
+            # though it always comes back yes.
+            baked = json.loads(PRIORS.read_text())
+            schema = schema.with_priors(unpack(baked["priors"], schema), baked.get("rates"))
+        _schemas[domain] = schema
     return _schemas[domain]
 
 
+def baked_scorer(schema):
+    """The fitted softmax, shipped as 88KB of weights. Loading it costs nothing and it is the
+    model every number on the page was measured with, so a visitor pokes the same thing the
+    claims are about rather than a sketch of it."""
+    if schema.domain not in _scorers:
+        from .softmax import SoftmaxScorer
+        _scorers[schema.domain] = SoftmaxScorer.load(WEIGHTS, schema)
+    return _scorers[schema.domain]
+
+
 def pick_scorer(schema):
-    """The open model when there is one, the CPU baseline otherwise. The caller is told which."""
+    """The open model when there is one, the fitted CPU model otherwise. The caller is told
+    which answered, every time, because a number off a GPU and a number off a laptop should
+    never be indistinguishable in the response."""
     endpoint = Endpoint()
     if endpoint.available():
         return ModelScorer(schema, endpoint), endpoint.describe()
+    if schema.domain == "ddxplus" and WEIGHTS.exists():
+        return baked_scorer(schema), "softmax regression on CPU, 99.6% top-1 on complete records"
     if schema.domain == "clinical":
         from .stub import make_scorer
         return make_scorer(schema), "hand-written baseline, no GPU attached"
     raise HTTPException(
         503,
         f"No scorer for {schema.domain!r} without a model endpoint. "
-        "Set ASKFIRST_VLLM_URL, or use the clinical domain which has a CPU baseline.",
+        "Set ASKFIRST_VLLM_URL, or use a domain that ships a CPU model.",
     )
 
 
@@ -97,6 +135,31 @@ def curve():
     if not BAKED.exists():
         raise HTTPException(503, "Curve not baked yet. Run scripts/bake_curve.py")
     return json.loads(BAKED.read_text())
+
+
+@app.get("/api/cases")
+def cases():
+    """Real held-out patients, so the live case is not a hand-written sketch."""
+    if not CASES.exists():
+        raise HTTPException(503, "No demo cases baked yet. Run scripts/bake_demo.py")
+    baked = json.loads(CASES.read_text())
+    schema = schema_for("ddxplus")
+    for patient in baked["patients"]:
+        patient["findings"] = [
+            {
+                "field": name,
+                "question": schema.fields[name].question or name,
+                "value": value,
+                "label": ", ".join(
+                    schema.fields[name].label_for(v)
+                    for v in (value if isinstance(value, list) else [value])
+                ),
+            }
+            for name, value in patient["evidences"].items()
+            if name in schema.fields
+        ]
+        patient["truth_label"] = schema.label_for_outcome(patient["truth"])
+    return baked
 
 
 @app.get("/api/schema/{domain}")
@@ -129,6 +192,9 @@ def as_gap(g, schema):
     return {
         "field": g.field,
         "question": spec.question or g.field,
+        "answers": len(spec.values),
+        "breadth_bits": round(g.breadth, 3),
+        "yield_rate": round(g.yield_rate, 4),
         "info_gain_bits": round(g.info_gain, 4),
         "flip_prob": round(g.flip_prob, 4),
         "cost": g.cost,
@@ -159,6 +225,9 @@ def assess(case: Case):
     confidence = max(dist.values()) if dist else 0.0
     threshold = threshold_for(case.coverage, case.kept)
     answering = confidence >= threshold
+    # the cut-off was measured against the softmax. A model on a GPU has its own confidence
+    # scale, so borrowing this number for it is an assumption, and the response says so.
+    calibrated = schema.domain == "ddxplus" and not Endpoint().available()
 
     ranked = sorted(dist.items(), key=lambda kv: -kv[1])[:5]
     return {
@@ -170,8 +239,9 @@ def assess(case: Case):
         ),
         "confidence": round(confidence, 4),
         "threshold": round(threshold, 4),
+        "threshold_calibrated": calibrated,
         "entropy_bits": round(entropy(dist), 3),
-        "sufficiency": sufficiency(case.record, scorer, schema),
+        "sufficiency": sufficiency(case.record, scorer, schema, gaps),
         "answer": (
             {"key": ranked[0][0], "label": schema.label_for_outcome(ranked[0][0])}
             if answering and ranked else None

@@ -10,15 +10,26 @@ account holds. So the app and the model are deployed separately and on purpose.
 ## Two tiers, split deliberately
 
 **The page and the headline run on CPU, free, permanently.** `/api/curve` reads a baked JSON
-artifact measured once over 1,500 patients. It cannot fail and it does not depend on a droplet.
-`/api/assess` falls back to the hand-written baseline scorer when no model endpoint is set.
+artifact measured once over 6,000 patients. It cannot fail and it does not depend on a droplet.
+
+**The live case runs the real model, on CPU.** `/api/assess` on the `ddxplus` domain loads the
+fitted softmax — 88 KB of weights that ship inside the image — so a visitor pokes the same scorer
+every number on the page was measured with, at 99.6% top-1 on complete records. The cases it
+scores are twelve real held-out patients from `/api/cases`, taken from past the end of both the
+fitting set and the set the curve was measured on. The hand-written baseline is still there for
+the `clinical` domain, which exists to exercise cost-aware ranking, and nothing measured comes
+from it.
 
 **The model attaches on demand.** Bring a droplet up, redeploy with one environment variable, and
 the same endpoints score against the open model instead. Every response carries `scored_by`, so
 nobody has to guess where a number came from:
 
     "scored_by": "open model on AMD MI300X"
+    "scored_by": "softmax regression on CPU, 99.6% top-1 on complete records"
     "scored_by": "hand-written baseline, no GPU attached"
+
+`threshold_calibrated` goes with it. The confidence cut-off was measured against the softmax, so
+when a model on a GPU answers instead, the response says the cut-off was not calibrated for it.
 
 ## Where it runs
 

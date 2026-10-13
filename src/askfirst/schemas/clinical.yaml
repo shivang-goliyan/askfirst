@@ -4,23 +4,35 @@ domain: clinical
 outcomes: [discharge, observe, admit, escalate]
 
 fields:
-  heart_rate:   {kind: numeric,     values: [low, normal, high],              cost: 1,  minutes: 1}
-  blood_pressure: {kind: numeric,   values: [low, normal, high],              cost: 1,  minutes: 1}
-  temperature:  {kind: numeric,     values: [low, normal, fever],             cost: 1,  minutes: 1}
+  heart_rate:   {kind: numeric,     values: [low, normal, high],              cost: 1,  minutes: 1,
+                 question: "What is the heart rate?"}
+  blood_pressure: {kind: numeric,   values: [low, normal, high],              cost: 1,  minutes: 1,
+                 question: "What is the blood pressure?"}
+  temperature:  {kind: numeric,     values: [low, normal, fever],             cost: 1,  minutes: 1,
+                 question: "What is the temperature?"}
   spo2:         {kind: numeric,     values: [low, normal],                    cost: 1,  minutes: 1,
+                 question: "What does the pulse oximeter read?",
                  priors: {low: 0.09, normal: 0.91}}
   ecg:          {kind: categorical, values: [normal, ischaemic, arrhythmia],  cost: 6,  minutes: 10,
+                 question: "What does the ECG show?",
                  priors: {normal: 0.74, ischaemic: 0.13, arrhythmia: 0.13}}
   troponin:     {kind: numeric,     values: [normal, raised, very_raised],    cost: 9,  minutes: 45,
+                 question: "What is the troponin?",
                  priors: {normal: 0.82, raised: 0.14, very_raised: 0.04}}
   d_dimer:      {kind: numeric,     values: [normal, raised],                 cost: 8,  minutes: 40,
+                 question: "What is the d-dimer?",
                  priors: {normal: 0.62, raised: 0.38}}
-  chest_xray:   {kind: categorical, values: [clear, consolidation, effusion], cost: 14, minutes: 60}
+  chest_xray:   {kind: categorical, values: [clear, consolidation, effusion], cost: 14, minutes: 60,
+                 question: "What does the chest x-ray show?"}
   ct_chest:     {kind: categorical, values: [normal, pe, dissection],         cost: 60, minutes: 180,
+                 question: "What does the CT chest show?",
                  priors: {normal: 0.93, pe: 0.06, dissection: 0.01}}
 
 # Antecedents are cheap because they are asked, not measured.
 antecedents:
-  smoker:       {kind: boolean, values: [true, false], cost: 0, minutes: 1}
-  prior_mi:     {kind: boolean, values: [true, false], cost: 0, minutes: 1}
-  family_history: {kind: boolean, values: [true, false], cost: 0, minutes: 2}
+  smoker:       {kind: boolean, values: [true, false], cost: 0, minutes: 1,
+                 question: "Do they smoke?"}
+  prior_mi:     {kind: boolean, values: [true, false], cost: 0, minutes: 1,
+                 question: "Have they had a heart attack before?"}
+  family_history: {kind: boolean, values: [true, false], cost: 0, minutes: 2,
+                 question: "Is there heart disease in the family?"}

@@ -56,10 +56,12 @@ REMOTE
 echo "→ checking the public URL"
 code=$(curl -sS -o /dev/null -w '%{http_code}' "$url/")
 scorer=$(curl -sS -X POST "$url/api/assess" -H 'content-type: application/json' \
-  -d '{"domain":"clinical","record":{"chest_pain":"yes"},"coverage":0.25}' \
+  -d '{"domain":"ddxplus","record":{"E_55":"present"},"coverage":0.25}' \
   | sed -n 's/.*"scored_by":"\([^"]*\)".*/\1/p')
+cases=$(curl -sS "$url/api/cases" | grep -o "\"truth\":" | wc -l)
 
 echo
 echo "$url → HTTP $code"
 echo "scoring with: ${scorer:-unknown}"
+echo "held-out patients on the page: ${cases:-0}"
 [ "$code" = "200" ] || { echo "that is not a 200 — check 'docker logs askfirst' on the box" >&2; exit 1; }

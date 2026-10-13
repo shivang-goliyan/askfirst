@@ -2,6 +2,11 @@
 
 **Live at https://askfirst.kgbnetwork.com** since 12 Oct — CPU only, no GPU attached, which is the point: the headline curve is baked and cannot go dark. Redeploy with `./scripts/deploy/vm.sh`; see [DEPLOY-APP.md](DEPLOY-APP.md).
 
+The live case on that page is now the real thing: twelve held-out DDXPlus patients scored by the
+fitted softmax that ships in the image, not a hand-written sketch. Take findings away and it stops
+answering. The costed hand-built case is still there on its own tab, because DDXPlus prices every
+question the same and the cheapest-first ordering needs something to chew on.
+
 ## What works, measured
 
 **Re-measured 13 Oct after finding the first version measured our own baseline.** A naive Bayes
@@ -57,15 +62,23 @@ Write-up: `results/2026-10-13-computational-line-ablation.md`.
 
 ## The advice works too, as of 13 Oct
 
-One question, from a record cut to three findings: **41.7% without it, 46.2% asking at random,
-67.1% asking what the engine says.** Intervals [43.1%, 49.3%] against [64.1%, 69.9%].
+One question, from a record cut to three findings, 4,000 held-out patients: **42.9% without it,
+47.9% asking at random, 72.5% asking what the engine says.** Intervals [46.3%, 49.4%] against
+[71.1%, 73.8%]. An oracle told which questions this patient can actually answer gets 74.3%.
 
 What fixed it was deleting the clever part. Ranking by **expected information gain measured worse
-than random** (43.3%), because it is an expectation taken under the model's own beliefs and those
-beliefs are wrong on exactly the sparse records where advice matters. Ranking by **answer breadth**
-— log2 of how many answers a question admits — needs no beliefs and adds 13 to 23 points. In
-clinical terms: characterise what you already know before asking about one more symptom.
-Write-up: `results/2026-10-13-breadth-beats-information.md`.
+than asking nothing at all** (39.9% against 42.9%), because it is an expectation taken under the
+model's own beliefs and those beliefs are wrong on exactly the sparse records where advice matters.
+Ranking by **answer breadth** — log2 of how many answers a question admits — needs no beliefs and
+adds 25 to 29 points over a coin. In clinical terms: characterise what you already know before
+asking about one more symptom.
+
+Re-measured after three bugs turned up, all of them in our favour: a negative answer was switching
+the evidence feature *on*, the ranker assumed every question gets answered, and the harness let
+`max()` break a three-way breadth tie using the engine's own sort order (worth seven points to us).
+Answer rate on its own scores 42.0%, below a coin — so breadth is the mechanism, not a proxy for
+"questions that tend to get answered". Write-up:
+`results/2026-10-13-breadth-beats-information.md`.
 
 ## Dead ends, so nobody repeats them
 
