@@ -285,7 +285,7 @@ def assess(case: Case):
         from .calibrate import FLOOR
         cal, done = rule
         complete = done(case.record)
-        chance = cal(confidence, len(case.record))
+        chance = cal(confidence, case.record)
         answering = complete >= FLOOR and chance >= case.target
         decision = {
             "rule": "calibrated",

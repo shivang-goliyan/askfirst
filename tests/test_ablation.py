@@ -201,8 +201,16 @@ def test_isotonic_only_goes_up():
 def test_calibration_beats_the_margin():
     from askfirst.calibrate import Calibrator
     # a margin that reads 0.4 but is right nine times in ten should come back near 0.9
-    cal = Calibrator().fit([(0.4, 3, i % 10 != 0) for i in range(200)])
-    assert cal(0.4, 3) > 0.8
+    record = {"E_55": "present", "E_53": "present", "E_56": 3}
+    cal = Calibrator({}).fit([(0.4, record, i % 10 != 0) for i in range(200)])
+    assert cal(0.4, record) > 0.8
+
+
+def test_common_findings_read_weaker():
+    from askfirst.calibrate import Calibrator
+    cal = Calibrator({"everyone": 0.99, "unusual": 0.01})
+    assert cal.key({"everyone": 1}) != cal.key({"unusual": 1})
+    assert cal.rarity({"everyone": 1}) < cal.rarity({"unusual": 1})
 
 
 def test_thin_records_read_as_thin():
@@ -219,5 +227,6 @@ def test_baked_rule_refuses_a_stub():
     model = SoftmaxScorer.load("src/askfirst/baked/ddxplus_softmax.npz", schema)
     done = Completeness.load("src/askfirst/baked/completeness.npz", model.encode)
     cal = Calibrator.load("src/askfirst/baked/calibrator.json")
-    assert done({"E_55": "present"}) < FLOOR
-    assert cal(0.2, 1) < cal(0.95, 12)
+    thin, thick = {"E_55": "present"}, dict.fromkeys(list(schema.fields)[:14], "present")
+    assert done(thin) < FLOOR
+    assert cal(0.2, thin) < cal(0.95, thick)

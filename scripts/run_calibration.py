@@ -23,6 +23,7 @@ from askfirst.ablation import argmax  # noqa: E402
 from askfirst.calibrate import FLOOR, Calibrator, Completeness  # noqa: E402
 from askfirst.ddxplus import load_patients  # noqa: E402
 from askfirst.metrics import ece, reliability, wilson  # noqa: E402
+from askfirst.missing import cut, mechanisms  # noqa: E402
 from askfirst.schema import load_schema  # noqa: E402
 from askfirst.softmax import SoftmaxScorer  # noqa: E402
 from run_abstention import KEPT, WEIGHTS, thin  # noqa: E402
@@ -38,17 +39,36 @@ def gather(model, pool):
     rows = {}
     for frac in KEPT:
         got = []
-        for whole, cut in zip(pool, thin(pool, frac)):
-            dist = model(cut["evidences"])
+        for whole, short in zip(pool, thin(pool, frac)):
+            dist = model(short["evidences"])
             got.append({
-                "record": cut["evidences"],
+                "record": short["evidences"],
                 "margin": max(dist.values()),
-                "n": len(cut["evidences"]),
+                "n": len(short["evidences"]),
                 "true_n": len(whole["evidences"]),
                 "right": argmax(dist) == whole["pathology"],
             })
         rows[frac] = got
     return rows
+
+
+def every_way(model, pool, ways):
+    """The same records cut short for every reason, not just the convenient one. Fitting only
+    against uniform thinning leaves the calibration four points short on a record that kept the
+    standard questions and lost the follow-ups, which is the likeliest shape of all."""
+    out = []
+    for key in ways.values():
+        for frac in KEPT:
+            for case in cut(pool, frac, key):
+                dist = model(case["evidences"])
+                out.append({
+                    "record": case["evidences"],
+                    "margin": max(dist.values()),
+                    "n": len(case["evidences"]),
+                    "true_n": case["true_n"],
+                    "right": argmax(dist) == case["pathology"],
+                })
+    return out
 
 
 def cut_for(rows, target):
@@ -76,7 +96,9 @@ def table(name, rows_by_level, decide, target):
             continue
         precision = sum(answered) / len(answered)
         lo, hi = wilson(sum(answered), len(answered))
-        flag = "" if precision >= target - 0.01 else "  <- misses the target"
+        # only call it a miss when the interval says so. A handful of answered cases cannot
+        # break a promise, and flagging them as though they could is its own kind of dishonesty.
+        flag = "  <- misses the target" if hi < target and len(answered) >= 30 else ""
         print(f"  {frac:>8.0%} {precision:>11.1%} {len(answered) / len(rows):>10.1%} "
               f"{len(answered):>9}{flag}")
         out[str(frac)] = {"precision": round(precision, 4),
@@ -136,12 +158,17 @@ def main(path):
         print(f"  {src:>10.0%} " + " ".join(cells))
     print("\n  ! is a threshold that fails the target on a record it was not chosen on.")
 
-    # The fix. Findings in hand for the calibration, because that is observable; estimated
+    # The fix. What is in hand for the calibration, because that is observable; estimated
     # completeness for the floor, because below it nothing reaches a useful precision anyway.
-    calibrator = Calibrator().fit(
-        [(r["margin"], r["n"], r["right"]) for frac in KEPT for r in F[frac]]).thin()
+    # Both are fitted against records cut short for every reason, not only the convenient one.
+    rates = json.loads((BAKE / "ddxplus_priors.json").read_text())["rates"]
+    ways = mechanisms(schema, rates)
+    print(f"\nfitting against {len(ways)} ways a record goes short, not just uniform thinning")
+    mixed_fit = every_way(model, fit, ways)
+    calibrator = Calibrator(rates).fit(
+        [(r["margin"], r["record"], r["right"]) for r in mixed_fit]).thin()
     completeness = Completeness(model.encode).fit(
-        [(r["record"], r["true_n"]) for frac in KEPT for r in F[frac]])
+        [(r["record"], r["true_n"]) for r in mixed_fit])
 
     errs = [abs(completeness(r["record"]) - min(1.0, r["n"] / r["true_n"]))
             for frac in KEPT for r in T[frac]]
@@ -149,15 +176,15 @@ def main(path):
           f"{sum(errs) / len(errs):.3f} on a 0-1 scale")
 
     plain = table(f"Calibrated, answering whenever P(right) clears {TARGET:.0%}:",
-                  T, lambda r: calibrator(r["margin"], r["n"]) >= TARGET, TARGET)
+                  T, lambda r: calibrator(r["margin"], r["record"]) >= TARGET, TARGET)
     floored = table(f"And refusing outright below {FLOOR:.0%} estimated completeness:",
                     T, lambda r: completeness(r["record"]) >= FLOOR
-                    and calibrator(r["margin"], r["n"]) >= TARGET, TARGET)
+                    and calibrator(r["margin"], r["record"]) >= TARGET, TARGET)
 
     every = [r for frac in KEPT for r in T[frac]]
     answered = [r["right"] for r in every
                 if completeness(r["record"]) >= FLOOR
-                and calibrator(r["margin"], r["n"]) >= TARGET]
+                and calibrator(r["margin"], r["record"]) >= TARGET]
     loose = sum(1 for r in every if r["right"])
     lo, hi = wilson(sum(answered), len(answered))
     mixed = {

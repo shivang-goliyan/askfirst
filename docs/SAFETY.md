@@ -98,5 +98,10 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
   stream it is 99.6% right on the 34% of cases it answers, against 67.1% answering everything.
 - It will never print "100% likely to be right". The calibration's top block sits at exactly 1.0
   and the display is capped below it on purpose.
+- **Records do not go missing at random, and we stopped pretending they do.** Seven realistic
+  patterns measured; at a fifth of a record, accuracy runs from 19.6% to 73.2% depending only on
+  which fifth. The calibration is fitted against all seven. Anyone deploying this should refit it
+  against the way records go short where it runs — the cost of not doing so is three points of
+  precision on a promise of ninety-five, measured.
 - The concept is not novel. MediQ (NeurIPS 2024) posed the interactive version of this problem
   first; the contribution here is the calibrated refusal and its price, not the idea.

@@ -20,6 +20,10 @@ class Field:
     # number, so 1.0 is right for an ordered test; a symptom question mostly comes back "no",
     # and DDXPlus records only the yeses, so the field is simply absent from the record.
     asked_rate: float = 1.0
+    # which part of the record it belongs to: what the patient reports now, or what is already
+    # known about them. A real intake loses one of those wholesale far more often than it loses
+    # a random scattering of both.
+    section: str = "fields"
 
     def label_for(self, value):
         if value in self.value_labels:
@@ -85,6 +89,7 @@ class Schema:
                 spec.name, spec.kind, spec.values, spec.cost, spec.delay,
                 dict(fitted.get(name) or spec.priors), spec.question, spec.value_labels,
                 float(rates.get(name, spec.asked_rate)),
+                spec.section,
             )
         return Schema(self.domain, self.outcomes, fields, self.labels, self.sources)
 
@@ -119,6 +124,7 @@ def load_schema(domain):
                 question=spec.get("question", ""),
                 value_labels=dict(spec.get("value_labels") or {}),
                 asked_rate=float(spec.get("asked_rate", 1.0)),
+                section=group,
             )
     return Schema(
         domain=raw["domain"],

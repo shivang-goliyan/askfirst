@@ -1,0 +1,607 @@
+{
+ "target": 0.95,
+ "floor": 0.35,
+ "cases": 6000,
+ "held_out": "standard questions, no follow-ups",
+ "top1": {
+  "at random": {
+   "1.0": 0.9958,
+   "0.6": 0.9623,
+   "0.4": 0.8243,
+   "0.2": 0.397,
+   "0.1": 0.1727
+  },
+  "the detail goes, the screen stays": {
+   "1.0": 0.9958,
+   "0.6": 0.9568,
+   "0.4": 0.8787,
+   "0.2": 0.3645,
+   "0.1": 0.129
+  },
+  "only the detail survives": {
+   "1.0": 0.9958,
+   "0.6": 0.9645,
+   "0.4": 0.89,
+   "0.2": 0.7323,
+   "0.1": 0.351
+  },
+  "no history, symptoms only": {
+   "1.0": 0.9958,
+   "0.6": 0.9778,
+   "0.4": 0.867,
+   "0.2": 0.4513,
+   "0.1": 0.2048
+  },
+  "history only, nothing current": {
+   "1.0": 0.9958,
+   "0.6": 0.9412,
+   "0.4": 0.6817,
+   "0.2": 0.1923,
+   "0.1": 0.0907
+  },
+  "standard questions, no follow-ups": {
+   "1.0": 0.9958,
+   "0.6": 0.948,
+   "0.4": 0.6868,
+   "0.2": 0.1962,
+   "0.1": 0.0277
+  },
+  "only what was volunteered": {
+   "1.0": 0.9958,
+   "0.6": 0.9633,
+   "0.4": 0.8908,
+   "0.2": 0.5498,
+   "0.1": 0.1677
+  }
+ },
+ "shipped": {
+  "at random": {
+   "1.0": {
+    "precision": 0.9995,
+    "answered": 5845,
+    "coverage": 0.9742,
+    "ci": [
+     0.9985,
+     0.9998
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9937,
+    "answered": 3662,
+    "coverage": 0.6103,
+    "ci": [
+     0.9906,
+     0.9958
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9882,
+    "answered": 1016,
+    "coverage": 0.1693,
+    "ci": [
+     0.9795,
+     0.9932
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "the detail goes, the screen stays": {
+   "1.0": {
+    "precision": 0.9995,
+    "answered": 5845,
+    "coverage": 0.9742,
+    "ci": [
+     0.9985,
+     0.9998
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9997,
+    "answered": 3684,
+    "coverage": 0.614,
+    "ci": [
+     0.9985,
+     1.0
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9873,
+    "answered": 706,
+    "coverage": 0.1177,
+    "ci": [
+     0.976,
+     0.9933
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "precision": 0.0,
+    "answered": 1,
+    "coverage": 0.0002,
+    "ci": [
+     0.0,
+     0.7935
+    ],
+    "broken": false
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "only the detail survives": {
+   "1.0": {
+    "precision": 0.9995,
+    "answered": 5845,
+    "coverage": 0.9742,
+    "ci": [
+     0.9985,
+     0.9998
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9854,
+    "answered": 3828,
+    "coverage": 0.638,
+    "ci": [
+     0.9811,
+     0.9887
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9651,
+    "answered": 1288,
+    "coverage": 0.2147,
+    "ci": [
+     0.9536,
+     0.9738
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "no history, symptoms only": {
+   "1.0": {
+    "precision": 0.9995,
+    "answered": 5845,
+    "coverage": 0.9742,
+    "ci": [
+     0.9985,
+     0.9998
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9923,
+    "answered": 4173,
+    "coverage": 0.6955,
+    "ci": [
+     0.9892,
+     0.9946
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9885,
+    "answered": 1133,
+    "coverage": 0.1888,
+    "ci": [
+     0.9805,
+     0.9933
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "history only, nothing current": {
+   "1.0": {
+    "precision": 0.9995,
+    "answered": 5845,
+    "coverage": 0.9742,
+    "ci": [
+     0.9985,
+     0.9998
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9916,
+    "answered": 3330,
+    "coverage": 0.555,
+    "ci": [
+     0.9879,
+     0.9942
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9858,
+    "answered": 565,
+    "coverage": 0.0942,
+    "ci": [
+     0.9723,
+     0.9928
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "standard questions, no follow-ups": {
+   "1.0": {
+    "precision": 0.9995,
+    "answered": 5845,
+    "coverage": 0.9742,
+    "ci": [
+     0.9985,
+     0.9998
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9778,
+    "answered": 2751,
+    "coverage": 0.4585,
+    "ci": [
+     0.9716,
+     0.9827
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.936,
+    "answered": 547,
+    "coverage": 0.0912,
+    "ci": [
+     0.9123,
+     0.9536
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "only what was volunteered": {
+   "1.0": {
+    "precision": 0.9995,
+    "answered": 5845,
+    "coverage": 0.9742,
+    "ci": [
+     0.9985,
+     0.9998
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9992,
+    "answered": 4717,
+    "coverage": 0.7862,
+    "ci": [
+     0.9978,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9915,
+    "answered": 1651,
+    "coverage": 0.2752,
+    "ci": [
+     0.9858,
+     0.9949
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  }
+ },
+ "held_out_of_fit": {
+  "at random": {
+   "1.0": {
+    "precision": 0.9993,
+    "answered": 5865,
+    "coverage": 0.9775,
+    "ci": [
+     0.9982,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9934,
+    "answered": 3767,
+    "coverage": 0.6278,
+    "ci": [
+     0.9902,
+     0.9955
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9858,
+    "answered": 1055,
+    "coverage": 0.1758,
+    "ci": [
+     0.9767,
+     0.9914
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "the detail goes, the screen stays": {
+   "1.0": {
+    "precision": 0.9993,
+    "answered": 5865,
+    "coverage": 0.9775,
+    "ci": [
+     0.9982,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9997,
+    "answered": 3723,
+    "coverage": 0.6205,
+    "ci": [
+     0.9985,
+     1.0
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9873,
+    "answered": 710,
+    "coverage": 0.1183,
+    "ci": [
+     0.9761,
+     0.9933
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "precision": 0.0,
+    "answered": 1,
+    "coverage": 0.0002,
+    "ci": [
+     0.0,
+     0.7935
+    ],
+    "broken": false
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "only the detail survives": {
+   "1.0": {
+    "precision": 0.9993,
+    "answered": 5865,
+    "coverage": 0.9775,
+    "ci": [
+     0.9982,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9851,
+    "answered": 4021,
+    "coverage": 0.6702,
+    "ci": [
+     0.9808,
+     0.9884
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9595,
+    "answered": 1455,
+    "coverage": 0.2425,
+    "ci": [
+     0.948,
+     0.9684
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "no history, symptoms only": {
+   "1.0": {
+    "precision": 0.9993,
+    "answered": 5865,
+    "coverage": 0.9775,
+    "ci": [
+     0.9982,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.992,
+    "answered": 4262,
+    "coverage": 0.7103,
+    "ci": [
+     0.9889,
+     0.9943
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9861,
+    "answered": 1222,
+    "coverage": 0.2037,
+    "ci": [
+     0.9778,
+     0.9913
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "history only, nothing current": {
+   "1.0": {
+    "precision": 0.9993,
+    "answered": 5865,
+    "coverage": 0.9775,
+    "ci": [
+     0.9982,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9912,
+    "answered": 3411,
+    "coverage": 0.5685,
+    "ci": [
+     0.9875,
+     0.9938
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9834,
+    "answered": 601,
+    "coverage": 0.1002,
+    "ci": [
+     0.9696,
+     0.9909
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "standard questions, no follow-ups": {
+   "1.0": {
+    "precision": 0.9993,
+    "answered": 5865,
+    "coverage": 0.9775,
+    "ci": [
+     0.9982,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9771,
+    "answered": 2971,
+    "coverage": 0.4952,
+    "ci": [
+     0.9711,
+     0.9819
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9246,
+    "answered": 650,
+    "coverage": 0.1083,
+    "ci": [
+     0.9017,
+     0.9425
+    ],
+    "broken": true
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  },
+  "only what was volunteered": {
+   "1.0": {
+    "precision": 0.9993,
+    "answered": 5865,
+    "coverage": 0.9775,
+    "ci": [
+     0.9982,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.6": {
+    "precision": 0.9992,
+    "answered": 4770,
+    "coverage": 0.795,
+    "ci": [
+     0.9978,
+     0.9997
+    ],
+    "broken": false
+   },
+   "0.4": {
+    "precision": 0.9915,
+    "answered": 1531,
+    "coverage": 0.2552,
+    "ci": [
+     0.9855,
+     0.995
+    ],
+    "broken": false
+   },
+   "0.2": {
+    "answered": 0
+   },
+   "0.1": {
+    "answered": 0
+   }
+  }
+ }
+}

@@ -17,6 +17,14 @@ outright below 35%. On 30,000 records of undeclared completeness: **99.6% right,
 34.2% of cases**, against 67.1% and 9,874 wrong answering everything. The only dial left on the
 live case is the target precision. Write-up: `results/2026-10-13-the-page-stops-asking.md`.
 
+**And then the uniform-missingness assumption got tested** (13 Oct, 12:30). Every number before
+this hid evidence at random. Cut the same number of findings seven different realistic ways and
+top-1 at a fifth of a record runs from **19.6% to 73.2%** — "20% of a record" is not one thing.
+The calibrated rule survives 33 of 35 cells; its worst is 93.6% [91.2%, 95.4%] on the likeliest
+pattern of all. Hold that pattern out of the fit and it breaks properly: 92.5% [90.2%, 94.3%].
+Fixing it needed both the pattern in the fit *and* a feature for how unusual the findings are —
+either alone is worse than neither. Write-up: `results/2026-10-13-missing-not-at-random.md`.
+
 Module B is on the page too, baked: all eleven contested CIViC groups the ESM-2 line can speak on,
 with the strength it is granted as a dial. `#level=B` links straight to the slide-worthy state —
 5 of 11 calls change and the prediction lands on top every time.

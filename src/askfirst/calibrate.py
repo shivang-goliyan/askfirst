@@ -24,6 +24,10 @@ from pathlib import Path
 import numpy as np
 
 BUCKETS = ((1, 2), (3, 4), (5, 7), (8, 11), (12, 99))
+# how unusual the findings in hand are, averaged. Two records of the same size are not equally
+# informative: one holding only the questions everyone gets asked says much less than one holding
+# things a patient volunteered, and without this the calibration cannot tell them apart.
+RARITY = (0.55, 0.7, 0.82, 0.92)
 FLOOR = 0.35      # estimated completeness below which it hands over whatever the confidence says
 
 
@@ -60,25 +64,45 @@ def bucket_of(n):
     return f"{BUCKETS[0][0]}-{BUCKETS[0][1]}"
 
 
-class Calibrator:
-    """P(the answer is right | this margin, this many findings)."""
+def band_of(rarity):
+    for i, edge in enumerate(RARITY):
+        if rarity < edge:
+            return f"r{i}"
+    return f"r{len(RARITY)}"
 
-    def __init__(self, knots=None):
+
+class Calibrator:
+    """P(the answer is right | this margin, this record).
+
+    Keyed on how many findings are in hand and how unusual they are. Both are observable at the
+    moment of deciding, which is the only test a feature has to pass here — the fraction of the
+    record that is present is not, and that is the whole reason this exists."""
+
+    def __init__(self, rates=None, knots=None):
+        self.rates = rates or {}
         self.knots = knots or {}
 
+    def rarity(self, record):
+        if not record:
+            return 1.0
+        return sum(1.0 - self.rates.get(name, 0.0) for name in record) / len(record)
+
+    def key(self, record):
+        return f"{bucket_of(len(record))}|{band_of(self.rarity(record))}"
+
     def fit(self, samples):
-        """samples: (margin, findings in hand, was it right)."""
+        """samples: (margin, the record as it arrived, was it right)."""
         grouped = {}
-        for margin, n, right in samples:
-            grouped.setdefault(bucket_of(n), []).append((margin, 1.0 if right else 0.0))
+        for margin, record, right in samples:
+            grouped.setdefault(self.key(record), []).append((margin, 1.0 if right else 0.0))
         self.knots = {}
         for key, rows in grouped.items():
             rows.sort()
             self.knots[key] = isotonic([r[0] for r in rows], [r[1] for r in rows])
         return self
 
-    def __call__(self, margin, findings):
-        knots = self.knots.get(bucket_of(findings))
+    def __call__(self, margin, record):
+        knots = self.knots.get(self.key(record))
         if not knots:
             return margin
         xs = [k[0] for k in knots]
@@ -103,11 +127,13 @@ class Calibrator:
             if picked[-1] != knots[-1]:
                 picked.append(knots[-1])
             out[key] = picked
-        return Calibrator(out)
+        return Calibrator(self.rates, out)
 
     def save(self, path):
         Path(path).write_text(json.dumps({
-            "note": "P(correct) given the scorer's margin and how many findings are in hand",
+            "note": "P(correct) given the scorer's margin, how many findings are in hand, "
+                    "and how unusual they are",
+            "rates": {k: round(v, 6) for k, v in self.rates.items()},
             "buckets": {k: [[round(x, 6), round(y, 6)] for x, y in v]
                         for k, v in self.knots.items()},
         }))
@@ -115,7 +141,8 @@ class Calibrator:
     @classmethod
     def load(cls, path):
         blob = json.loads(Path(path).read_text())
-        return cls({k: [tuple(p) for p in v] for k, v in blob["buckets"].items()})
+        return cls(blob.get("rates") or {},
+                   {k: [tuple(p) for p in v] for k, v in blob["buckets"].items()})
 
 
 class Completeness:

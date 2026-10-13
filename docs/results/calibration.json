@@ -427,12 +427,12 @@
    "0.1": 0.625
   }
  },
- "completeness_error": 0.0535,
+ "completeness_error": 0.0568,
  "calibrated": {
   "1.0": {
    "precision": 0.9995,
-   "coverage": 0.9718,
-   "answered": 5831,
+   "coverage": 0.9772,
+   "answered": 5863,
    "ci": [
     0.9985,
     0.9998
@@ -440,38 +440,46 @@
   },
   "0.6": {
    "precision": 0.994,
-   "coverage": 0.6123,
-   "answered": 3674,
+   "coverage": 0.6393,
+   "answered": 3836,
    "ci": [
-    0.9909,
+    0.991,
     0.996
    ]
   },
   "0.4": {
-   "precision": 0.988,
-   "coverage": 0.2355,
-   "answered": 1413,
+   "precision": 0.9854,
+   "coverage": 0.2625,
+   "answered": 1575,
    "ci": [
-    0.9808,
-    0.9925
+    0.9782,
+    0.9902
    ]
   },
   "0.2": {
-   "precision": 0.8415,
-   "coverage": 0.0137,
-   "answered": 82,
+   "precision": 0.8397,
+   "coverage": 0.0218,
+   "answered": 131,
    "ci": [
-    0.7474,
-    0.9049
+    0.7673,
+    0.8927
    ]
   },
-  "0.1": null
+  "0.1": {
+   "precision": 0.5263,
+   "coverage": 0.0032,
+   "answered": 19,
+   "ci": [
+    0.3171,
+    0.7267
+   ]
+  }
  },
  "calibrated_with_floor": {
   "1.0": {
    "precision": 0.9995,
-   "coverage": 0.9688,
-   "answered": 5813,
+   "coverage": 0.9742,
+   "answered": 5845,
    "ci": [
     0.9985,
     0.9998
@@ -479,33 +487,41 @@
   },
   "0.6": {
    "precision": 0.9937,
-   "coverage": 0.5842,
-   "answered": 3505,
+   "coverage": 0.6098,
+   "answered": 3659,
    "ci": [
-    0.9905,
-    0.9959
+    0.9906,
+    0.9958
    ]
   },
   "0.4": {
-   "precision": 0.9861,
-   "coverage": 0.1555,
-   "answered": 933,
+   "precision": 0.9815,
+   "coverage": 0.1618,
+   "answered": 971,
    "ci": [
-    0.9763,
-    0.9918
+    0.9709,
+    0.9882
    ]
   },
-  "0.2": null,
+  "0.2": {
+   "precision": 0.0,
+   "coverage": 0.0002,
+   "answered": 1,
+   "ci": [
+    0.0,
+    0.7935
+   ]
+  },
   "0.1": null
  },
  "mixed_stream": {
-  "precision": 0.9963,
-  "coverage": 0.3417,
-  "wrong": 38,
+  "precision": 0.9957,
+  "coverage": 0.3492,
+  "wrong": 45,
   "cases": 30000,
   "ci": [
-   0.9949,
-   0.9973
+   0.9943,
+   0.9968
   ],
   "answer_everything": {
    "precision": 0.6709,
