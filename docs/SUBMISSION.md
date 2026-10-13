@@ -65,7 +65,7 @@ it chooses to answer** — against 67.1% and 9,874 wrong if it answers everythin
 **And it was tested against records that do not go missing at random**, which is what every
 version of this did before. Remove the same number of findings seven realistic ways — the
 follow-ups never happened, no history was available, the detail went and the screen stayed — and
-accuracy at a fifth of a record runs from 19.6% to 73.2% depending only on which fifth. The
+accuracy at a fifth of a record runs from 19.2% to 73.2% depending only on which fifth. The
 refusal rule keeps its promise in 33 of 35 cells, and the two it does not are in the write-up.
 
 **The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:

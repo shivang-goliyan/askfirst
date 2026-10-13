@@ -19,7 +19,7 @@ live case is the target precision. Write-up: `results/2026-10-13-the-page-stops-
 
 **And then the uniform-missingness assumption got tested** (13 Oct, 12:30). Every number before
 this hid evidence at random. Cut the same number of findings seven different realistic ways and
-top-1 at a fifth of a record runs from **19.6% to 73.2%** — "20% of a record" is not one thing.
+top-1 at a fifth of a record runs from **19.2% to 73.2%** — "20% of a record" is not one thing.
 The calibrated rule survives 33 of 35 cells; its worst is 93.6% [91.2%, 95.4%] on the likeliest
 pattern of all. Hold that pattern out of the fit and it breaks properly: 92.5% [90.2%, 94.3%].
 **We could not fully fix that cell.** Fitting against the pattern and adding a feature for how
@@ -90,7 +90,8 @@ run is queued for the GPU and the figure will be re-reported either way.
 Full write-up: `results/2026-10-13-esm2-evidence-line.md`.
 
 Then the question that matters — is that line load-bearing? Put the score into a CIViC group as one
-removable item and sweep the strength it is granted. **At supporting strength, where ACMG caps it,
+removable item and sweep the strength it is granted. **At supporting strength, where an
+uncalibrated predictor belongs,
 0 of 11 contested calls change. Granted clinical strength, 5 of 11 change, and every time the
 computational label itself ends up on top**, outranking documented therapy-response evidence
 (`EGFR S768I`, `FLT3 D835V`). Loosen the score threshold and even supporting strength moves calls,

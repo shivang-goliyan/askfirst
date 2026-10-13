@@ -41,7 +41,9 @@ Five steps, one diagram:
 2. Open model scores it — the full distribution is kept, not a sampled answer.
 3. Each present field removed in turn → what the answer rests on.
 4. Each absent field ranked by how much it could tell you, then by cost and minutes.
-5. Unstable under ablation → refuse, return the ranked gaps, hand over.
+5. Too little record, or under the bar you set → refuse, return the ranked gaps, hand over.
+   Say plainly that the ablation is what is *shown*, not what decides — the decision is the
+   completeness gate plus the calibrated probability.
 
 ## 4 — The measurement
 
@@ -117,7 +119,7 @@ answered** against 67.1% and 9,874.
 The line to say out loud: *the page now tells you what it thinks instead of asking you.*
 
 Then the robustness half: records do not go missing at random, and we tested seven ways they
-actually go short. Accuracy at a fifth of a record runs **19.6% to 73.2%** depending only on which
+actually go short. Accuracy at a fifth of a record runs **19.2% to 73.2%** depending only on which
 fifth. The rule holds in 33 of 35 cells; it broke on the likeliest pattern, and fixing it needed
 the pattern in the fit **and** a feature for how unusual the findings are, and even then it reaches
 only 93.6% against a 95% promise. Say that we could not fully fix it.
@@ -139,7 +141,7 @@ on a screen, which is its own kind of signal.
 
 - The table of four ranking objectives, three of them below a coin, ending at 72.5% for the one
   that needs no beliefs at all.
-- **Records do not go missing at random.** Seven realistic patterns; 19.6% to 73.2% at a fifth of a
+- **Records do not go missing at random.** Seven realistic patterns; 19.2% to 73.2% at a fifth of a
   record. The refusal broke on the likeliest one and we could not fully fix it — 91.5% to 93.6%
   against a 95% promise. An earlier ladder said we had; it came from a scratch script.
 
@@ -176,7 +178,7 @@ of which **182 are contested** — cases where the same knowledge base both supp
 support a call.
 
 On the page, live, with a strength dial: an ESM-2 score enters as one removable evidence item. At
-**supporting**, where ACMG caps it, **0 of 11 calls change**. At **clinical** strength, **5 of 11**
+**supporting**, where an uncalibrated predictor belongs, **0 of 11 calls change**. At **clinical** strength, **5 of 11**
 change and the prediction ends up on top every time. Show **EGFR S768I / erlotinib** — documented
 sensitivity becoming "predicted damaging".
 

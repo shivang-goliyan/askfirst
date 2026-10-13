@@ -24,7 +24,7 @@ from askfirst.civic import (  # noqa: E402
 
 SCORES = Path("src/askfirst/baked/variant_scores.json")
 BAKED = Path("src/askfirst/baked/variants.json")
-LEVELS = [("E", "supporting — where ACMG caps it"), ("D", "case report"),
+LEVELS = [("E", "supporting — where an uncalibrated predictor belongs"), ("D", "case report"),
           ("C", "preclinical"), ("B", "clinical"), ("A", "validated")]
 
 

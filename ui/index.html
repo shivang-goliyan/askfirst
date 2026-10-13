@@ -351,8 +351,9 @@ function variantPanel(){
     + `<strong class="${lv.changed?'bad':'good'}">${lv.changed} of ${n}</strong> calls change, and `
     + `the predictor's own label ends up on top <strong>${lv.dominated}</strong> times.`
     + (VLEVEL === 'E'
-        ? ' <span class="good">This is where ACMG caps computational evidence, and nothing moves.</span>'
-        : ' <span class="warn">Above the cap ACMG sets.</span>');
+        ? ' <span class="good">Where an uncalibrated predictor belongs, and nothing moves.</span>'
+        : ' <span class="warn">Above supporting. ClinGen allows that for tools that have been '
+          + 'calibrated for the purpose; this score has not been.</span>');
 
   const rows = VARIANTS.cases.map((v,i) => {
     const after = v.calls[VLEVEL], moved = after !== v.calls.none;

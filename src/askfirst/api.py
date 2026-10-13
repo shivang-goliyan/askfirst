@@ -55,6 +55,7 @@ app = FastAPI(title="askfirst", docs_url="/api/docs")
 _schemas = {}
 _scorers = {}
 _rules = {}
+_gates = {}
 
 
 class Case(BaseModel):
@@ -132,19 +133,31 @@ def baked_scorer(schema):
     return _scorers[schema.domain]
 
 
+def gate_for(schema):
+    """The checks that are about the RECORD rather than the model: is there enough of it, and
+    could it have come from a patient at all. Neither depends on what is doing the scoring, so
+    neither is allowed to switch itself off when a different scorer is attached."""
+    if schema.domain != "ddxplus" or not COMPLETENESS.exists():
+        return None
+    if schema.domain not in _gates:
+        from .calibrate import Completeness
+        from .softmax import SoftmaxScorer
+        _gates[schema.domain] = Completeness.load(
+            COMPLETENESS, SoftmaxScorer.load(WEIGHTS, schema).encode)
+    return _gates[schema.domain]
+
+
 def rule_for(schema, scorer):
-    """The calibrated decision, where one has been fitted. Returns None otherwise, and the
-    caller falls back to reading a threshold off the baked curve."""
+    """The calibrated probability. It is fitted against one scorer's margins and does NOT
+    transfer to another, so when a model is attached this returns None, the response says the
+    precision promise does not apply, and the record-level gate above still runs."""
     if schema.domain != "ddxplus" or not CALIBRATOR.exists() or not COMPLETENESS.exists():
         return None
     if not hasattr(scorer, "encode"):
         return None
     if schema.domain not in _rules:
         from .calibrate import Calibrator, Completeness
-        _rules[schema.domain] = (
-            Calibrator.load(CALIBRATOR),
-            Completeness.load(COMPLETENESS, scorer.encode),
-        )
+        _rules[schema.domain] = Calibrator.load(CALIBRATOR)
     return _rules[schema.domain]
 
 
@@ -243,24 +256,25 @@ def describe_schema(domain: str):
 
 
 def why(answering, decision):
-    """Say which of the two things stopped it, because 'not confident' is the wrong answer when
-    the real problem is that there is barely a record here."""
+    """Say which of the three things stopped it, because 'not confident' is the wrong answer
+    when the real problem is that there is barely a record here."""
+    if not decision["could_be_a_patient"]:
+        return (f"{decision['findings']} findings in one record. The largest record in the data "
+                f"this was fitted on holds 37, so this did not come from a patient and nothing "
+                f"measured here applies to it.")
+    if decision["completeness"] is not None and not decision["enough_record"]:
+        return (f"only about {decision['completeness']:.0%} of a record — too little to judge "
+                f"the answer by, whatever the confidence says")
     if decision["rule"] != "calibrated":
-        return ("confident enough at this coverage setting" if answering
+        return ("over the borrowed cut-off — but that cut-off was fitted against a different "
+                "scorer, so it carries no precision promise here" if answering
                 else "not confident enough — handing over, with what to get next")
     # an isotonic fit pins the top of its range at exactly 1.0, and "100% likely to be right"
     # is the one sentence this product must never print
     odds = decision["chance_right"]
     said = "better than 99%" if odds >= 0.995 else f"about {odds:.0%}"
-    if not decision["could_be_a_patient"]:
-        return (f"{decision['findings']} findings in one record. The largest record in the data "
-                f"this was fitted on holds 37, so this did not come from a patient and nothing "
-                f"measured here applies to it.")
     if answering:
         return f"{said} likely to be right, which clears the {decision['target']:.0%} asked for"
-    if not decision["enough_record"]:
-        return (f"only about {decision['completeness']:.0%} of a record — too little to judge "
-                f"the answer by, whatever the confidence says")
     return (f"{said} likely to be right, short of the {decision['target']:.0%} asked for "
             f"— handing over, with what to get next")
 
@@ -298,6 +312,24 @@ def assess(case: Case):
     record, ignored = clean(case.record, schema)
     target = min(1.0, max(0.0, case.target))
 
+    # Before anything is scored. A record that could not have come from a patient is refused
+    # without a single forward pass, which is free on a laptop and is the point on a rented GPU.
+    from .calibrate import CEILING
+    if gate_for(schema) and len(record) > CEILING:
+        return {
+            "scored_by": "nothing — this was not scored",
+            "answering": False,
+            "why": why(False, {"could_be_a_patient": False, "findings": len(record),
+                               "rule": "refused before scoring"}),
+            "decision": {"rule": "refused before scoring", "target": None,
+                         "chance_right": None, "completeness": None, "floor": None,
+                         "enough_record": None, "findings": len(record), "ceiling": CEILING,
+                         "could_be_a_patient": False},
+            "confidence": 0.0, "threshold": 0.0, "threshold_calibrated": False,
+            "ignored_fields": ignored, "entropy_bits": 0.0, "one_more_fact_flips": 0.0,
+            "answer": None, "ranked": [], "go_get": [], "go_get_by_cost": [], "rests_on": [],
+        }
+
     try:
         dist = scorer(record)
     except Exception as e:
@@ -310,31 +342,38 @@ def assess(case: Case):
     # scale, so borrowing this number for it is an assumption, and the response says so.
     calibrated = schema.domain == "ddxplus" and not Endpoint().available()
 
-    rule = rule_for(schema, scorer) if calibrated else None
-    if rule:
-        from .calibrate import CEILING, FLOOR
-        cal, done = rule
-        complete = done(record)
+    from .calibrate import CEILING, FLOOR
+    gate = gate_for(schema)
+    cal = rule_for(schema, scorer) if calibrated else None
+
+    # The record-level gate runs whatever is scoring. It was conditional on there being NO model
+    # attached until a review pointed out that attaching one on a GPU turned the whole safety
+    # mechanism off and left a cut-off borrowed from a different scorer doing the work alone.
+    complete = gate(record) if gate else None
+    plausible = len(record) <= CEILING if gate else True
+    enough = complete is None or complete >= FLOOR
+
+    if cal:
         chance = cal(confidence, record)
-        plausible = len(record) <= CEILING
-        answering = plausible and complete >= FLOOR and chance >= target
-        decision = {
-            "rule": "calibrated",
-            "target": target,
-            "chance_right": round(chance, 4),
-            "completeness": round(complete, 4),
-            "floor": FLOOR,
-            "enough_record": complete >= FLOOR,
-            "findings": len(record),
-            "ceiling": CEILING,
-            "could_be_a_patient": plausible,
-        }
+        answering = plausible and enough and chance >= target
+        rule = "calibrated"
     else:
-        answering = confidence >= threshold
-        decision = {"rule": "threshold read off the baked curve", "target": None,
-                    "chance_right": None, "completeness": None, "floor": None,
-                    "enough_record": None, "findings": len(record), "ceiling": None,
-                    "could_be_a_patient": True}
+        chance = None
+        answering = plausible and enough and confidence >= threshold
+        rule = ("uncalibrated for this scorer — cut-off borrowed from the softmax"
+                if gate else "threshold read off the baked curve")
+
+    decision = {
+        "rule": rule,
+        "target": target if cal else None,
+        "chance_right": round(chance, 4) if chance is not None else None,
+        "completeness": round(complete, 4) if complete is not None else None,
+        "floor": FLOOR if gate else None,
+        "enough_record": enough,
+        "findings": len(record),
+        "ceiling": CEILING if gate else None,
+        "could_be_a_patient": plausible,
+    }
 
     ranked = sorted(dist.items(), key=lambda kv: -kv[1])[:5]
     return {

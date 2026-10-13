@@ -35,8 +35,13 @@ lands within 2 points of an oracle that is told which questions this patient can
 
 ## Why the principled objective loses
 
-Expected information gain is `Σ P(value) × H(outcome | value)` — an expectation taken under the
-model's own beliefs about what each answer would do. On a record with three findings those beliefs
+Expected information gain is `H(outcome) − Σ P(value) × H(outcome | value)`. **An earlier version
+of this note wrote only the second term and called it the objective, which is the expected
+remaining entropy rather than the gain.** Worse, the `P(value)` we use is the fitted marginal and
+not `P(value | record)` taken from the model, which is why the quantity on the page can come out
+negative when a true mutual information cannot. What is measured below is a marginal-prior
+approximation, and the comparison should be read against that rather than against a faithful
+implementation of BALAR. On a record with three findings those beliefs
 are wrong, so maximising an expectation computed from them is worse than not using them. Answer
 breadth asks a different question — *how much could this tell me?* — and needs no beliefs at all.
 

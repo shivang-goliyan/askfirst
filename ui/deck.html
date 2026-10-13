@@ -89,7 +89,9 @@
     <li class="mark">Open model scores it — the full <strong>distribution</strong> is kept, not a sampled answer.</li>
     <li>Each present field removed in turn → what the answer rests on.</li>
     <li class="mark">Each absent field ranked by how much it <strong>could</strong> tell you, then by cost and minutes.</li>
-    <li class="mark">Unstable under ablation → <strong>refuse</strong>, return the ranked gaps, hand over.</li>
+    <li class="mark">Too little record, or not confident enough for the bar you set →
+    <strong>refuse</strong>, return the ranked gaps, hand over. The ablation above is what the
+    page shows you about the answer; it is not what makes the call.</li>
   </ol>
 </section>
 
@@ -202,7 +204,7 @@
   the most reliable finding in this project.</p>
   <p><strong>And our central assumption was that records go missing at random. They do not.</strong>
   Cut the same number of findings seven realistic ways and accuracy at a fifth of a record runs
-  from <span class="bad">19.6%</span> to <span class="hot">73.2%</span> depending only on which
+  from <span class="bad">19.2%</span> to <span class="hot">73.2%</span> depending only on which
   fifth. Our refusal rule broke on the likeliest pattern of all and we
   <span class="bad">could not fully fix it</span>: fitting against that pattern and adding a
   feature for how unusual the findings are takes it from 91.5% to 93.6%, still short of the 95%
@@ -258,7 +260,7 @@
   removing one line of evidence can change the call, of which <strong>182 are contested</strong> —
   the same knowledge base both supports and does not support the conclusion.</p>
   <p class="lede">An ESM-2 score goes in as one removable evidence item, and the strength it is
-  granted is a dial on the page. At <strong>supporting</strong>, where ACMG caps computational
+  granted is a dial on the page. At <strong>supporting</strong>, where an uncalibrated predictor
   evidence, <strong>0 of 11</strong> calls change. At <strong>clinical</strong> strength,
   <span class="bad">5 of 11</span> change — and every time, the prediction ends up on top.</p>
   <p><strong>EGFR S768I, lung adenocarcinoma, erlotinib.</strong> The group's own evidence says the

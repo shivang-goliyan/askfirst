@@ -185,7 +185,7 @@ floor. On 30,000 records of undeclared completeness it is **99.6% right on the 3
 
 So we stopped assuming they do. The same number of findings removed seven realistic ways — the
 follow-ups never happened, no history was available, the detail went and the screen stayed — and
-at a fifth of a record top-1 runs from **19.6% to 73.2% depending only on which fifth**. The
+at a fifth of a record top-1 runs from **19.2% to 73.2% depending only on which fifth**. The
 calibrated refusal survives 33 of 35 cells and is fitted against all seven patterns; hold the
 likeliest one out of the fit and it breaks by three points, which is the measured cost of
 calibrating against the wrong kind of missingness

@@ -107,7 +107,7 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
 - It will never print "100% likely to be right". The calibration's top block sits at exactly 1.0
   and the display is capped below it on purpose.
 - **Records do not go missing at random, and we stopped pretending they do.** Seven realistic
-  patterns measured; at a fifth of a record, accuracy runs from 19.6% to 73.2% depending only on
+  patterns measured; at a fifth of a record, accuracy runs from 19.2% to 73.2% depending only on
   which fifth. The calibration is fitted against all seven. Anyone deploying this should refit it
   against the way records go short where it runs — the cost of not doing so is three points of
   precision on a promise of ninety-five, measured.

@@ -4,9 +4,15 @@ The previous result measured what ESM-2 *says*. This one measures whether it sho
 say it, by putting the score into a CIViC group as one removable evidence item and asking the only
 question that matters at a tumour board: **does the call change when you take it away?**
 
-ACMG/AMP caps computational evidence at *supporting* strength. ClinGen later had to recalibrate
-that slot downward because predictors were being trusted past it. So strength is not a detail here
-— it is the independent variable, and the sweep below is the experiment.
+The 2015 ACMG/AMP framework used computational evidence at *supporting* strength. **An earlier
+version of this note said ACMG "caps" it there and that is wrong**: ClinGen's 2022 calibrated
+recommendations explicitly permit stronger weights — up to strong — for predictors that have been
+calibrated against a reference set for the purpose.
+
+That makes the argument here narrower and better specified. An ESM-2 masked-marginal score has not
+been calibrated for this purpose, by us or by anyone, so *supporting* is where an uncalibrated
+predictor belongs — not because a guideline forbids more, but because nothing has earned more.
+Strength is the independent variable and the sweep below is the experiment.
 
 **Read the counts, not the percentages.** The samples are 6 to 20 groups. That is too small to
 carry a headline and the percentages are printed only because they are easier to compare across
@@ -32,7 +38,7 @@ Same line, same score, same groups. Only the strength it is granted changes.
 
 | strength granted | calls changed (of 11) | predictor ends up on top |
 |---|---|---|
-| **E — supporting, where ACMG caps it** | **0** | 0 |
+| **E — supporting, where an uncalibrated predictor belongs** | **0** | 0 |
 | D — case report | 2 | 2 |
 | C — preclinical | 4 | 4 |
 | **B — clinical, roughly how predictors get used in practice** | **5** | 5 |

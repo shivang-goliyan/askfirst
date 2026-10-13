@@ -23,7 +23,7 @@ Top-1 accuracy answering everything:
 | **standard questions, no follow-ups** | 99.6% | 94.8% | 68.7% | **19.6%** | 2.8% |
 | only what was volunteered | 99.6% | 96.3% | 89.1% | 55.0% | 16.8% |
 
-At a fifth of a record the answer ranges from **19.6% to 73.2%** depending only on *which* fifth.
+At a fifth of a record the answer ranges from **19.2% to 73.2%** depending only on *which* fifth.
 Uniform thinning sits in the middle of that range, which is lucky rather than principled — it was
 never argued for, it was just the obvious thing to write.
 
@@ -31,7 +31,7 @@ Two things fall out of this that we did not go looking for.
 
 **It confirms the breadth result from a completely different direction.** Keeping only the wide,
 graded fields and throwing away every binary screen is the best way to lose 80% of a record:
-73.2% against uniform's 39.7%. Keeping the questions everyone gets asked is the worst: 19.6%. The
+73.2% against uniform's 39.7%. Keeping only what is already on file and nothing current is the worst: 19.2%, with the standard-questions pattern just above it at 19.6%. The
 advice engine ranks exactly those graded fields first, and it was not tuned on any of this.
 
 **History alone is nearly worthless here.** 19.2% at a fifth of a record against 45.1% for
@@ -54,9 +54,15 @@ out, the patterns are not, and the next section is the honest version of that.
 | standard questions, no follow-ups | 99.9% | 97.8% | **93.6%** | silent | silent |
 | only what was volunteered | 99.9% | 99.9% | 99.2% | silent | silent |
 
-Thirty-three of thirty-five cells keep the promise or go silent. The worst, 93.6% on 547 answered
-cases, has a 95% interval of [91.2%, 95.4%] — it includes the target, so the promise is not
-broken, but it is the one cell that comes near it, and it is the likeliest pattern of all.
+The worst cell is 93.6% on 547 answered cases, with a 95% interval of [91.2%, 95.4%]. **That
+interval contains the target, which is not the same as meeting it** — failing to demonstrate
+underperformance is not evidence of adequacy, and an earlier version of this note read it the
+wrong way round. The point estimate is below the bar on the likeliest pattern of all, and the
+honest summary is that the promise is kept at the three fullest levels and is not demonstrated
+here.
+
+Of the thirty-five cells, fourteen are silent, so the promise was actually put to the test in
+twenty-one of them.
 
 ## What happens if that pattern was never in the fit
 
@@ -111,8 +117,10 @@ thinning, which is what every version of this before today did. The cost of gett
 measured above: about two points of precision on a promise of ninety-five, on the single likeliest
 shape a rushed intake takes — and fitting it right recovers most but not all of that.
 
-The floor does the rest of the work. At a fifth of a record and below, every pattern goes silent,
-including the ones where top-1 is 73% and it would have been tempting to answer.
+The floor does most of the rest. At a fifth of a record and below, all but one pattern goes
+silent — including the ones where top-1 is 73% and answering would have been tempting. The
+exception answered a single case out of 6,000 and got it wrong, which is one case rather than a
+pattern, and is not the same thing as silence.
 
 ## What this does not say
 
