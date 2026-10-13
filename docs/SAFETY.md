@@ -90,5 +90,13 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
   is a property of the question, not of the model's beliefs.
 - Three bugs in that measurement were found by us, after publishing a first version of it, and all
   three had pointed in our favour. They are listed in the write-up rather than quietly corrected.
+- **The word "calibrated" was doing work it had not earned, and we checked.** The scorer's margin
+  is honest on a complete record and 40 points underconfident at 40% evidence, so a single
+  threshold cannot hold a precision promise across records of different completeness. The app now
+  calibrates against how many findings it has, estimates how much of the record is missing, and
+  refuses outright below a floor — two mechanisms, because one measured insufficient. On a mixed
+  stream it is 99.6% right on the 34% of cases it answers, against 67.1% answering everything.
+- It will never print "100% likely to be right". The calibration's top block sits at exactly 1.0
+  and the display is capped below it on purpose.
 - The concept is not novel. MediQ (NeurIPS 2024) posed the interactive version of this problem
   first; the contribution here is the calibrated refusal and its price, not the idea.

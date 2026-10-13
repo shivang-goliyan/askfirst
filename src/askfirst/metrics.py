@@ -29,3 +29,34 @@ def wilson(hits, n, z=1.96):
     centre = p + z * z / (2 * n)
     spread = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5)
     return (centre - spread) / denom, (centre + spread) / denom
+
+
+def reliability(scored, bins=10):
+    """Confidence against the accuracy it actually delivers, in bins.
+
+    `scored` is a list of (confidence, right). A model whose 0.7 means 0.7 sits on the diagonal.
+    One that does not is still useful for ranking and useless as a number, which matters here
+    because the refusal threshold IS that number."""
+    rows = []
+    for b in range(bins):
+        lo, hi = b / bins, (b + 1) / bins
+        take = [s for s in scored if lo <= s[0] < hi or (b == bins - 1 and s[0] == 1.0)]
+        if not take:
+            rows.append({"lo": lo, "hi": hi, "n": 0, "confidence": None, "accuracy": None})
+            continue
+        rows.append({
+            "lo": lo, "hi": hi, "n": len(take),
+            "confidence": sum(s[0] for s in take) / len(take),
+            "accuracy": sum(1 for s in take if s[1]) / len(take),
+        })
+    return rows
+
+
+def ece(scored, bins=10):
+    """Expected calibration error: the gap between promise and delivery, weighted by how often
+    each promise is made."""
+    rows = [r for r in reliability(scored, bins) if r["n"]]
+    total = sum(r["n"] for r in rows)
+    if not total:
+        return 0.0
+    return sum(r["n"] / total * abs(r["accuracy"] - r["confidence"]) for r in rows)

@@ -103,7 +103,7 @@ const pct = x => (x*100).toFixed(1) + '%';
 let ORDER = 'bits', LAST = null, LASTCOV = 0.25;
 let KEPT = '0.4';
 let CURVE = null, PICKED = {};
-let DOMAIN = 'ddxplus', CASES = null, WHO = 0, SHOWN = false;
+let DOMAIN = 'ddxplus', CASES = null, WHO = 0, SHOWN = false, TARGET = 0.95;
 const DROPPED = new Set();
 
 // The costed domain is hand-built on purpose: DDXPlus prices every question the same, so the
@@ -231,7 +231,8 @@ async function assess(){
   let r;
   try {
     const res = await fetch('/api/assess', {method:'POST', headers:{'content-type':'application/json'},
-      body: JSON.stringify({domain:DOMAIN, record:record(), coverage:cov, kept:KEPT})});
+      body: JSON.stringify({domain:DOMAIN, record:record(), coverage:cov, kept:KEPT,
+                            target:TARGET})});
     if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
     r = await res.json();
   } catch (e) {
@@ -245,16 +246,37 @@ async function assess(){
 
 function draw(r, cov){
   LAST = r; LASTCOV = cov;
-  const ok = r.answering;
+  const ok = r.answering, d = r.decision || {};
+  const auto = d.rule === 'calibrated';
+  const targets = [0.8, 0.9, 0.95, 0.99].map(t =>
+    `<button class="chip${t===TARGET?' on':''}" data-t="${t}">${(t*100).toFixed(0)}%</button>`).join('');
+  const bar = v => `<span style="display:inline-block;width:70px;height:7px;background:#20272f;
+    border-radius:4px;vertical-align:middle;overflow:hidden"><span style="display:block;
+    height:100%;width:${Math.round(v*100)}%;background:${v>=d.floor?'var(--good)':'var(--warn)'}">
+    </span></span>`;
+
   $('#verdict').innerHTML = `
+    ${auto ? `<div class="note" style="margin-bottom:10px">How right does it have to be?
+      ${targets} <span style="color:var(--dim)">&mdash; the only dial here. It works out the
+      rest.</span></div>` : ''}
     <div class="verdict">
       <span class="dot" style="background:${ok?'var(--good)':'var(--warn)'}"></span>
       <strong>${ok ? r.answer.label : 'Not answering'}</strong>
       <span style="color:var(--dim)">&mdash; ${r.why}</span>
     </div>
-    <div class="note">confidence ${r.confidence.toFixed(3)} against a cut-off of
-      ${r.threshold.toFixed(3)} at ${pct(cov)} coverage &middot;
-      ${r.entropy_bits} bits of uncertainty &middot; sufficiency ${r.sufficiency}/100</div>`;
+    <div class="note">${auto
+      ? `looks about <strong>${(d.completeness*100).toFixed(0)}%</strong> of a record ${bar(d.completeness)}
+         ${d.enough_record ? '' : `<span class="warn">&mdash; below the ${pct(d.floor)} floor,
+         where no cut-off reaches a useful precision</span>`}
+         &middot; raw margin ${r.confidence.toFixed(3)}, calibrated to
+         ${d.chance_right >= 0.995 ? 'better than 0.99' : d.chance_right.toFixed(3)}`
+      : `confidence ${r.confidence.toFixed(3)} against a cut-off of ${r.threshold.toFixed(3)}
+         at ${pct(cov)} coverage`}
+      &middot; ${r.entropy_bits} bits of uncertainty &middot; sufficiency ${r.sufficiency}/100</div>`;
+
+  if (auto) $('#verdict').querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
+    TARGET = +b.dataset.t; assess();
+  });
 
   const costed = DOMAIN === 'clinical';
   const byCost = costed && ORDER === 'cost';

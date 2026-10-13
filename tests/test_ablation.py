@@ -189,3 +189,35 @@ def test_domain_cannot_be_a_path():
             pass
         else:
             raise AssertionError(f"{bad!r} should not have loaded")
+
+
+def test_isotonic_only_goes_up():
+    from askfirst.calibrate import isotonic
+    knots = isotonic([0.1, 0.2, 0.3, 0.4, 0.5], [0, 1, 0, 1, 1])
+    ys = [y for _, y in knots]
+    assert ys == sorted(ys)
+
+
+def test_calibration_beats_the_margin():
+    from askfirst.calibrate import Calibrator
+    # a margin that reads 0.4 but is right nine times in ten should come back near 0.9
+    cal = Calibrator().fit([(0.4, 3, i % 10 != 0) for i in range(200)])
+    assert cal(0.4, 3) > 0.8
+
+
+def test_thin_records_read_as_thin():
+    from askfirst.calibrate import Completeness
+    seen = Completeness(lambda r: __import__("numpy").zeros(2, dtype="float32"))
+    seen.fit([({"a": 1, "b": 1}, 10), ({"a": 1}, 10)] * 20)
+    assert seen({"a": 1}) < seen({"a": 1, "b": 1, "c": 1, "d": 1, "e": 1})
+
+
+def test_baked_rule_refuses_a_stub():
+    from askfirst.calibrate import FLOOR, Calibrator, Completeness
+    from askfirst.softmax import SoftmaxScorer
+    schema = load_schema("ddxplus")
+    model = SoftmaxScorer.load("src/askfirst/baked/ddxplus_softmax.npz", schema)
+    done = Completeness.load("src/askfirst/baked/completeness.npz", model.encode)
+    cal = Calibrator.load("src/askfirst/baked/calibrator.json")
+    assert done({"E_55": "present"}) < FLOOR
+    assert cal(0.2, 1) < cal(0.95, 12)

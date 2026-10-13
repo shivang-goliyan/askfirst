@@ -137,6 +137,16 @@ Those methods select from a question set, or prompt the model to ask. askfirst m
 *absent* field most destabilises the model's own answer distribution, and then prices the answer.
 The number we care about is that +22.3%, measured on their benchmark, against ours.
 
+## The page does not ask you how complete your record is
+
+It used to. Measured: the scorer's margin is honest on a complete record and **40 points
+underconfident at 40% evidence**, so a threshold chosen on full records promises 95% precision and
+delivers 48% on a tenth of one. The app now calibrates P(right) against how many findings it has
+in hand, estimates how much of the record is missing to within 0.053, and refuses outright below a
+floor. On 30,000 records of undeclared completeness it is **99.6% right on the 34% it answers —
+38 wrong, against 9,874** if it answers everything
+(`docs/results/2026-10-13-the-page-stops-asking.md`).
+
 ## Data
 
 Everything shipped is redistributable. See [docs/DATA.md](docs/DATA.md).

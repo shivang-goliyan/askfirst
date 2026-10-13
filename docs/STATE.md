@@ -7,6 +7,16 @@ fitted softmax that ships in the image, not a hand-written sketch. Take findings
 answering. The costed hand-built case is still there on its own tab, because DDXPlus prices every
 question the same and the cheapest-first ordering needs something to chew on.
 
+**The page stopped asking how complete your record is** (13 Oct, 11:45). It used to make the
+visitor pick a completeness level and read the threshold off that curve, which is the one thing a
+deployment cannot know. Measured: the margin is honest on a full record and **40 points
+underconfident at 40% evidence**, so a threshold chosen on complete records promises 95% and
+delivers 48% on a tenth of one. Fixed with two pieces — an isotonic calibration on findings in
+hand, and a ridge estimate of how much of the record is missing (error 0.053) that refuses
+outright below 35%. On 30,000 records of undeclared completeness: **99.6% right, 38 wrong, on
+34.2% of cases**, against 67.1% and 9,874 wrong answering everything. The only dial left on the
+live case is the target precision. Write-up: `results/2026-10-13-the-page-stops-asking.md`.
+
 Module B is on the page too, baked: all eleven contested CIViC groups the ESM-2 line can speak on,
 with the strength it is granted as a dial. `#level=B` links straight to the slide-worthy state —
 5 of 11 calls change and the prediction lands on top every time.

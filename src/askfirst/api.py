@@ -34,6 +34,8 @@ CASES = BAKE / "cases.json"
 VARIANTS = BAKE / "variants.json"
 WEIGHTS = BAKE / "ddxplus_softmax.npz"
 PRIORS = BAKE / "ddxplus_priors.json"
+CALIBRATOR = BAKE / "calibrator.json"
+COMPLETENESS = BAKE / "completeness.npz"
 
 
 def find_ui():
@@ -52,6 +54,7 @@ UI = find_ui()
 app = FastAPI(title="askfirst", docs_url="/api/docs")
 _schemas = {}
 _scorers = {}
+_rules = {}
 
 
 class Case(BaseModel):
@@ -60,7 +63,11 @@ class Case(BaseModel):
     coverage: float = 0.25
     # how complete the record is assumed to be. The right amount to refuse depends on it:
     # measured best coverage runs from 95% on a complete record to 5% on a nearly empty one.
+    # Only used where there is no calibrator — where there is one, it works this out itself.
     kept: str = "0.4"
+    # how right the answer has to be before it is worth giving. This is the only dial a person
+    # should have to touch, and it is the one they actually have an opinion about.
+    target: float = 0.95
 
 
 def unpack(baked, schema):
@@ -99,6 +106,22 @@ def baked_scorer(schema):
         from .softmax import SoftmaxScorer
         _scorers[schema.domain] = SoftmaxScorer.load(WEIGHTS, schema)
     return _scorers[schema.domain]
+
+
+def rule_for(schema, scorer):
+    """The calibrated decision, where one has been fitted. Returns None otherwise, and the
+    caller falls back to reading a threshold off the baked curve."""
+    if schema.domain != "ddxplus" or not CALIBRATOR.exists() or not COMPLETENESS.exists():
+        return None
+    if not hasattr(scorer, "encode"):
+        return None
+    if schema.domain not in _rules:
+        from .calibrate import Calibrator, Completeness
+        _rules[schema.domain] = (
+            Calibrator.load(CALIBRATOR),
+            Completeness.load(COMPLETENESS, scorer.encode),
+        )
+    return _rules[schema.domain]
 
 
 def pick_scorer(schema):
@@ -195,6 +218,25 @@ def describe_schema(domain: str):
     }
 
 
+def why(answering, decision):
+    """Say which of the two things stopped it, because 'not confident' is the wrong answer when
+    the real problem is that there is barely a record here."""
+    if decision["rule"] != "calibrated":
+        return ("confident enough at this coverage setting" if answering
+                else "not confident enough — handing over, with what to get next")
+    # an isotonic fit pins the top of its range at exactly 1.0, and "100% likely to be right"
+    # is the one sentence this product must never print
+    odds = decision["chance_right"]
+    said = "better than 99%" if odds >= 0.995 else f"about {odds:.0%}"
+    if answering:
+        return f"{said} likely to be right, which clears the {decision['target']:.0%} asked for"
+    if not decision["enough_record"]:
+        return (f"only about {decision['completeness']:.0%} of a record — too little to judge "
+                f"the answer by, whatever the confidence says")
+    return (f"{said} likely to be right, short of the {decision['target']:.0%} asked for "
+            f"— handing over, with what to get next")
+
+
 def as_gap(g, schema):
     """One missing field, described for a human: what to ask, what it settles, what it costs."""
     spec = schema.fields[g.field]
@@ -234,19 +276,37 @@ def assess(case: Case):
     gaps = rank_gaps(case.record, scorer, schema)
     confidence = max(dist.values()) if dist else 0.0
     threshold = threshold_for(case.coverage, case.kept)
-    answering = confidence >= threshold
     # the cut-off was measured against the softmax. A model on a GPU has its own confidence
     # scale, so borrowing this number for it is an assumption, and the response says so.
     calibrated = schema.domain == "ddxplus" and not Endpoint().available()
+
+    rule = rule_for(schema, scorer) if calibrated else None
+    if rule:
+        from .calibrate import FLOOR
+        cal, done = rule
+        complete = done(case.record)
+        chance = cal(confidence, len(case.record))
+        answering = complete >= FLOOR and chance >= case.target
+        decision = {
+            "rule": "calibrated",
+            "target": case.target,
+            "chance_right": round(chance, 4),
+            "completeness": round(complete, 4),
+            "floor": FLOOR,
+            "enough_record": complete >= FLOOR,
+        }
+    else:
+        answering = confidence >= threshold
+        decision = {"rule": "threshold read off the baked curve", "target": None,
+                    "chance_right": None, "completeness": None, "floor": None,
+                    "enough_record": None}
 
     ranked = sorted(dist.items(), key=lambda kv: -kv[1])[:5]
     return {
         "scored_by": which,
         "answering": answering,
-        "why": (
-            "confident enough at this coverage setting" if answering
-            else "not confident enough — handing over, with what to get next"
-        ),
+        "why": why(answering, decision),
+        "decision": decision,
         "confidence": round(confidence, 4),
         "threshold": round(threshold, 4),
         "threshold_calibrated": calibrated,
