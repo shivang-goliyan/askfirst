@@ -1,7 +1,8 @@
 # The video — three minutes, timed
 
-Read it out loud with a stopwatch before recording. The script below runs about 2:50 at a normal
-speaking pace, which leaves room to breathe. Record the screen capture first and narrate over it;
+Read it out loud with a stopwatch before recording. The script below runs about 3:05 at a normal
+speaking pace. If the platform caps at three minutes, cut the second domain — it is the only beat
+that stands alone, and the link in the submission copy covers it. Record the screen capture first and narrate over it;
 narrating live while clicking produces dead air and misclicks.
 
 Capture from the **deployed URL**, never localhost. One browser window, no tabs, no bookmarks bar.
@@ -27,22 +28,36 @@ Capture from the **deployed URL**, never localhost. One browser window, no tabs,
 > removes one fact at a time to see what the answer actually rests on — and when the answer is
 > unstable, it refuses, and tells you what to go and get.
 
-**0:45-1:25 — the live demo, thin case**
+**0:45-1:20 — the live demo, backwards**
 
-*On screen:* type a thin case into the live app. Chest pain, nothing else. Hit assess.
+*On screen:* the live page, first patient, all eleven findings in. Then click findings off, one at
+a time, until it stops answering.
 
-> One symptom. Watch what it does — it won't answer. It says the record can't support an answer
-> yet, and it ranks what's missing: troponin first, at nought point three nine bits of information,
-> costing nine units, back in ninety minutes. ECG second. And here's what matters — it also shows
-> what the current guess is resting on, so a person can disagree with the reasoning rather than
-> just the conclusion.
+> This is a real patient the model has never seen — held out from the fitting set and from the set
+> every number on this page was measured on. Eleven findings in, it answers, and it's right.
+>
+> Now take the record apart. Nine findings. Seven. Five — still answering, less sure. Three, and it
+> stops. Read the confidence and the cut-off off the screen as they move; the point is that the
+> cut-off isn't a guess, it's read straight off the curve above, and it changes when you move that
+> dial. It won't answer, it hands the case over, and it arrives with a work list.
 
-*Then:* add the troponin. Hit assess again.
+**1:20-1:45 — what to go and get, and the thing we got wrong**
 
-> Add the troponin and it crosses its threshold and answers — and it still shows the fields the
-> answer depends on. Every case produces a work item. It refuses the answer, never the interaction.
+*On screen:* the "go get" table, the answers column visible.
 
-**1:25-2:05 — the measurement**
+> Here's what to go and get, ranked. And the ranking is the part I'd want a judge to push on,
+> because our first four attempts at it were worse than guessing.
+>
+> The published approach is expected information gain. We implemented it, and over four thousand
+> patients it scored worse than asking nothing at all — thirty-nine point nine against forty-two
+> point nine. It's an expectation taken under the model's own beliefs, and on a thin record those
+> beliefs are wrong.
+>
+> What works is stupider. Rank by how many answers the question even admits. Seventy-two point
+> five percent. In clinical terms: characterise what you already have before asking about one more
+> symptom.
+
+**1:45-2:15 — the measurement**
 
 *On screen:* the completeness selector, dragged from "complete" down to "20% in", then the cost table.
 
@@ -58,7 +73,20 @@ Capture from the **deployed URL**, never localhost. One browser window, no tabs,
 > percent of complete records, two percent of nearly empty ones. That's a setting, and we can tell
 > you where to put it.
 
-**2:05-2:30 — why AMD**
+**2:15-2:35 — the second domain**
+
+*On screen:* `askfirst.kgbnetwork.com/#level=B`, then click back to E.
+
+> Same engine, different evidence. These are contested cancer-variant calls — cases where a public
+> knowledge base disagrees with itself — and we put a protein language model's score in as one
+> removable piece of evidence. This dial is the strength it's granted.
+>
+> At supporting strength, where the ACMG guidelines cap computational evidence, nothing moves.
+> Nudge it to clinical strength and five of eleven calls flip, and the prediction lands on top
+> every time. That one — documented evidence that a drug works, overruled by a conservation score.
+> The cap isn't bureaucracy. It's the thing standing between a predictor and the call.
+
+**2:35-2:50 — why AMD**
 
 *On screen:* the vLLM request with `echo=True`, the logprobs coming back, the MI300X.
 
@@ -69,17 +97,21 @@ Capture from the **deployed URL**, never localhost. One browser window, no tabs,
 > And a better model doesn't make the answers cheaper. It makes more of them answerable. That's
 > what the hardware buys, and we have the CPU baseline to measure it against.
 
-**2:30-2:50 — the limits, said out loud**
+**2:50-3:10 — the limits, said out loud**
 
 *On screen:* the repo's results directory, the dates visible.
 
 > What we won't claim. No clinician has reviewed this and it is not medical advice. The data is
 > synthetic, and a linear model gets ninety-nine point six percent on it, which tells you how
-> synthetic. On a complete record this product is nearly pointless and we say so on the slide.
-> The question-ranking half is neutral so far, not proven. MediQ at NeurIPS posed this problem
-> before us. And our first headline measured our own weak baseline — two of our files disagreed, we
-> chased it, killed the claim and re-ran everything. The old notes are still in the repo with a
-> notice on them.
+> synthetic. On a complete record this product is nearly pointless and we say so on the page.
+> Eleven variant groups is a demonstration, not a benchmark. MediQ at NeurIPS posed this problem
+> before us.
+>
+> And the two biggest corrections are ours. Our first headline measured our own weak baseline —
+> two of our files disagreed, we chased it, killed the claim and re-ran everything. Then we found
+> three bugs in the ranking measurement, every one of them in our favour, and fixing them made the
+> result we were beating worse rather than better. Both are in the repo, dated, in the order they
+> happened.
 >
 > It knows when it doesn't know. That's the product.
 
