@@ -129,6 +129,20 @@ fifth. The rule holds in 33 of 35 cells; it broke on the likeliest pattern, and 
 the pattern in the fit **and** a feature for how unusual the findings are, and even then it reaches
 only 93.6% against a 95% promise. Say that we could not fully fix it.
 
+## 6c — The job the open model actually wins
+
+The engine scores structured findings and the world produces prose. An open model reads one into
+the other: **72% of findings recovered, 87% precision**, 100 notes in 70 seconds.
+
+Then the number that earns the slide. Scored twice at the same bar — from the real record, and
+from a note the model read: 41% answered becomes 34%, and **zero wrong answers are introduced**.
+Ten cases stopped being answered, three started. What the reader misses makes the record look
+thinner, and a thinner record is what the gate refuses.
+
+Say it plainly: *the error turns into caution instead of a confident mistake, because the gate
+reads the record rather than the scorer's mood.* Three notes are on the live page with what the
+model missed shown beside what it found.
+
 ## 7a — What we got wrong, 1 of 2: the measurements
 
 Keep both of these. Four of six winners in this series shipped a visible don't-be-confidently-wrong

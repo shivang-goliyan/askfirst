@@ -151,6 +151,26 @@
 </section>
 
 <section>
+  <div class="tag">The job the open model actually wins · 100 held-out records</div>
+  <h2>Prose in, findings out — and what it misses turns into caution, not mistakes.</h2>
+  <p>The engine scores structured findings. The world produces prose. An open model reads one
+  into the other: <strong>72% of findings recovered, 87% of what it returns really there</strong>,
+  100 notes in 70 seconds. It is wrong often enough to matter — which is the point.</p>
+  <table>
+    <tr><th>scored twice, same gate, same 95% bar</th><th>top-1</th><th>answers</th><th>wrong</th></tr>
+    <tr><td>from the real record</td><td>95.0%</td><td>41.0%</td><td>0</td></tr>
+    <tr class="key"><td>from a prose note it read</td><td>74.0%</td><td>34.0%</td><td><strong>0</strong></td></tr>
+  </table>
+  <p class="lede">Ten cases stopped being answered. Three started. <strong>No wrong answer was
+  introduced.</strong> What the reader misses makes the record look thinner, and a thinner record
+  is exactly what the gate refuses.</p>
+  <p class="dim">It works because the gate reads the record, not the scorer's mood. The note was
+  written by the same model that read it back, so both numbers are upper bounds.</p>
+  <div class="src">docs/results/2026-10-13-prose-in-findings-out.md — three notes are on the live
+  page with what the model missed shown beside what it found</div>
+</section>
+
+<section>
   <div class="tag">Why this needs an open model, on AMD</div>
   <h2>The product is built on the distribution. A closed API returns text.</h2>
   <p>Entropy, information gain and a calibrated threshold are all functions of the full posterior.
