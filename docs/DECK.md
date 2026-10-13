@@ -98,11 +98,14 @@ And the honest framing of what the hardware buys, which is not "faster":
 
 > **A better model does not make the answers cheaper. It makes more of them answerable.**
 
-The CPU model is already 99.6% on a complete record, so a bigger one buys nothing there. It buys
-the thin end: at a fifth of a record the refusal goes **silent**, because no cut-off reaches a
-useful precision, and every one of those cases goes to a person. A stronger scorer raises how much
-of that the machine can take at the same promise. The CPU floor is measured, so the comparison
-*is* the AMD result.
+**Do not say "a better model makes more of them answerable" — we tested it and it is false here.**
+A 3B open model scores 35.3% on a complete record against the linear model's 99.6%, and its
+confidence barely moves when four fifths of the record is taken away (margin down 12%, ours down
+83%). A refusal needs a signal that responds to evidence; that one does not.
+
+Say instead what is measured: **ESM-2 650M changes the Module B safety conclusion** that the
+laptop-sized model gets wrong. A model that needs the GPU, an artifact that ships, a finding that
+moves. Plus the distribution argument, which is about open weights rather than size.
 
 (This paragraph said "a naive Bayes is 21% accurate" until 13 Oct. That scorer has been dead since
 the headline was re-measured; if any other slide still argues from it, it is stale too.)

@@ -154,17 +154,17 @@
   <div class="tag">Why this needs an open model, on AMD</div>
   <h2>The product is built on the distribution. A closed API returns text.</h2>
   <p>Entropy, information gain and a calibrated threshold are all functions of the full posterior.
-  There is no version of this that works behind an API that hands back a sentence.</p>
-  <pre>POST /v1/completions   { "echo": true, "max_tokens": 0, "logprobs": 1 }
-→ token_logprobs + text_offset over the prompt
-   one round trip per label set · vLLM on MI300X when a droplet is attached
-   nothing attached today — everything on this page was measured on CPU</pre>
-  <blockquote>A better model does not make the answers cheaper. It makes more of them answerable.</blockquote>
-  <p>The CPU model is already 99.6% on a complete record, so a bigger one buys nothing there. It
-  buys the thin end. At a fifth of a record the refusal goes <strong>silent</strong> — no cut-off
-  reaches a useful precision, so every one of those cases goes to a person. A stronger scorer
-  raises how much of that the machine can take at the same promise, and the CPU floor is already
-  measured to compare against.</p>
+  No version of this works behind an API that hands back a sentence. <span class="dim">Nothing is
+  attached today — everything on this page was measured on CPU.</span></p>
+  <blockquote>We tested the obvious claim — that a bigger model makes more cases answerable — and
+  it is false here.</blockquote>
+  <p>300 patients, 44,100 scored prompts on a rented GPU: a 3B open model gets
+  <span class="bad">35.3%</span> on a complete record against our linear model's 99.6%. Take four
+  fifths of the record away and <strong>its confidence barely moves</strong> — margin down 12%,
+  ours down 83%. A refusal needs a signal that responds to evidence; that one has nothing in it to
+  calibrate.</p>
+  <p class="lede">What survives is measured: <strong>ESM-2 650M changes the safety conclusion</strong>
+  the laptop-sized model gets wrong — 4 of 28 calls move at supporting strength, not 0 of 11.</p>
   <div class="src">src/askfirst/model.py — exact label scoring via text_offset, mean-normalised,
   tested against the documented response shape before any GPU hour was spent</div>
 </section>
