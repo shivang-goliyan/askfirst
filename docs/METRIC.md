@@ -46,7 +46,7 @@ counted as errors regardless of whether the original was right. This needs no la
 ## Splits
 
 DDXPlus is split by patient before anything else happens, and the test split is not looked at
-until the metrics above are final. MedQA is held out entirely as a cross-check, so that a good
+until the metrics above are final. MedQA is held out entirely as a cross-check — **and in the event was never run; see (`docs/results/2026-10-13-the-cross-check-we-did-not-run.md`)** — so that a good
 DDXPlus result cannot simply mean the generator behind DDXPlus was reverse-engineered.
 
 ## Kill criterion

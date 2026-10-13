@@ -32,7 +32,7 @@ cache = modal.Volume.from_name("askfirst-hf-cache", create_if_missing=True)
 INSTRUCTION = "Read the patient record and give the single most likely condition."
 
 
-@app.function(gpu="L40S", volumes={"/cache": cache}, timeout=5400)
+@app.function(gpu="H100:2", volumes={"/cache": cache}, timeout=7200)
 def score(cases, labels, model_name):
     """cases: list of {"lines": [...], "truth": label, "kept": frac}. Returns a posterior per
     case, built from the summed log probability of each label under the same prompt."""
@@ -42,7 +42,8 @@ def score(cases, labels, model_name):
     from vllm import LLM, SamplingParams
 
     llm = LLM(model=model_name, max_model_len=2048, gpu_memory_utilization=0.90,
-              enable_prefix_caching=True, dtype="bfloat16")
+              enable_prefix_caching=True, dtype="bfloat16",
+              tensor_parallel_size=int(os.environ.get("TP", "2")))
     params = SamplingParams(max_tokens=1, prompt_logprobs=0, temperature=0.0)
 
     prompts, index = [], []
@@ -121,7 +122,8 @@ def main(cases: int = 300, model: str = MODEL):
         best = max(post, key=post.get)
         rows.append({"kept": case["kept"], "n": case["n"], "truth": case["truth"],
                      "said": best, "margin": post[best], "right": best == case["truth"]})
-    where = HERE / "docs/results/rehearsal-llm-grid.json"
+    tag = model.split("/")[-1].replace("-Instruct", "").lower()
+    where = HERE / f"docs/results/rehearsal-llm-grid-{tag}.json"
     where.write_text(json.dumps({"model": out["model"], "seconds": out["seconds"],
                                  "cases": cases, "rows": rows}))
     print(f"\n{'record':>8} {'top-1':>8} {'mean margin':>13}")

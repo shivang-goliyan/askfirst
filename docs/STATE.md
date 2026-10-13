@@ -226,5 +226,5 @@ With a served model, the proposer harness adds the model to the table automatica
   scale, so "How fast did the pain appear? -> 5" now reads "5 of 10". Display only; the join keys
   are untouched.
 - DDXPlus is rule-based synthetic, so recovering a deleted field may partly mean recovering the
-  generator. MedQA is the cross-check and the limitation is stated rather than buried.
+  generator. MedQA was pre-registered as the cross-check and **was not run** — it needs a model, and a weak CPU scorer would repeat the mistake that killed our first headline. So every number here is DDXPlus-only and the claim that the method generalises past one synthetic generator is unsupported (`docs/results/2026-10-13-the-cross-check-we-did-not-run.md`).
 - Module B has 182 contested CIViC groups. That is a demo and a small result, not a headline.

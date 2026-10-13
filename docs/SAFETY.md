@@ -85,7 +85,7 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
   cheapest policy answers 98% of cases. It earns its keep on thin records, and we say where the
   line is rather than leaving it vague.
 - DDXPlus is rule-based synthetic data, so recovering a deleted field may partly mean recovering
-  the generator. MedQA is the cross-check and the limitation is stated rather than buried.
+  the generator. MedQA was pre-registered as the cross-check and **was not run**, so nothing here is evidence that the method survives a different dataset (`docs/results/2026-10-13-the-cross-check-we-did-not-run.md`).
 - The question-ranking half now **is** measured useful — 72.3% against 43.7% for asking at random,
   with one question from three findings — but only after the principled objective was thrown out:
   ranking by expected information gain scored *worse than asking nothing at all*. The working rule

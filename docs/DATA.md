@@ -15,7 +15,7 @@ with the reason.
 
 DDXPlus is synthetic, generated from a proprietary knowledge base and a rule-based system. That is
 a strength for privacy and a weakness for validity: a model can learn the generator instead of the
-medicine. This is why MedQA is held out as a cross-check and why the limitation is stated in the
+medicine. This is why MedQA was held out as a cross-check — it was not run, and that is recorded in (`docs/results/2026-10-13-the-cross-check-we-did-not-run.md`) — and why the limitation is stated in the
 README rather than buried.
 
 ## Needs checking before it ships
