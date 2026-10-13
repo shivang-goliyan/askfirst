@@ -125,10 +125,12 @@ and the comparison against it is the point rather than something to avoid:
   systematically removing information from cases.
 - **ALFA** (arXiv 2502.14860) — aligning models to ask better clinical questions.
 - **BALAR / MedClarify** — choose the next question by expected information gain over a
-  predefined question set. **We implemented that objective and measured it losing to a coin:**
-  43.3% against 46.2% for asking at random, with one question from a three-finding record. It is
-  an expectation taken under the model's own beliefs, and on a sparse record those beliefs are
-  wrong. Ranking instead by how much a question *could* tell you scores 67.1%
+  predefined question set. **We implemented that objective and measured it losing to a coin —
+  and then to silence:** 39.9% against 47.9% for asking at random and 42.9% for asking nothing at
+  all, one question from a three-finding record, 4,000 held-out patients. It is an expectation
+  taken under the model's own beliefs, and on a sparse record those beliefs are wrong. Two bugs
+  in our own implementation of it had been flattering it; fixing them made it worse. Ranking
+  instead by how much a question *could* tell you scores 72.5%
   (`docs/results/2026-10-13-breadth-beats-information.md`).
 
 Those methods select from a question set, or prompt the model to ask. askfirst measures which

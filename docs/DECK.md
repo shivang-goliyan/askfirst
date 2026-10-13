@@ -105,8 +105,13 @@ and judges in this track reward stated limits.
 
 - Four dead ends, dated, in the repo — including one where **our own ranking objective made results
   worse than asking at random** (18.8% vs 26.0%), which we measured, diagnosed and replaced.
-- The question-ranking half is **neutral**: 28.4% vs 26.0%, intervals overlapping. It ships as an
-  aid, not a claim.
+- **Expected information gain — the objective the literature uses — lost to a coin and then to
+  silence**: 39.9% against 47.9% random and 42.9% for asking nothing. Ranking by how many answers
+  a question admits scores 72.5%.
+- **Three bugs in that measurement, found by us after publishing it, all three in our favour.**
+  Negative answers switched the evidence feature on; the ranker assumed every question gets
+  answered; `max()` broke a tie using the engine's own sort order. Fixing the first two made the
+  objective we beat *worse*.
 - DDXPlus is synthetic. Stated, not buried.
 - Not clinically validated. No clinician has reviewed any output.
 
@@ -125,8 +130,12 @@ naive prompting to ask questions **lowered** accuracy by 11.3%; their self-consi
 evaluation by systematically removing information from cases, which is our design, already
 published.
 
+**BALAR / MedClarify** pick the next question by expected information gain over a question set.
+We implemented that objective and it lost to a coin — and to asking nothing at all. That is a
+stronger thing to say than a citation.
+
 Saying this on camera is strictly better than being told it. The contribution is not the idea —
-it is the calibrated refusal, its price, and the measurement that the advice half does not work yet.
+it is the calibrated refusal, its price, and a measured ranking rule that beats the published one.
 
 ## 10 — The second domain, briefly
 

@@ -84,9 +84,11 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
   line is rather than leaving it vague.
 - DDXPlus is rule-based synthetic data, so recovering a deleted field may partly mean recovering
   the generator. MedQA is the cross-check and the limitation is stated rather than buried.
-- The question-ranking half now **is** measured useful — 67.1% against 46.2% for asking at random,
+- The question-ranking half now **is** measured useful — 72.5% against 47.9% for asking at random,
   with one question from three findings — but only after the principled objective was thrown out:
-  ranking by expected information gain scored *worse* than random. The working rule is a property
-  of the question, not of the model's beliefs.
+  ranking by expected information gain scored *worse than asking nothing at all*. The working rule
+  is a property of the question, not of the model's beliefs.
+- Three bugs in that measurement were found by us, after publishing a first version of it, and all
+  three had pointed in our favour. They are listed in the write-up rather than quietly corrected.
 - The concept is not novel. MediQ (NeurIPS 2024) posed the interactive version of this problem
   first; the contribution here is the calibrated refusal and its price, not the idea.

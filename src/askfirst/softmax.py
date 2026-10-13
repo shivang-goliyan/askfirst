@@ -11,6 +11,11 @@ picks it up without changes."""
 
 import numpy as np
 
+# What counts as "we asked and the answer was no". Without "absent" in here a negative answer
+# switched the feature ON, so asking a question and being told no scored identically to being
+# told yes — which made every binary field look worth asking about.
+OFF = (False, None, 0, "0", "absent")
+
 
 class SoftmaxScorer:
     def __init__(self, schema, l2=1e-4, seed=13):
@@ -50,7 +55,7 @@ class SoftmaxScorer:
                 continue
             if spec.kind == "binary":
                 slot = self.index.get((name, None))
-                if slot is not None and value not in (False, None, 0, "0"):
+                if slot is not None and value not in OFF:
                     x[slot] = 1.0
             else:
                 for v in (value if isinstance(value, list) else [value]):

@@ -150,3 +150,32 @@ def test_breadth_decides_the_order():
     gaps = rank_gaps(CASE, make_scorer(schema), schema)
     assert [g.breadth for g in gaps] == sorted((g.breadth for g in gaps), reverse=True)
     assert answer_breadth(schema.fields["heart_rate"]) > answer_breadth(schema.fields["smoker"])
+
+
+def test_no_answer_is_not_yes():
+    """A negative answer must not switch the feature on, or asking is always worth it."""
+    from askfirst.softmax import SoftmaxScorer
+    schema = load_schema("ddxplus")
+    model = SoftmaxScorer.load("src/askfirst/baked/ddxplus_softmax.npz", schema)
+    base = {"E_55": "present"}
+    assert model({**base, "E_103": "absent"}) == model(base)
+    assert model({**base, "E_103": "present"}) != model(base)
+
+
+def test_rare_questions_count_less():
+    from askfirst.schema import fit_ask_rates
+    schema = load_schema("clinical")
+    sample = [{"troponin": "raised"} for _ in range(9)] + [{"ecg": "normal"}]
+    rates = fit_ask_rates(sample, schema)
+    assert rates["troponin"] == 0.9 and rates["ecg"] == 0.1
+    tuned = schema.with_priors({}, rates)
+    gaps = {g.field: g for g in rank_gaps(CASE, make_scorer(tuned), tuned)}
+    plain = {g.field: g for g in rank_gaps(CASE, make_scorer(schema), schema)}
+    assert gaps["ecg"].info_gain < plain["ecg"].info_gain
+    assert gaps["ecg"].flip_prob < plain["ecg"].flip_prob
+
+
+def test_french_names_stay_provenance():
+    schema = load_schema("ddxplus")
+    assert schema.label_for_outcome("Pneumonia") == "Pneumonia"
+    assert schema.sources["Pneumonia"] == "Pneumonie"

@@ -16,6 +16,10 @@ class Field:
     priors: dict = dc_field(default_factory=dict)
     question: str = ""
     value_labels: dict = dc_field(default_factory=dict)
+    # How often asking this returns anything at all. A blood test always comes back with a
+    # number, so 1.0 is right for an ordered test; a symptom question mostly comes back "no",
+    # and DDXPlus records only the yeses, so the field is simply absent from the record.
+    asked_rate: float = 1.0
 
     def label_for(self, value):
         if value in self.value_labels:
@@ -41,8 +45,13 @@ class Schema:
     outcomes: list
     fields: dict
     labels: dict = dc_field(default_factory=dict)
+    sources: dict = dc_field(default_factory=dict)
 
     def label_for_outcome(self, outcome):
+        """What a person — or a model being asked to score it — should see. DDXPlus names its
+        conditions in French in the source file; those names are provenance and live in
+        `sources`, because showing them to an English-speaking reader is wrong and scoring an
+        English record against them is worse."""
         return self.labels.get(outcome, outcome)
 
     def values_for(self, name):
@@ -68,14 +77,16 @@ class Schema:
     def present_in(self, record):
         return [f for f in record if f in self.fields]
 
-    def with_priors(self, fitted):
+    def with_priors(self, fitted, rates=None):
+        rates = rates or {}
         fields = {}
         for name, spec in self.fields.items():
             fields[name] = Field(
                 spec.name, spec.kind, spec.values, spec.cost, spec.delay,
                 dict(fitted.get(name) or spec.priors), spec.question, spec.value_labels,
+                float(rates.get(name, spec.asked_rate)),
             )
-        return Schema(self.domain, self.outcomes, fields, self.labels)
+        return Schema(self.domain, self.outcomes, fields, self.labels, self.sources)
 
 
 def _delay_of(spec):
@@ -104,13 +115,31 @@ def load_schema(domain):
                 priors=dict(spec.get("priors") or {}),
                 question=spec.get("question", ""),
                 value_labels=dict(spec.get("value_labels") or {}),
+                asked_rate=float(spec.get("asked_rate", 1.0)),
             )
     return Schema(
         domain=raw["domain"],
         outcomes=list(raw["outcomes"] or []),
         fields=fields,
         labels=dict(raw.get("outcome_labels") or {}),
+        sources=dict(raw.get("outcome_sources") or {}),
     )
+
+
+def fit_ask_rates(records, schema):
+    """How often each question returns an answer at all.
+
+    Needed because the ranker was quietly assuming every question gets answered. On DDXPlus a
+    record holds only the findings the patient reported, so asking about a rare symptom comes
+    back empty about 97% of the time — and a ranking that ignores that spends its one question
+    on whatever would be most decisive IF present, which is usually nothing."""
+    n = max(1, len(records))
+    seen = {name: 0 for name in schema.fields}
+    for record in records:
+        for name in record:
+            if name in seen:
+                seen[name] += 1
+    return {name: hits / n for name, hits in seen.items()}
 
 
 def fit_priors(records, schema, smoothing=1.0):

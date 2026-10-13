@@ -56,7 +56,8 @@ outcomes:
   - "Whooping cough"
 
 # The source file's own French name for each, kept so the provenance is traceable.
-outcome_labels:
+# Provenance only. These are not display labels and nothing should score against them.
+outcome_sources:
   "Acute COPD exacerbation / infection": "Exacerbation aigue de MPOC et/ou surinfection associ\u00e9e"
   "Acute dystonic reactions": "R\u00e9action dystonique a\u00efgue"
   "Acute laryngitis": "Laryngite aigue"

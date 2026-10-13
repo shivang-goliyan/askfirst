@@ -38,18 +38,25 @@ def entropy(dist):
 def answer_breadth(spec):
     """How much a question COULD tell you: log2 of the number of answers it admits.
 
-    This decides the order, and it beat every cleverer objective we tried. Measured on 800
-    identical cases with three findings in hand and one question allowed:
+    This is what decides the order, and it beat every cleverer objective we tried. 1,000
+    held-out patients, three findings in hand, one question allowed, 25 fields the patient does
+    not have mixed into the candidate pool:
 
-        no question                     41.9%
-        ask at random                   45.4%
-        ask by expected information     42.2%   <- worse than random
-        ask the widest question         83.5%
+        no question                      41.7%
+        ask at random                    46.2%
+        ask by expected information      38.2%   <- worse than asking nothing
+        ask whatever usually answers     42.8%   <- also worse than random
+        ask the widest question          66.9%
+        widest, weighted by answer rate  72.7%
+        (upper bound: widest question the patient can actually answer, 70.2%)
 
     Expected information gain sums P(value) x H(outcome | value) using the model's own beliefs,
     and on a sparse record those beliefs are wrong — so maximising expected information under a
     miscalibrated model is worse than guessing. How much a question could tell you needs no
     beliefs at all. In clinical terms: characterise the pain before asking about one more symptom.
+
+    Answer rate on its own is worth nothing, which is the ablation that says breadth is really
+    the mechanism and not a proxy for "questions that tend to get answered".
     """
     return math.log2(max(1, len(spec.values)))
 
@@ -64,6 +71,7 @@ class Gap:
     cost: float
     delay: float
     breadth: float = 1.0
+    yield_rate: float = 1.0
     by_value: list = dc_field(default_factory=list)
 
     def value_per_cost(self, floor=0.05):
@@ -126,6 +134,7 @@ def rank_gaps(record, scorer, schema, candidates=None):
             continue
 
         priors = schema.priors_for(name)
+        rate = schema.fields[name].asked_rate
         rows = []
         for value in values:
             dist = scorer({**record, name: value})
@@ -139,30 +148,40 @@ def rank_gaps(record, scorer, schema, candidates=None):
                 entropy=entropy(dist),
             ))
 
+        # The branch where the question comes back empty. It leaves the distribution exactly
+        # where it was, so it contributes the base entropy and never flips anything — but it
+        # has to be counted, or a question that usually returns nothing is rated as though it
+        # always returns its most decisive answer.
         spec = schema.fields[name]
+        answered = sum(r.prior * r.entropy for r in rows)
         gaps.append(Gap(
             field=name,
-            info_gain=base_entropy - sum(r.prior * r.entropy for r in rows),
-            flip_prob=sum(r.prior for r in rows if r.flips),
-            expected_shift=sum(r.prior * r.shift for r in rows),
+            info_gain=rate * (base_entropy - answered),
+            flip_prob=rate * sum(r.prior for r in rows if r.flips),
+            expected_shift=rate * sum(r.prior * r.shift for r in rows),
             worst_shift=max(r.shift for r in rows),
             cost=spec.cost,
             delay=spec.delay,
             breadth=answer_breadth(spec),
+            yield_rate=rate,
             by_value=rows,
         ))
 
-    # Breadth first, expected information second. Ranking by expected information gain measured
-    # WORSE than asking at random (42.2% against 45.4%); ranking by how much a question could
-    # tell you gives 83.5%. The bits are still computed and still shown — they just do not decide
-    # the order, because they are an expectation taken under beliefs that are wrong on exactly
-    # the sparse records where the advice matters.
-    return sorted(gaps, key=lambda g: (-g.breadth, -g.info_gain, -g.expected_shift))
+    # Breadth, discounted by how often the question comes back with anything; expected
+    # information only breaks ties. Ranking by expected information gain measured WORSE than
+    # asking nothing at all (38.2% against 41.7%), and worse than a coin (46.2%). Breadth alone
+    # gives 66.9% and breadth x answer rate gives 72.7% — better even than being told which
+    # questions this patient can answer. The bits are still computed and still shown; they just
+    # do not decide the order, because they are an expectation taken under beliefs that are
+    # wrong on exactly the sparse records where the advice matters.
+    return sorted(
+        gaps, key=lambda g: (-(g.breadth * g.yield_rate), -g.info_gain, -g.expected_shift)
+    )
 
 
-def sufficiency(record, scorer, schema):
+def sufficiency(record, scorer, schema, gaps=None):
     """0-100. High when nothing we could still learn is likely to change the answer."""
-    gaps = rank_gaps(record, scorer, schema)
+    gaps = rank_gaps(record, scorer, schema) if gaps is None else gaps
     if not gaps:
         return 100.0
     return round(100.0 * (1.0 - max(g.flip_prob for g in gaps)), 1)

@@ -161,10 +161,17 @@
     It settles the question without changing the leading answer, and the old objective could not see it.</li>
     <li><strong>Cheap-proposes-then-model-ablates caps the system near 32%</strong> — shortlist
     recall at k=20 is 31.8% and stage two can only re-rank what stage one passes. Inverted.</li>
-    <li><strong>Expected information gain — the objective the literature uses — lost to a coin.</strong>
-    43.3% against <span class="cool">46.2%</span> for asking at random. It is an expectation taken
-    under the model's own beliefs, and on a three-finding record those beliefs are wrong. Ranking
-    by how much a question <em>could</em> tell you scores <span class="hot">67.1%</span>.</li>
+    <li><strong>Expected information gain — the objective the literature uses — lost to a coin,
+    and then to silence.</strong> <span class="bad">39.9%</span> against
+    <span class="cool">47.9%</span> for asking at random and 42.9% for asking nothing at all. It is
+    an expectation taken under the model's own beliefs, and on a three-finding record those beliefs
+    are wrong. Ranking by how much a question <em>could</em> tell you scores
+    <span class="hot">72.5%</span>.</li>
+    <li><strong>Then we found three bugs in that measurement, all of them in our favour.</strong>
+    A negative answer was switching the evidence feature <em>on</em>; the ranker assumed every
+    question gets answered; and <code>max()</code> was breaking a three-way tie using the engine's
+    own sort order, worth seven points to us. Fixing the first two made the objective we beat
+    <em>worse</em>. Published with the numbers from after.</li>
   </ul>
   <div class="src">Four objectives tried, three of them worse than a coin, and the winner is a
   property of the question rather than anything learned. Every failure is dated and committed in
