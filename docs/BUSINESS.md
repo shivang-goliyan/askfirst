@@ -26,6 +26,87 @@ symptom-checker vendors who sell into them. Three properties make them the buyer
 - **They already carry the liability.** A confident wrong call is their problem, and the expected
   cost of one is $4,220 to $167,000 (`2026-10-13-what-it-is-worth.md`).
 
+## The named operators who have this problem, and the published evidence that they do
+
+"Nobody has bought this" is still true and it is the last section of this document. What was also
+true until tonight is that nobody had been *named*. This is the evidence that the failure this
+product addresses is a documented property of deployed systems rather than a problem we inferred
+from a synthetic dataset. Everything below was read at source this evening; where a figure is a
+vendor's own claim rather than peer-reviewed, it says so.
+
+### 1. Healthdirect Australia — the clearest case, and it is the operator's own paper
+
+Australia's national health line runs an AI virtual triage and care referral engine (Infermedica's)
+with a nurse behind it. Their published evaluation covers **1,552,592 encounters**, 1 April 2023 to
+31 March 2025, across every state and territory except Queensland. Nurses agreed with the engine's
+acuity recommendation in **83.3%** of encounters, and *"where they did not agree, nurses generally
+set a higher triage level."*
+
+Then the sentence that is this product's entire market, written by the operator about its own
+system:
+
+> *"This warrants further investigation, given that VTCR is configured to overtriage to minimize
+> patient risk."*
+
+A deployed engine at national scale is **deliberately set to over-escalate**, because nobody has
+measured how far it can be trusted on an incomplete record. That is a calibrated refusal layer's
+job description. (*Mayo Clinic Proceedings: Digital Health*, 2026; figures confirmed via
+[Medical Republic](https://www.medicalrepublic.com.au/ai-triage-works-sending-people-to-the-right-care-healthdirect-finds/123169),
+primary article at ScienceDirect `S2949761225001385`.)
+
+It is also the right *shape* of buyer by our own measurement: Infermedica's engine returns a
+ranked condition list with probabilities, which is a rich differential — the thing the real-queue
+experiment showed this gate needs (`results/2026-10-13-the-real-queue-said-no.md`).
+
+### 2. Consumer symptom checkers, measured getting *more willing to answer* over five years
+
+Schmieding et al. re-ran Semigran's 2015 audit on the same 45 vignettes five years later
+(*J Med Internet Res* 2022;24(5):e31810). Median triage accuracy barely moved — 59.1% in 2015,
+**55.8%** in 2020. What moved was the trade:
+
+| the median app, same 45 vignettes | 2015 | 2020 |
+|---|---|---|
+| sensitivity on emergencies | 85.7% | **51.9%** |
+| specificity | 82.1% | **93.3%** |
+
+Emergency sensitivity fell **33.8 points** while specificity rose 11.2. The abstract's own summary
+is *"missing >40% of emergencies."* Across a cohort of deployed consumer products, over five
+years, the industry became **more confident and less safe in exactly the direction this gate
+refuses in.** Nobody had to be persuaded that the problem exists; it was measured twice, five years
+apart, by people with no stake in our answer.
+
+(Semigran et al., *BMJ* 2015;351:h3480 established the baseline: 23 checkers, 45 vignettes,
+appropriate triage advice ranging 33%–78% across checkers. A figure of "86 of 202 emergency
+evaluations under-triaged" circulates for the 2022 follow-up; it is a calculation from Table 3 and
+**not** something the authors report, so it is not quoted here.)
+
+### 3. The frontier models being put in front of patients
+
+Offered an explicit `INSUFFICIENT` option, a frontier model took it 0% of the time on a complete
+record and 35% on a tenth of one, answering 92.5% of the time at 40% evidence while right 15.1% —
+and at higher reasoning effort it abstained **less** and was right less
+(`results/2026-10-13-a-frontier-model-offered-the-door.md`, our own measurement, 750 calls, $3.20).
+This is not a claim about diagnosis. It is a claim about refusal, and it is the one capability that
+does not arrive with a better model.
+
+### Who is *not* the buyer, now that we have measured it
+
+- **Deterministic protocol lines** — NHS Pathways, Schmitt-Thompson, Pharmacy First. No posterior,
+  nothing to calibrate. They were in an earlier draft of this document and they should not have
+  been.
+- **Acuity prediction from vitals.** Measured and rejected on 72,004 real ED visits: the data's
+  own ceiling is 94.0% precision at 1.0% recall, so a 95% bar does not exist there for any rule
+  (`results/2026-10-13-the-real-queue-said-no.md`).
+
+### What this evidence is and is not
+
+It establishes that **named operators run probabilistic triage engines at scale and that those
+engines are documented over-escalating or under-detecting.** It does **not** establish that any of
+them would buy this, that they have budget, or that they would let a student team near their queue.
+No approach has been made to anyone named here, and nothing on this page should be read as a
+relationship. It moves the demand case from "we think this matters" to "three independent published
+sources say this exact failure is happening in production", which is a real step and not a customer.
+
 ## What they buy, in one sentence
 
 **A gate in front of whatever they already use, which answers the share of the queue it can hold

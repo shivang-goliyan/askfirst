@@ -539,10 +539,22 @@ against the fitted softmax's 99.6%; measured as a *reader* it earns its place.
 
 ## Who pays
 
-An operator whose cost line is clinician-minutes: nurse triage lines, teleconsultation platforms,
-the symptom-checker vendors selling into them. They already have the cost, already have a person
-at the other end for a refusal to reach, and already carry the liability for a confident wrong
-call.
+An operator whose cost line is clinician-minutes **and whose engine produces a rich differential**
+— teleconsultation platforms, symptom-checker vendors, virtual-triage engines. They already have
+the cost, already have a person at the other end for a refusal to reach, and already carry the
+liability for a confident wrong call. Deterministic protocol lines are *not* buyers: there is no
+posterior to calibrate. Nor is acuity prediction from vitals, which we measured and rejected.
+
+**And the failure is documented in production, by people with no stake in our answer.** Australia's
+national health line published an evaluation of its AI virtual-triage engine over **1,552,592
+encounters**: nurses agreed with it 83.3% of the time and *"where they did not agree, nurses
+generally set a higher triage level"* — alongside the operator's own sentence, *"VTCR is configured
+to overtriage to minimize patient risk."* A deployed engine at national scale is deliberately set
+to over-escalate because nobody has measured how far it can be trusted on a thin record.
+
+Meanwhile consumer symptom checkers, re-audited on the same 45 vignettes five years apart, went
+from **85.7% to 51.9%** sensitivity on emergencies while specificity rose 82.1% → 93.3% (*JMIR*
+2022;24(5):e31810). More confident, less safe, in exactly the direction this refuses in.
 
 Per 1,000 records at a 95% bar: **352 never reach a person**, 1.7 are answered wrongly against
 330.5 if everything is answered, **C$3,500–9,500 of review capacity returned**, and a **cost to
@@ -553,8 +565,11 @@ The defensibility came out of a limitation: the calibration has to be fitted aga
 records go short where it runs, and we measured that getting it wrong costs about 1.1 points of
 precision — on intervals that overlap, so it is a real effect we cannot size precisely yet. The deployed thing is fitted to one operator's intake behaviour and does not transfer.
 
-Nobody has bought it, there is no pilot, and the throughput is measured on synthetic patients.
-Full case, including what would have to be true: [docs/BUSINESS.md](docs/BUSINESS.md).
+**Nobody has bought it, there is no pilot, and no approach has been made to anyone named above.**
+The throughput is measured on synthetic patients and the one real queue we tried it on said no.
+What the evidence above establishes is that this failure happens in production — not that anyone
+would buy a fix from us. Full case, including what would have to be true:
+[docs/BUSINESS.md](docs/BUSINESS.md).
 
 ## Data
 

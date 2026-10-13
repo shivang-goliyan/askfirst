@@ -33,23 +33,39 @@ if [ ! -f "$DATA" ]; then
   exit 2
 fi
 
-say "1/4  the risk-coverage curve the page serves  (~90s)"
+say "1/5  the risk-coverage curve the page serves  (~90s)"
 $PY scripts/bake_curve.py "$DATA" >/dev/null || failed=1
 check src/askfirst/baked/curve.json
 
-say "2/4  the calibration, the completeness estimator and the answer-rate priors  (~2 min)"
+say "2/5  the calibration, the completeness estimator and the answer-rate priors  (~2 min)"
 $PY scripts/bake_demo.py "$DATA" >/dev/null || failed=1
 $PY scripts/run_calibration.py "$DATA" >/dev/null || failed=1
 check docs/results/calibration.json
 check src/askfirst/baked/calibrator.json
 
-say "3/4  the variant ablation  (~20s)"
+say "3/5  the variant ablation  (~20s)"
 $PY -I scripts/run_variant_ablation.py data/civic/evidence.tsv >/dev/null || failed=1
 check docs/results/variant-ablation.json
 check src/askfirst/baked/variants.json
 
+say "4/5  the gate against the standard selective-prediction baselines, seven folds  (~3 min)"
+$PY scripts/run_conformal.py "$DATA" 2000 >/dev/null || failed=1
+check docs/results/conformal.json
+
+if [ -f data/nhamcs-raw/layout-2022.json ]; then
+  say "5/5  the real queue  (~90s)"
+  $PY scripts/run_nhamcs.py data/nhamcs-raw >/dev/null || failed=1
+  check docs/results/nhamcs.json
+else
+  say "5/5  skipping the real queue — no NHAMCS on disk, see scripts/fetch_data.sh"
+fi
+
 if [ "${1:-}" = "--all" ]; then
-  say "4/4  the two long ones  (~35 min)"
+  say "and the long ones — three scorers, and the arms that try to delete the gate  (~55 min)"
+  $PY scripts/run_portability.py "$DATA" 1200 >/dev/null || failed=1
+  check docs/results/portability.json
+  $PY scripts/run_make_it_unnecessary.py "$DATA" 1200 >/dev/null || failed=1
+  check docs/results/make-it-unnecessary.json
   $PY scripts/run_decision_value.py "$DATA" 4000 >/dev/null || failed=1
   check docs/results/decision-value.json
   $PY scripts/run_missingness.py "$DATA" >/dev/null || failed=1
@@ -57,7 +73,7 @@ if [ "${1:-}" = "--all" ]; then
   $PY scripts/run_value.py "$DATA" >/dev/null || failed=1
   check docs/results/value.json
 else
-  say "4/4  skipping the two long measurements — pass --all for those"
+  say "skipping the long measurements — pass --all for those"
 fi
 
 say "and the documents, against the artifacts"
