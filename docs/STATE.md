@@ -42,6 +42,17 @@ on is throughput at a bar: answering everything puts **330.5 wrong answers per 1
 holding a 95% bar puts **1.7** and still takes 35.2% of the queue. Write-up:
 `results/2026-10-13-what-it-is-worth.md`.
 
+**The open model's job turned out to be reading, not deciding** (13 Oct, 17:00). Measured as a
+scorer it is poor — 35.3% against the softmax's 99.6%, with a confidence that does not notice
+four fifths of the record is gone. Measured as a *reader* it recovers **72% of findings from a
+prose note at 87% precision**, 100 records in 70 seconds. And the number that matters: scored
+from the note instead of the record, it answers 34% of cases instead of 41% at the same 95% bar
+and introduces **zero wrong answers**. What the extraction misses makes the record look thinner,
+and a thinner record is what the gate refuses — the error turns into caution rather than a
+confident mistake. First end-to-end demonstration of the product's claim through a messy input
+path. Baked notes are on the live page with what the model missed shown beside what it found.
+Write-up: `results/2026-10-13-prose-in-findings-out.md`.
+
 Module B is on the page too, baked: all eleven contested CIViC groups the ESM-2 line can speak on,
 with the strength it is granted as a dial. `#level=B` links straight to the slide-worthy state —
 5 of 11 calls change and the prediction lands on top every time.

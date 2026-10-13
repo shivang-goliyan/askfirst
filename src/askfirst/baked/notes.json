@@ -1,0 +1,120 @@
+{
+ "model": "Qwen/Qwen2.5-7B-Instruct",
+ "where": "a rented GPU, 13 Oct \u2014 not AMD, and not baked into any measured result",
+ "recall": 0.7201,
+ "precision": 0.8725,
+ "cases_measured": 100,
+ "note": "the note was written by the same model that read it back, which is easier than a real clinical note. Read these as a demonstration of the path, not as evidence about real notes.",
+ "examples": [
+  {
+   "note": "The patient presents with a history of cystic fibrosis and rheumatoid arthritis. They report coughing up blood and have a chronic cough that produces colored or more abundant sputum than usual. The patient also has a history of Crohn\u2019s disease and chronic obstructive pulmonary disease (COPD). They have a history of asthma and have previously required the use of a bronchodilator. No travel outside the country in the last four weeks is reported.",
+   "found": [
+    {
+     "field": "E_123",
+     "question": "Do you have a chronic obstructive pulmonary disease (COPD)?"
+    },
+    {
+     "field": "E_18",
+     "question": "Do you have cystic fibrosis?"
+    },
+    {
+     "field": "E_20",
+     "question": "Do you have Rheumatoid Arthritis?"
+    },
+    {
+     "field": "E_201",
+     "question": "Do you have a cough?"
+    },
+    {
+     "field": "E_45",
+     "question": "Have you been coughing up blood?"
+    },
+    {
+     "field": "E_77",
+     "question": "Do you have a cough that produces colored or more abundant sputum than usual?"
+    }
+   ],
+   "missed": [
+    {
+     "field": "E_124",
+     "question": "Do you have asthma or have you ever had to use a bronchodilator in the past?"
+    },
+    {
+     "field": "E_47",
+     "question": "Do you suffer from Crohn\u2019s disease or ulcerative colitis (UC)?"
+    }
+   ],
+   "invented": [],
+   "in_the_record": 8
+  },
+  {
+   "note": "The patient reports feeling anxious. They currently consume coffee or tea regularly. The patient does not describe any pain and rates their pain intensity at 0 out of 10. There is no reported radiating pain to other locations, and the pain is precisely located at 0 out of 10. The onset of any pain is also rated at 0 out of 10. The patient confirms regular use of stimulant drugs and reports feeling lightheaded and dizzy, indicating a sensation of impending fainting. They have not traveled outside the country in the last four weeks. Additionally, the patient has recently taken decongestants or other substances with stimulant effects.",
+   "found": [
+    {
+     "field": "E_16",
+     "question": "Do you feel anxious?"
+    },
+    {
+     "field": "E_213",
+     "question": "Have you recently taken decongestants or other substances that may have stimulant effects?"
+    },
+    {
+     "field": "E_35",
+     "question": "Do you regularly drink coffee or tea?"
+    },
+    {
+     "field": "E_62",
+     "question": "Do you regularly take stimulant drugs?"
+    },
+    {
+     "field": "E_82",
+     "question": "Do you feel lightheaded and dizzy or do you feel like you are about to faint?"
+    }
+   ],
+   "missed": [],
+   "invented": [],
+   "in_the_record": 5
+  },
+  {
+   "note": "The patient is of Asian descent and presents with cystic fibrosis, rheumatoid arthritis, and chronic obstructive pulmonary disease (COPD). They report experiencing significant shortness of breath and a cough that produces colored or more abundant sputum than usual. The patient also has an immunosuppressed state. No travel outside the country in the last four weeks is reported.",
+   "found": [
+    {
+     "field": "E_123",
+     "question": "Do you have a chronic obstructive pulmonary disease (COPD)?"
+    },
+    {
+     "field": "E_18",
+     "question": "Do you have cystic fibrosis?"
+    },
+    {
+     "field": "E_20",
+     "question": "Do you have Rheumatoid Arthritis?"
+    },
+    {
+     "field": "E_201",
+     "question": "Do you have a cough?"
+    },
+    {
+     "field": "E_227",
+     "question": "Are you immunosuppressed?"
+    },
+    {
+     "field": "E_66",
+     "question": "Are you experiencing shortness of breath or difficulty breathing in a significant way?"
+    },
+    {
+     "field": "E_77",
+     "question": "Do you have a cough that produces colored or more abundant sputum than usual?"
+    }
+   ],
+   "missed": [
+    {
+     "field": "E_17",
+     "question": "Are you of Asian descent?"
+    }
+   ],
+   "invented": [],
+   "in_the_record": 8
+  }
+ ]
+}

@@ -254,6 +254,19 @@ the distribution-derived objectives we tried, including theirs. The honest state
 difference is that **we went looking for a patient-specific ranking and found that a
 patient-independent one wins.**
 
+## It does not need a form
+
+The engine scores structured findings; the world produces prose. An open model reads one into the
+other — **72% of findings recovered at 87% precision** over 100 records. It is wrong often enough
+to matter, which is the point: scored from the note instead of the record it answers 34% of cases
+rather than 41% at the same bar and introduces **zero wrong answers**. What the reader misses
+makes the record look thinner, and a thinner record is exactly what the completeness gate refuses.
+The error becomes caution instead of a confident mistake
+(`docs/results/2026-10-13-prose-in-findings-out.md`).
+
+That is also the honest job for the hardware. Measured as a *scorer* the same model gets 35.3%
+against the fitted softmax's 99.6%; measured as a *reader* it earns its place.
+
 ## Who pays
 
 An operator whose cost line is clinician-minutes: nurse triage lines, teleconsultation platforms,

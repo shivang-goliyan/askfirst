@@ -80,6 +80,14 @@
     <div class="prov" id="prov"></div>
   </div>
 
+  <div class="panel" id="nPanel" style="display:none">
+    <h2>And it does not need a form &mdash; prose in, findings out</h2>
+    <div class="note" id="nNote"></div>
+    <div class="chips" id="nPick" style="margin-top:12px"></div>
+    <div id="nBody"></div>
+    <div class="prov" id="nProv"></div>
+  </div>
+
   <div class="panel" id="vPanel" style="display:none">
     <h2>The second domain &mdash; and what happens when a predictor is over-trusted</h2>
     <div class="note" id="vNote"></div>
@@ -320,6 +328,59 @@ function draw(r, cov){
   }
 }
 
+let NOTES = null, NWHICH = 0;
+
+async function notePanel(){
+  if (!NOTES || !NOTES.examples || !NOTES.examples.length) return;
+  $('#nPanel').style.display = '';
+  const ex = NOTES.examples[NWHICH];
+  $('#nNote').innerHTML = `A triage note, read by an open model into the fields the engine scores.
+    Measured over ${NOTES.cases_measured} records: it recovers
+    <strong>${pct(NOTES.recall)}</strong> of the findings and
+    <strong>${pct(NOTES.precision)}</strong> of what it returns is really there.
+    <span class="warn">Both numbers are an upper bound</span> &mdash; ${NOTES.note}`;
+  $('#nPick').innerHTML = NOTES.examples.map((_, i) =>
+    `<button class="chip${i===NWHICH?' on':''}" data-i="${i}">note ${i+1}</button>`).join('');
+  $('#nPick').querySelectorAll('button').forEach(b => b.onclick = () => {
+    NWHICH = +b.dataset.i; notePanel();
+  });
+
+  const record = {};
+  ex.found.forEach(f => { record[f.field] = 'present'; });
+  let verdict = '';
+  try {
+    const res = await fetch('/api/assess', {method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({domain:'ddxplus', record, target:TARGET})});
+    const r = await res.json();
+    const d = r.decision || {};
+    verdict = `<div class="verdict" style="margin-top:14px">
+      <span class="dot" style="background:${r.answering?'var(--good)':'var(--warn)'}"></span>
+      <strong>${r.answering ? r.answer.label : 'Not answering'}</strong>
+      <span style="color:var(--dim)">&mdash; ${r.why}</span></div>
+      <div class="note">from ${ex.found.length} findings read out of the note &middot;
+        looks about ${(d.completeness*100).toFixed(0)}% of a record</div>`;
+  } catch (e) { verdict = `<div class="note bad">could not score that: ${e.message}</div>`; }
+
+  const row = (f, cls, tail) => `<tr class="${cls}"><td>${f.question}</td>
+    <td style="color:var(--dim);text-align:right">${tail}</td></tr>`;
+  $('#nBody').innerHTML = `
+    <div style="background:#0f1318;border:1px solid var(--line);border-radius:8px;
+                padding:14px 16px;margin:12px 0;line-height:1.6">${ex.note}</div>
+    <table>
+      <tr><th>what the model read out of it</th><th style="text-align:right">&nbsp;</th></tr>
+      ${ex.found.map(f => row(f, '', 'found')).join('')}
+      ${ex.missed.map(f => row(f, 'off', 'in the record, missed')).join('')}
+      ${ex.invented.map(f => row(f, 'off', 'not in the record')).join('')}
+    </table>
+    <div class="note">${ex.found.length} of ${ex.in_the_record} recovered.
+      <strong>What it misses makes the record look thinner, so the gate refuses more rather than
+      answering wrongly</strong> &mdash; measured end to end on ${NOTES.cases_measured} records:
+      reading from prose dropped how often it answers from 41% to 34% and introduced
+      <strong>zero</strong> wrong answers.</div>
+    ${verdict}`;
+  $('#nProv').textContent = `Extracted by: ${NOTES.model} on ${NOTES.where}`;
+}
+
 let VARIANTS = null, VOPEN = null;
 // linkable, so the deck and the video can point straight at a strength
 let VLEVEL = (location.hash.match(/level=([A-E])/) || [])[1] || 'E';
@@ -423,6 +484,10 @@ function levels(){
     domains();
   }
   picker();
+  try {
+    const res = await fetch('/api/notes');
+    if (res.ok) { NOTES = await res.json(); notePanel(); }
+  } catch (e) { /* the panel stays hidden rather than showing an error */ }
   try {
     const res = await fetch('/api/variants');
     if (res.ok) { VARIANTS = await res.json(); variantPanel(); }

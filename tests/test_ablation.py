@@ -261,3 +261,13 @@ def test_nested_values_rejected():
         assert "nested" in e.detail
     else:
         raise AssertionError("a dict is not a finding")
+
+
+def test_notes_admit_what_they_missed():
+    """A demo of an extraction step that hides its misses is the wrong demo for this project."""
+    import json
+    blob = json.loads(Path("src/askfirst/baked/notes.json").read_text())
+    assert blob["examples"]
+    for row in blob["examples"]:
+        assert "missed" in row and "invented" in row
+        assert len(row["found"]) <= row["in_the_record"] + len(row["invented"])

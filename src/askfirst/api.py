@@ -32,6 +32,7 @@ BAKE = Path(__file__).parent / "baked"
 BAKED = BAKE / "curve.json"
 CASES = BAKE / "cases.json"
 VARIANTS = BAKE / "variants.json"
+NOTES = BAKE / "notes.json"
 WEIGHTS = BAKE / "ddxplus_softmax.npz"
 PRIORS = BAKE / "ddxplus_priors.json"
 CALIBRATOR = BAKE / "calibrator.json"
@@ -221,6 +222,16 @@ def cases():
         ]
         patient["truth_label"] = schema.label_for_outcome(patient["truth"])
     return baked
+
+
+@app.get("/api/notes")
+def notes():
+    """Prose in, findings out. The extraction needs an open model, so these were produced by one
+    and frozen — the page can show the whole path on a box with no accelerator, and each example
+    carries what the model MISSED as well as what it found."""
+    if not NOTES.exists():
+        raise HTTPException(503, "No notes baked yet. Run scripts/bake_notes.py")
+    return json.loads(NOTES.read_text())
 
 
 @app.get("/api/variants")
