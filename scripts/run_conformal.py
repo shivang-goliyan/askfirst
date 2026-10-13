@@ -41,7 +41,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from askfirst.ablation import argmax  # noqa: E402
 from askfirst.calibrate import CEILING, FLOOR, Calibrator, Completeness, band_of, bucket_of  # noqa: E402
 from askfirst.ddxplus import load_patients  # noqa: E402
-from askfirst.metrics import clustered  # noqa: E402
+from askfirst.metrics import clustered, precision_text  # noqa: E402
 from askfirst.missing import cut, mechanisms  # noqa: E402
 from askfirst.schema import load_schema  # noqa: E402
 from askfirst.softmax import SoftmaxScorer  # noqa: E402
@@ -106,8 +106,9 @@ def show(rows):
             continue
         band = f"[{r['ci'][0]:.1%}, {r['ci'][1]:.1%}]" if r["ci"] else "—"
         mark = "kept" if r["keeps_promise"] else "BROKEN"
-        print(f"  {r['rule']:44} {r['precision']:>10.1%} {r['coverage']:>10.1%}   "
-              f"{band:>18}  {mark}")
+        hits = round(r["precision"] * r["answered"])
+        print(f"  {r['rule']:44} {precision_text(hits, r['answered']):>10} "
+              f"{r['coverage']:>10.1%}   {band:>18}  {mark}")
 
 
 def rules_on(fit, test, patients, rates, encode):

@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from askfirst.ablation import argmax  # noqa: E402
 from askfirst.calibrate import FLOOR, Calibrator, Completeness  # noqa: E402
 from askfirst.ddxplus import load_patients  # noqa: E402
-from askfirst.metrics import ece, reliability, wilson  # noqa: E402
+from askfirst.metrics import ece, precision_text, reliability, wilson  # noqa: E402
 from askfirst.missing import cut, mechanisms  # noqa: E402
 from askfirst.schema import load_schema  # noqa: E402
 from askfirst.softmax import SoftmaxScorer  # noqa: E402
@@ -99,8 +99,8 @@ def table(name, rows_by_level, decide, target):
         # only call it a miss when the interval says so. A handful of answered cases cannot
         # break a promise, and flagging them as though they could is its own kind of dishonesty.
         flag = "  <- misses the target" if hi < target and len(answered) >= 30 else ""
-        print(f"  {frac:>8.0%} {precision:>11.1%} {len(answered) / len(rows):>10.1%} "
-              f"{len(answered):>9}{flag}")
+        print(f"  {frac:>8.0%} {precision_text(sum(answered), len(answered)):>11} "
+              f"{len(answered) / len(rows):>10.1%} {len(answered):>9}{flag}")
         out[str(frac)] = {"precision": round(precision, 4),
                           "coverage": round(len(answered) / len(rows), 4),
                           "answered": len(answered),
@@ -197,9 +197,10 @@ def main(path):
                               "wrong": len(every) - loose},
     }
     print(f"\nA mixed stream, nobody saying how complete anything is ({len(every)} records):\n")
-    print(f"  answering everything        {loose / len(every):>7.1%} right, "
+    print(f"  answering everything        {precision_text(loose, len(every)):>9} right, "
           f"{len(every) - loose:>5} wrong")
-    print(f"  under this rule             {mixed['precision']:>7.1%} right, "
+    print(f"  under this rule             "
+          f"{precision_text(len(answered) - mixed['wrong'], len(answered)):>9} right, "
           f"{mixed['wrong']:>5} wrong, on {mixed['coverage']:.1%} of cases")
 
     calibrator.save(BAKE / "calibrator.json")

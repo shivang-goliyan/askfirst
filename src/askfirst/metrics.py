@@ -89,3 +89,20 @@ def clustered(answered, patients, draws=400, seed=19):
             spread.append(hits / seen)
     spread.sort()
     return spread[int(0.025 * len(spread))], spread[int(0.975 * len(spread)) - 1]
+
+
+def precision_text(hits, n, places=1):
+    """A precision, printed so it never reads as a guarantee.
+
+    With the scorer refitted on thinned records the headline became 5 wrong answers in 13,743,
+    and `f"{0.9996:.1%}"` renders that as "100.0%". "100% right" is the one sentence this
+    product must never print, so a figure that would round to it gets more decimals, and a
+    figure that really is every-single-one gets a count instead of a percentage — because a
+    hundred percent of a sample is a sample, not a promise."""
+    if n == 0:
+        return "nothing answered"
+    if hits >= n:
+        return f"{n:,} of {n:,}"
+    while round(hits / n * 100, places) >= 100.0:
+        places += 1
+    return f"{hits / n * 100:.{places}f}%"

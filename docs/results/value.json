@@ -13,148 +13,148 @@
  "sweep": [
   {
    "ratio": 2,
-   "target": 0.5,
-   "cost": 10.966380952380952,
-   "coverage": 0.49905238095238097,
-   "wrong": 4974,
-   "answer_all": 13.22152380952381,
+   "target": 0.0,
+   "cost": 7.038666666666667,
+   "coverage": 1.0,
+   "wrong": 36953,
+   "answer_all": 7.038666666666667,
    "refuse_all": 20.0
   },
   {
    "ratio": 5,
-   "target": 0.8,
-   "cost": 12.091809523809523,
-   "coverage": 0.4486,
-   "wrong": 2234,
-   "answer_all": 33.05380952380953,
+   "target": 0.7,
+   "cost": 10.546380952380952,
+   "coverage": 0.49287142857142857,
+   "wrong": 848,
+   "answer_all": 17.596666666666668,
    "refuse_all": 20.0
   },
   {
    "ratio": 20,
-   "target": 0.95,
-   "cost": 13.646952380952381,
-   "coverage": 0.35222380952380955,
-   "wrong": 363,
-   "answer_all": 132.2152380952381,
+   "target": 0.9,
+   "cost": 10.955428571428572,
+   "coverage": 0.4648,
+   "wrong": 132,
+   "answer_all": 70.38666666666667,
    "refuse_all": 20.0
   },
   {
    "ratio": 50,
-   "target": 0.98,
-   "cost": 14.247238095238096,
-   "coverage": 0.31001904761904764,
-   "wrong": 94,
-   "answer_all": 330.53809523809525,
+   "target": 0.95,
+   "cost": 11.042095238095238,
+   "coverage": 0.4545619047619048,
+   "wrong": 28,
+   "answer_all": 175.96666666666667,
    "refuse_all": 20.0
   },
   {
    "ratio": 100,
-   "target": 0.99,
-   "cost": 14.641904761904762,
-   "coverage": 0.2917142857142857,
-   "wrong": 50,
-   "answer_all": 661.0761904761905,
+   "target": 0.98,
+   "cost": 11.14847619047619,
+   "coverage": 0.44733809523809526,
+   "wrong": 10,
+   "answer_all": 351.93333333333334,
    "refuse_all": 20.0
   },
   {
    "ratio": 211,
-   "target": 0.995,
-   "cost": 15.051904761904762,
-   "coverage": 0.2815666666666667,
-   "wrong": 34,
-   "answer_all": 1394.8707619047618,
+   "target": 0.99,
+   "cost": 11.191238095238095,
+   "coverage": 0.4444571428571429,
+   "wrong": 4,
+   "answer_all": 742.5793333333334,
    "refuse_all": 20.0
   },
   {
    "ratio": 500,
    "target": 0.995,
-   "cost": 15.987714285714286,
-   "coverage": 0.2815666666666667,
-   "wrong": 34,
-   "answer_all": 3305.3809523809523,
+   "cost": 11.279428571428571,
+   "coverage": 0.44317142857142855,
+   "wrong": 3,
+   "answer_all": 1759.6666666666667,
    "refuse_all": 20.0
   },
   {
    "ratio": 1000,
    "target": 0.995,
-   "cost": 17.606761904761903,
-   "coverage": 0.2815666666666667,
-   "wrong": 34,
-   "answer_all": 6610.761904761905,
+   "cost": 11.422285714285714,
+   "coverage": 0.44317142857142855,
+   "wrong": 3,
+   "answer_all": 3519.3333333333335,
    "refuse_all": 20.0
   },
   {
    "ratio": 4000,
-   "target": 1.01,
-   "cost": 20.0,
-   "coverage": 0.0,
-   "wrong": 0,
-   "answer_all": 26443.04761904762,
+   "target": 0.995,
+   "cost": 12.279428571428571,
+   "coverage": 0.44317142857142855,
+   "wrong": 3,
+   "answer_all": 14077.333333333334,
    "refuse_all": 20.0
   },
   {
    "ratio": 8351,
-   "target": 1.01,
-   "cost": 20.0,
-   "coverage": 0.0,
-   "wrong": 0,
-   "answer_all": 55206.47266666667,
+   "target": 0.995,
+   "cost": 13.522571428571428,
+   "coverage": 0.44317142857142855,
+   "wrong": 3,
+   "answer_all": 29389.952666666668,
    "refuse_all": 20.0
   }
  ],
  "promises": [
   {
    "target": 0.8,
-   "precision": 0.9763,
-   "coverage": 0.4486,
-   "wrong_per_1000": 10.64,
+   "precision": 0.9957,
+   "coverage": 0.48,
+   "wrong_per_1000": 2.07,
    "ci": [
-    0.9742,
-    0.9781
+    0.9948,
+    0.9964
    ],
    "ci_kind": "bootstrap over patients"
   },
   {
    "target": 0.9,
-   "precision": 0.9885,
-   "coverage": 0.3992,
-   "wrong_per_1000": 4.61,
+   "precision": 0.9986,
+   "coverage": 0.4648,
+   "wrong_per_1000": 0.63,
    "ci": [
-    0.9868,
-    0.9899
+    0.9983,
+    0.999
    ],
    "ci_kind": "bootstrap over patients"
   },
   {
    "target": 0.95,
-   "precision": 0.9951,
-   "coverage": 0.3522,
-   "wrong_per_1000": 1.73,
+   "precision": 0.9997,
+   "coverage": 0.4546,
+   "wrong_per_1000": 0.13,
    "ci": [
-    0.994,
-    0.9961
+    0.9996,
+    0.9998
    ],
    "ci_kind": "bootstrap over patients"
   },
   {
    "target": 0.98,
-   "precision": 0.9986,
-   "coverage": 0.31,
-   "wrong_per_1000": 0.45,
+   "precision": 0.9999,
+   "coverage": 0.4473,
+   "wrong_per_1000": 0.05,
    "ci": [
-    0.9981,
-    0.9989
+    0.9998,
+    1.0
    ],
    "ci_kind": "bootstrap over patients"
   },
   {
    "target": 0.99,
-   "precision": 0.9992,
-   "coverage": 0.2917,
-   "wrong_per_1000": 0.24,
+   "precision": 1.0,
+   "coverage": 0.4445,
+   "wrong_per_1000": 0.02,
    "ci": [
-    0.9989,
-    0.9994
+    0.9999,
+    1.0
    ],
    "ci_kind": "bootstrap over patients"
   }

@@ -1,5 +1,16 @@
 # The confidence was not a currency, and the page was asking the wrong person — 13 October 2026
 
+> **Measured against the previous scorer.** On 14 October the scorer was refitted on records with
+> holes in them, and the artifact this file reads from has been regenerated, so figures in the
+> prose below may disagree with the JSON beside them. The prose is left as the record of what was
+> measured when. What moved, and what it cost the argument, is in
+> `2026-10-14-the-scorer-now-expects-holes.md`.
+>
+> **The motivating number is also smaller.** "40 points underconfident at 40% evidence" is 8.2
+> points once the scorer has seen holes, so most of that gap was a training bug rather than a
+> property of confidence under missingness. What survives is that one raw threshold still does not
+> transfer across completeness.
+
 The completeness grid is the headline result: how much to refuse depends on how much of the
 record is in, by a factor of fifty. The app implemented that by **asking the visitor how complete
 their record was** and reading the threshold off the curve for that level.

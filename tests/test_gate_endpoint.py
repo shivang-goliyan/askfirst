@@ -92,13 +92,17 @@ def test_fitted_scorer_uses_its_own():
 
 
 def test_readme_contrast_still_holds():
-    """The README prints two numbers off this endpoint to make its central argument. If a
-    refitted calibrator moves them, the README is wrong and this is how we find out."""
+    """The README makes its central argument out of this endpoint: one confidence, two scorers,
+    opposite decisions. Refitting the scorer already killed the first version of that table, so
+    this reads it back off the live endpoint rather than trusting the prose."""
     readme = (Path(__file__).parent.parent / "README.md").read_text()
-    for scorer in ("softmax", "example-bayes"):
-        chance = ask(confidence=0.5, scorer=scorer)["precision_promise"]["chance_right"]
-        assert f"{chance * 100:.1f}%" in readme, (
-            f"README does not quote {chance * 100:.1f}% for {scorer} at confidence 0.5")
+    ours = ask(confidence=0.8, scorer="softmax")
+    theirs = ask(confidence=0.8, scorer="example-bayes")
+    assert ours["answering"] is False and theirs["answering"] is True, (
+        "the same confidence no longer produces opposite decisions, so the README is wrong")
+    chance = ours["precision_promise"]["chance_right"]
+    assert f"{chance * 100:.1f}%" in readme, (
+        f"README does not quote {chance * 100:.1f}% for the softmax at confidence 0.8")
 
 
 def test_anonymous_caller_gets_nothing():

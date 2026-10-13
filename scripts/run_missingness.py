@@ -147,8 +147,25 @@ def main(path):
                            "answered": len(answered)})
             shown = f"{got:.1%}" if got else "silent"
             print(f"  {has_pattern:>20} {knows:>36} {shown:>9}")
-    print(f"\n  Each ingredient helps a little and together they do not reach {TARGET:.0%}. This cell")
-    print("  is the honest limit of the method, not a thing we fixed.")
+    # This sentence used to be hardcoded, and it said the cell was the honest limit of the
+    # method. Then the scorer was refitted on records with holes in it and every arm of the
+    # ladder cleared the target, while the prose underneath went on calling it a limit. A
+    # conclusion that cannot change when the numbers do is not a conclusion.
+    live = [row for row in ladder if row["precision"] is not None]
+    best = max((row["precision"] for row in live), default=None)
+    if best is None:
+        print("\n  Every arm of that ladder goes silent, which is the floor working.")
+    elif best < TARGET:
+        print(f"\n  Each ingredient helps a little and together they reach {best:.1%}, short of "
+              f"the {TARGET:.0%} promised.")
+        print("  This cell is the honest limit of the method, not a thing we fixed.")
+    else:
+        worst = min(row["precision"] for row in live)
+        print(f"\n  Every arm of that ladder now clears {TARGET:.0%} — {worst:.1%} to {best:.1%}.")
+        print("  This cell was the honest limit of the method until the scorer was refitted on")
+        print("  records with holes in them; it is no longer the binding one. Neither ingredient")
+        print("  is doing the work here, and the earlier version of this script asserted the")
+        print("  opposite conclusion in prose that could not change when the numbers did.")
 
     OUT.write_text(json.dumps({
         "target": TARGET, "floor": FLOOR, "cases": len(test), "held_out": HELD_OUT,

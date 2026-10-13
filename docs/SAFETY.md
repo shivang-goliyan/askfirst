@@ -86,7 +86,7 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
   line is rather than leaving it vague.
 - DDXPlus is rule-based synthetic data, so recovering a deleted field may partly mean recovering
   the generator. MedQA was pre-registered as the cross-check and **was not run**, so nothing here is evidence that the method survives a different dataset (`docs/results/2026-10-13-the-cross-check-we-did-not-run.md`).
-- The question-ranking half now **is** measured useful — 72.3% against 43.7% for asking at random,
+- The question-ranking half now **is** measured useful — 88.8% against 78.5% for asking at random,
   with one question from three findings — but only after the principled objective was thrown out:
   ranking by expected information gain scored *worse than asking nothing at all*. The working rule
   is a property of the question, not of the model's beliefs.
@@ -107,7 +107,7 @@ Coverage of useful output is 100%. Coverage of confident wrong answers is what g
 - It will never print "100% likely to be right". The calibration's top block sits at exactly 1.0
   and the display is capped below it on purpose.
 - **Records do not go missing at random, and we stopped pretending they do.** Seven realistic
-  patterns measured; at a fifth of a record, accuracy runs from 19.2% to 73.2% depending only on
+  patterns measured; at a fifth of a record, accuracy runs from 8.9% to 96.4% depending only on
   which fifth. The calibration is fitted against all seven. Anyone deploying this should refit it
   against the way records go short where it runs — the cost of not doing so is three points of
   precision on a promise of ninety-five, measured.

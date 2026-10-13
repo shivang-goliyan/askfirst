@@ -1,5 +1,11 @@
 # Is it a layer, or is it just our model? — 13 October 2026
 
+> **Measured against the previous scorer.** On 14 October the scorer was refitted on records with
+> holes in them, and the artifact this file reads from has been regenerated, so figures in the
+> prose below may disagree with the JSON beside them. The prose is left as the record of what was
+> measured when. What moved, and what it cost the argument, is in
+> `2026-10-14-the-scorer-now-expects-holes.md`.
+
 `scripts/run_portability.py` · `docs/results/portability.json`
 
 ## The question

@@ -51,3 +51,30 @@ def cut(patients, frac, key, seed=13):
             "true_n": len(patient["evidences"]),
         })
     return out
+
+
+def augment(patients, ways, copies=1, levels=(0.6, 0.4, 0.2, 0.1), seed=5):
+    """Masked copies of each patient, for training a scorer that will be handed thin records.
+
+    The scorer used to be fitted on complete records and then asked about records with holes in
+    them, where a deleted finding is represented exactly like one that was asked about and
+    denied. That is a mismatch we created: measured, it costs 9 points of top-1 at 40% of a
+    record and 30 points at a fifth, and fixing it costs a tenth of a point on complete records.
+
+    `ways` is deliberately an argument rather than `mechanisms(...)` called in here. Training on
+    all seven realistic patterns makes a slightly better model and makes every
+    leave-one-pattern-out experiment weaker, because the scorer would have seen the pattern the
+    post-processors are being asked to generalise to. Passing uniform thinning alone keeps the
+    scorer agnostic, so those folds still test the whole pipeline — and it gets nearly all of
+    the gain."""
+    rng = random.Random(seed)
+    keys = list(ways.values())
+    out = []
+    for c in range(copies):
+        for i, patient in enumerate(patients):
+            frac = rng.choice(levels)
+            key = keys[rng.randrange(len(keys))]
+            short = cut([patient], frac, key, seed=seed + c * 100003 + i)[0]
+            out.append({"evidences": short["evidences"], "pathology": short["pathology"],
+                        "age": patient.get("age"), "sex": patient.get("sex")})
+    return out

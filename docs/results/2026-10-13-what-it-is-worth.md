@@ -1,5 +1,11 @@
 # The prices were invented, so we went and looked them up — 13 October 2026
 
+> **Measured against the previous scorer.** On 14 October the scorer was refitted on records with
+> holes in them, and the artifact this file reads from has been regenerated, so figures in the
+> prose below may disagree with the JSON beside them. The prose is left as the record of what was
+> measured when. What moved, and what it cost the argument, is in
+> `2026-10-14-the-scorer-now-expects-holes.md`.
+
 Every economics number in this repo priced a confident wrong answer at 100 and a handover at 5.
 Those were placeholders. Nobody argued for them, and the ratio between them is the only thing any
 conclusion depends on. So: what does the published literature imply the ratio is?

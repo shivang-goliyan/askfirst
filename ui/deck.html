@@ -60,8 +60,8 @@
   <p class="lede">It works out how much of a record is missing — without being told — and refuses
   to answer when there is not enough there.</p>
   <table>
-    <tr><td>30,000 held-out records, completeness undeclared</td><td class="bad">9,874 wrong</td><td class="key"><strong>45 wrong</strong></td></tr>
-    <tr><td>of the queue it takes off a person</td><td>—</td><td><strong>35%</strong></td></tr>
+    <tr><td>30,000 held-out records, completeness undeclared</td><td class="bad">5,460 wrong</td><td class="key"><strong>5 wrong</strong></td></tr>
+    <tr><td>of the queue it takes off a person</td><td>—</td><td><strong>45.5%</strong></td></tr>
     <tr><td>cost to serve, per 1,000 assessments</td><td>—</td><td><strong>$0.0004</strong></td></tr>
   </table>
   <p class="dim">Every number in this deck regenerates from public data with
@@ -151,12 +151,12 @@
   record is missing</strong> (mean absolute error 0.057) and refuse below a floor whatever the confidence says.</p>
   <table>
     <tr><th>30,000 records, completeness undeclared</th><th>right</th><th>wrong</th><th>answered</th></tr>
-    <tr><td>answer everything</td><td>67.1%</td><td class="bad">9,874</td><td>100%</td></tr>
-    <tr class="key"><td>this rule</td><td>99.6%</td><td>45</td><td>35%</td></tr>
+    <tr><td>answer everything</td><td>81.8%</td><td class="bad">5,460</td><td>100%</td></tr>
+    <tr class="key"><td>this rule</td><td>99.96%</td><td>5</td><td>45.8%</td></tr>
   </table>
   <p class="dim">It now says what it thinks instead of asking: <em>"only about 23% of a record —
   too little to judge the answer by, whatever the confidence says."</em> Tested against seven ways
-  a record goes short, not just the convenient one: the promise is tested in 22 of the 35 cells — the other 13 go silent, which is the floor working rather than a promise kept — and <strong>20 of the 22 clear it</strong>. One lands at 93.6% on 547 answers, and one answered a single case and got it wrong.</p>
+  a record goes short, not just the convenient one: the promise is tested in 26 of the 35 cells — the other 9 go silent, which is the floor working rather than a promise kept — and <strong>24 of 26 clear it</strong>. The two that do not answered 19 cases and 1 case, so neither carries weight.</p>
   <div class="src">docs/results/2026-10-13-the-page-stops-asking.md</div>
 </section>
 
@@ -225,19 +225,21 @@
 
 <section>
   <div class="tag">What we got wrong, with dates on it · 2 of 2</div>
-  <h2>Four ranking objectives. Three of them lost to a coin.</h2>
+  <h2>A cheap property of the question beats the principled objective — by three points, not thirty.</h2>
   <table>
     <tr><th>what we ranked questions by</th><th>score</th><th>against</th></tr>
-    <tr><td>flip probability — most likely to change the answer</td><td class="bad">18.8%</td><td>26.0% random</td></tr>
-    <tr><td>pathology-conditioned discrimination</td><td class="bad">14.7%</td><td>20.0% at k=10</td></tr>
-    <tr><td><strong>expected information gain</strong> — the literature's, implemented faithfully</td><td class="bad">41.3%</td><td>43.7% random, 42.7% silence</td></tr>
-    <tr class="key"><td>how many answers the question even admits</td><td>72.3%</td><td>43.7% random</td></tr>
+    <tr><td>asking nothing at all</td><td>77.8%</td><td>78.5% random</td></tr>
+    <tr><td><strong>expected information gain</strong> — the literature's, implemented faithfully</td><td>85.5%</td><td>77.8% silence</td></tr>
+    <tr class="key"><td>breadth &times; answer rate — what we ship</td><td>88.8%</td><td>90.1% oracle</td></tr>
   </table>
-  <p>The winner is a property of the question, not of anything the model believes. That pattern is
-  the most reliable finding in this project.</p>
+  <p>We published this as <em>"information gain loses to a coin and then to silence"</em> — 41.3%
+  against 43.7%. <strong>That is retracted.</strong> It was an artifact of a scorer that had never
+  seen a thin record, so every entropy computed from its posterior was wrong on exactly the sparse
+  cases where advice matters. Refitting the scorer on records with holes moved information gain
+  from 41.3% to 85.5%. The measurement was broken, not the objective.</p>
   <p><strong>And our central assumption was that records go missing at random. They do not.</strong>
   Cut the same number of findings seven realistic ways and accuracy at a fifth of a record runs
-  from <span class="bad">19.2%</span> to <span class="hot">73.2%</span> depending only on which
+  from <span class="bad">8.9%</span> to <span class="hot">96.4%</span> depending only on which
   fifth. Our refusal rule broke on the likeliest pattern of all and we
   <span class="bad">could not fully fix it</span>: fitting against that pattern and adding a
   feature for how unusual the findings are takes it from 91.5% to 93.6%, still short of the 95%
@@ -336,8 +338,8 @@
   liability.</p>
   <table>
     <tr><th>per 1,000 records, at a 95% bar</th><th></th></tr>
-    <tr><td>never reach a person</td><td><strong>352</strong></td></tr>
-    <tr><td>review capacity returned, at C$10–27 a call</td><td><strong>C$3,500 – C$9,500</strong></td></tr>
+    <tr><td>never reach a person</td><td><strong>455</strong></td></tr>
+    <tr><td>review capacity returned, at C$10–27 a call</td><td><strong>C$4,546 – C$12,274</strong></td></tr>
     <tr class="key"><td>cost to serve — 47 ms of CPU, no GPU, no model call</td><td><strong>$0.0004</strong></td></tr>
   </table>
   <p class="lede">Price it at C$500 per thousand: a 7–19× return for them, and a gross margin a

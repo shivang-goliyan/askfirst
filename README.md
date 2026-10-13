@@ -12,7 +12,7 @@ So we deleted four fifths of a patient record and asked an open model again. **I
 12%. A classifier fitted to the same data lost 83% of its confidence on the same deletion.** That
 gap is the product: askfirst works out how much of a record is missing *without being told*, to
 off by 0.057 on average, and refuses below a floor whatever the confidence says. On **30,000 held-out records
-of undeclared completeness it answers 35% of them at 99.6% — 45 wrong instead of 9,874** — and
+of undeclared completeness it answers 45.8% of them at 99.96% — 5 wrong instead of 5,460** — and
 hands the rest to a person with a ranked list of what to go and get.
 
 Then we stopped giving it fields. Feeding it **prose**, through a reader that loses 28% of the
@@ -155,7 +155,7 @@ patients, 49 conditions, chance 2.0%:
 On a complete record this product is nearly pointless, and the page says so.
 
 **The advice works, and the principled objective is what was wrong.** One question from a
-three-finding record, 4,000 patients: 42.7% asking nothing, 43.7% asking at random, **72.3%
+three-finding record, 4,000 patients: 77.8% asking nothing, 78.5% asking at random, **88.8%
 asking what the engine says**. Ranking by expected information gain — the objective the
 literature uses, now implemented the way it states it, with P(value | record) taken through the
 outcomes rather than from a population marginal — scores 41.3%, worse than asking nothing at all.
@@ -185,24 +185,28 @@ cannot ask it 208 yes/no questions about a note for the price of one shared pref
 
 ## The page does not ask you how complete your record is
 
-It used to. Measured: the scorer's margin is honest on a complete record and **40 points
-underconfident at 40% evidence**, so a threshold chosen on full records promises 95% precision and
-delivers 48% on a tenth of one. The app now calibrates P(right) against how many findings it has
-in hand, estimates how much of the record is missing to a mean absolute error of 0.057, and refuses outright below a
-floor. On 30,000 records of undeclared completeness it is **99.6% right on the 35% it answers —
-45 wrong, against 9,874** if it answers everything
+It used to, and reading a threshold off a completeness level the visitor declares is the one
+thing a deployment cannot do. The app now calibrates P(right) against how many findings it has in
+hand, estimates how much of the record is missing to a mean absolute error of 0.057, and refuses
+outright below a floor. On 30,000 records of undeclared completeness it is **99.96% right on the
+45.8% it answers — 5 wrong, against 5,460** if it answers everything
 (`docs/results/2026-10-13-the-page-stops-asking.md`).
+
+The original motivation for this was that the margin was **40 points underconfident at 40%
+evidence**. Refitting the scorer on records with holes in them cut that to **8.2 points**, so most
+of it was a bug in how we trained rather than a property of confidence under missingness
+(`docs/results/2026-10-14-the-scorer-now-expects-holes.md`). What survives is the part that
+motivates the gate: one raw threshold still does not transfer. A cut-off chosen on 60%-complete
+records promises 95% and delivers **44.9%** on a tenth of one.
 
 ## Records do not go missing at random
 
 So we stopped assuming they do. The same number of findings removed seven realistic ways — the
 follow-ups never happened, no history was available, the detail went and the screen stayed — and
-at a fifth of a record top-1 runs from **19.2% to 73.2% depending only on which fifth**. The
-calibrated refusal is tested in 22 of the 35 cells — the other 13 go silent. **20 of those 22
-clear 95%**; one lands at 93.6% [91.2%, 95.4%] on 547 answers and one answered a single case and
-got it wrong. It is fitted against all seven patterns; hold the
-likeliest one out of the fit and it breaks by three points, which is the measured cost of
-calibrating against the wrong kind of missingness
+at a fifth of a record top-1 runs from **8.9% to 96.4% depending only on which fifth** — an
+eighty-seven point spread at one nominal completeness. The calibrated refusal is tested in 26 of
+the 35 cells — the other 9 go silent. **24 of those 26 clear 95%**; the two that do not answered
+19 cases and 1 case respectively, so neither carries any weight.
 (`docs/results/2026-10-13-missing-not-at-random.md`).
 
 ## What it is worth, at prices we did not invent
@@ -213,8 +217,8 @@ answer at $4,220–$167,000 — **a ratio of 211:1 to 8,356:1 against our 20:1**
 this repo is conservative. Carried honestly, though, expected-cost minimisation says *switch the
 product off*: above about 4,000:1 the cheapest policy answers nothing and refers everything. That
 is a flaw in the objective — clinicians are finite and the queue has to go somewhere. The number
-that survives is throughput at a fixed bar: **answering everything puts 330.5 wrong answers into
-every 1,000 records; holding a 95% bar puts 1.7 there and still takes 35% of the queue**
+that survives is throughput at a fixed bar: **answering everything puts 176 wrong answers into
+every 1,000 records; holding a 95% bar puts 0.13 there and still takes 45.5% of the queue**
 (`docs/results/2026-10-13-what-it-is-worth.md`).
 
 ## What this is not
@@ -277,22 +281,26 @@ folds, the floor offered to the baselines, and intervals bootstrapped over patie
 
 | fitted on all seven, tested on all seven | precision | queue taken |
 |---|---|---|
-| one global threshold | 94.9% *(misses)* | 57.0% |
-| **a threshold per group (Mondrian partition)** | **96.2%** | **52.9%** |
-| a threshold per group + the same floor | 97.0% | 46.3% |
-| ours: isotonic in-group + the floor | 99.5% | 35.8% |
+| one global threshold | 94.9% *(misses)* | 80.1% |
+| **a threshold per group (Mondrian partition)** | **97.1%** | **74.0%** |
+| a threshold per group + the same floor | 98.2% | 51.4% |
+| ours: isotonic in-group + the floor | 99.9% | 46.6% |
 
-**In distribution the standard tool beats us on coverage** — same bar, seventeen more points.
+**In distribution the standard tool beats us on coverage** — same bar, twenty-seven more points.
 Under shift, across all seven folds, ours is the only rule that keeps the 95% promise every time:
-**7 of 7, worst fold 98.5%**, against 5 of 7 for the per-group threshold (worst 91.3%) and 5 of 7
-when that threshold is given our floor as well (worst 92.7%). Neither piece is sufficient on its
-own — the floor alone keeps 3 of 7.
+**7 of 7, worst fold 99.7%**, against 6 of 7 for the per-group threshold (worst 94.5%) and 6 of 7
+when that threshold is given our floor as well (worst 94.9%).
+
+**And refitting the scorer on records with holes narrowed that gap rather than widening it.** The
+completeness floor on its own went from keeping 3 of 7 folds to keeping 6 of 7; a better-calibrated
+scorer helps the simple rules more than it helps us. Same finding as the three-scorer experiment
+below, arriving from the other direction: the gate is worth most when the model is worst
+(`docs/results/2026-10-14-the-scorer-now-expects-holes.md`).
 
 One row of that experiment costs us something: stop the **raw, uncalibrated margin ranking** at
-exactly our coverage and it is equally precise (99.46% against 99.45%). On *this* scorer the
-calibration is not buying ordering — what it buys is a stopping point chosen *without* seeing the
-answers, and every rule above that had to choose blind, except ours, broke the promise at least
-twice in seven folds. Isolate ordering properly — same eligible pool, same
+exactly our coverage and it is equally precise. On *this* scorer the calibration is not buying
+ordering — what it buys is a stopping point chosen *without* seeing the answers, and every rule
+above that had to choose blind, except ours, broke the promise at least once in seven folds. Isolate ordering properly — same eligible pool, same
 size, only the sort key differing — and it buys **+10.6 points** on an overconfident naive Bayes,
 where the raw ranking breaks the promise and the calibration keeps it, and **nothing** on the
 other two (next section). It buys nothing here because our own scorer already ranks well, which
@@ -318,15 +326,20 @@ and the comparison against it is the point rather than something to avoid:
   systematically removing information from cases.
 - **ALFA** (arXiv 2502.14860) — aligning models to ask better clinical questions.
 - **BALAR / MedClarify** — choose the next question by expected information gain over a
-  predefined question set. **We implemented that objective and measured it losing to a coin —
-  and then to silence:** 41.3% against 43.7% for asking at random and 42.7% for asking nothing at
-  all, one question from a three-finding record, 4,000 held-out patients. It is an expectation
-  taken under the model's own beliefs, and on a sparse record those beliefs are wrong. Our first
-  implementation weighted answers by a population marginal, which is not what they do; computing
-  P(value | record) through the outcomes the way they state it is worth about one point and does
-  not change the result. Ranking
-  instead by how much a question *could* tell you scores 72.3%
-  (`docs/results/2026-10-13-breadth-beats-information.md`).
+  predefined question set. We implemented that objective and measured it **losing to a coin and
+  then to silence**: 41.3% against 43.7% for asking at random and 42.7% for asking nothing at all.
+  **That result is retracted.** It was an artifact of a scorer that had never seen a thin record,
+  so its posterior — and therefore every entropy computed from it — was wrong on exactly the
+  sparse cases where the advice matters. Refit the scorer on records with holes and information
+  gain reaches **85.5%** against 77.8% for asking nothing: clearly useful, and it was the
+  measurement that was broken, not the objective.
+
+  Our ranking still wins — **88.8%** for breadth × answer rate against 85.5% for information gain,
+  one question from a three-finding record, 4,000 held-out patients — but by three points rather
+  than by thirty, and against a baseline that works. The honest claim is now "a cheap property of
+  the question beats the principled objective here", not "the principled objective is wrong"
+  (`docs/results/2026-10-13-breadth-beats-information.md`,
+  `docs/results/2026-10-14-the-scorer-now-expects-holes.md`).
 
 Those methods select from a question set, or prompt the model to ask. askfirst scores every
 *absent* field against the model's own answer distribution and shows what each would settle — but
@@ -507,17 +520,17 @@ standing in for a customer's model: 16,800 rows, and on the 5,040 it never saw i
 of them at 99.5% [99.0%, 100.0%].
 
 The contrast is the argument, and you can see it in two calls to the same endpoint. Same record,
-same confidence of **0.5**:
+same confidence of **0.8**, opposite decisions:
 
-| `"confidence": 0.5` on the same twelve findings | what it is worth |
-|---|---|
-| `"scorer": "softmax"` | **80.2%** likely right |
-| `"scorer": "example-bayes"` | **13.9%** likely right |
+| `"confidence": 0.8` on the same twelve findings | what it is worth | what the gate does |
+|---|---|---|
+| `"scorer": "softmax"` | **65.7%** likely right | **hands over** |
+| `"scorer": "example-bayes"` | top of its fitted range | **answers** |
 
-Sixty-six points apart. At 0.7 it is 88.5% against 27.5%, and at 0.8 the two rules disagree about
-what to *do* — the softmax's 0.8 is still short of a 95% bar at 92.6% while the naive Bayes's 0.8
-is near the top of its own range, because that model almost never gets that confident. One
-number, two unrelated meanings. A threshold holds the number and cannot see which it has.
+Not a difference in a probability — a difference in what to *do* with an identical number. The
+refitted softmax's confidence is honest, so 0.8 really does mean about two thirds. The naive Bayes
+almost never gets that confident, so 0.8 from it is a strong signal. A threshold holds the number
+and cannot see which of those it is holding.
 
 Fitting also replaces the completeness estimator with one fitted to **that operator's** intake:
 on the same record the shipped estimate says 61% present and the example fit says 74%, because
@@ -556,8 +569,8 @@ Meanwhile consumer symptom checkers, re-audited on the same 45 vignettes five ye
 from **85.7% to 51.9%** sensitivity on emergencies while specificity rose 82.1% → 93.3% (*JMIR*
 2022;24(5):e31810). More confident, less safe, in exactly the direction this refuses in.
 
-Per 1,000 records at a 95% bar: **352 never reach a person**, 1.7 are answered wrongly against
-330.5 if everything is answered, **C$3,500–9,500 of review capacity returned**, and a **cost to
+Per 1,000 records at a 95% bar: **455 never reach a person**, 0.13 are answered wrongly against
+176 if everything is answered, **C$4,546–12,274 of review capacity returned**, and a **cost to
 serve of $0.0004** — an assessment is 47 ms of CPU with no GPU and no model call. Priced at C$500
 per thousand that is a 7–19× return for the buyer at close to 100% gross margin.
 

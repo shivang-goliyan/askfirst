@@ -124,8 +124,8 @@ answered** against 67.1% and 9,874.
 The line to say out loud: *the page now tells you what it thinks instead of asking you.*
 
 Then the robustness half: records do not go missing at random, and we tested seven ways they
-actually go short. Accuracy at a fifth of a record runs **19.2% to 73.2%** depending only on which
-fifth. The rule was tested in 22 of the 35 cells, the other 13 going silent, and 20 of the 22 clear 95%; it broke on the likeliest pattern, and fixing it needed
+actually go short. Accuracy at a fifth of a record runs **8.9% to 96.4%** depending only on which
+fifth. The rule was tested in 26 of the 35 cells, the other 9 going silent, and 24 of 26 clear 95%; it broke on the likeliest pattern, and fixing it needed
 the pattern in the fit **and** a feature for how unusual the findings are, and even then it reaches
 only 93.6% against a 95% promise. Say that we could not fully fix it.
 
@@ -158,9 +158,9 @@ on a screen, which is its own kind of signal.
 
 ## 7b — What we got wrong, 2 of 2: the objectives and the assumption
 
-- The table of four ranking objectives, three of them below a coin, ending at 72.3% for the one
+- The table of four ranking objectives, ending at 88.8% for the one
   that needs no beliefs at all.
-- **Records do not go missing at random.** Seven realistic patterns; 19.2% to 73.2% at a fifth of a
+- **Records do not go missing at random.** Seven realistic patterns; 8.9% to 96.4% at a fifth of a
   record. The refusal broke on the likeliest one and we could not fully fix it — 91.5% to 93.6%
   against a 95% promise. An earlier ladder said we had; it came from a scratch script.
 

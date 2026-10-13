@@ -1,5 +1,16 @@
 # The advice works, and the principled objective was the problem — 13 October 2026
 
+> **Measured against the previous scorer.** On 14 October the scorer was refitted on records with
+> holes in them, and the artifact this file reads from has been regenerated, so figures in the
+> prose below may disagree with the JSON beside them. The prose is left as the record of what was
+> measured when. What moved, and what it cost the argument, is in
+> `2026-10-14-the-scorer-now-expects-holes.md`.
+>
+> **This file's central finding is retracted.** Expected information gain losing to a coin and
+> then to silence was an artifact of a scorer that had never seen a thin record. Refitted, it
+> reaches 85.5% against 77.8% for asking nothing. Our ranking still wins, 88.8%, by three points
+> rather than thirty.
+
 Until today the honest position was that the refusal worked and the advice did not. The advice
 half now works, measured, and what fixed it was removing the clever part.
 

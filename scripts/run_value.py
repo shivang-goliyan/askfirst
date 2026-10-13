@@ -39,7 +39,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from askfirst.ablation import argmax  # noqa: E402
 from askfirst.calibrate import FLOOR, Calibrator, Completeness  # noqa: E402
 from askfirst.ddxplus import load_patients  # noqa: E402
-from askfirst.metrics import clustered, wilson  # noqa: E402
+from askfirst.metrics import clustered, precision_text, wilson  # noqa: E402
 from askfirst.missing import cut, mechanisms  # noqa: E402
 from askfirst.schema import load_schema  # noqa: E402
 from askfirst.softmax import SoftmaxScorer  # noqa: E402
@@ -144,7 +144,7 @@ def main(path):
           f"{'clustered on patients':>25}")
     held = []
     loose = sum(1 for r in rows if r["right"])
-    print(f"  {'answer all':>9} {loose / n:>9.1%} {1.0:>16.1%} "
+    print(f"  {'answer all':>9} {precision_text(loose, n):>9} {1.0:>16.1%} "
           f"{(n - loose) / n * 1000:>17.1f} {'':>25}")
     for target in (0.8, 0.9, 0.95, 0.98, 0.99):
         answered, referred = policy(rows, target)
@@ -158,7 +158,7 @@ def main(path):
                      "wrong_per_1000": round((len(answered) - right) / n * 1000, 2),
                      "ci": [round(wlo, 4), round(whi, 4)],
                      "ci_kind": "bootstrap over patients"})
-        print(f"  {target:>9.0%} {prec:>9.1%} {len(answered) / n:>16.1%} "
+        print(f"  {target:>9.0%} {precision_text(right, len(answered)):>9} {len(answered) / n:>16.1%} "
               f"{(len(answered) - right) / n * 1000:>17.1f} "
               f"{f'[{wlo:.1%}, {whi:.1%}]':>25}")
 

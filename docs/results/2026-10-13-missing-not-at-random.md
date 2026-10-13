@@ -1,5 +1,15 @@
 # "20% of a record" is not one thing — 13 October 2026
 
+> **Measured against the previous scorer.** On 14 October the scorer was refitted on records with
+> holes in them, and the artifact this file reads from has been regenerated, so figures in the
+> prose below may disagree with the JSON beside them. The prose is left as the record of what was
+> measured when. What moved, and what it cost the argument, is in
+> `2026-10-14-the-scorer-now-expects-holes.md`.
+>
+> **And the cell this file calls the honest limit of the method is no longer failing.** Every arm
+> of the ladder now clears the target (99.8-99.9%, from 91.5-93.6%). The limit was in how the
+> scorer was trained, not in the method.
+
 Every measurement in this repo until now hid evidence **uniformly at random**. That is the
 easiest possible assumption and it is not how anything goes missing. An intake that runs out of
 time gets through the standard questions and not the follow-ups. A walk-in has symptoms and no

@@ -65,13 +65,12 @@ it chooses to answer** — against 67.1% and 9,874 wrong if it answers everythin
 **And it was tested against records that do not go missing at random**, which is what every
 version of this did before. Remove the same number of findings seven realistic ways — the
 follow-ups never happened, no history was available, the detail went and the screen stayed — and
-accuracy at a fifth of a record runs from 19.2% to 73.2% depending only on which fifth. The
-refusal rule was tested in 22 of 35 cells, the other 13 going silent, and keeps its promise in 20
-of the 22. The two it does not are in the write-up: 93.6% on 547 answers, and a cell that
-answered one case and got it wrong.
+accuracy at a fifth of a record runs from 8.9% to 96.4% depending only on which fifth. The
+refusal rule was tested in 26 of 35 cells, the other 9 going silent, and keeps its promise in 24
+of 26. The two it does not answered 19 cases and 1 case, so neither carries weight.
 
 **The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:
-42.7% without it, 43.7% asking at random, **72.3% asking what the engine says**. The ranking rule
+77.8% without it, 78.5% asking at random, **88.8% asking what the engine says**. The ranking rule
 is `log2(number of answers the question admits)`, weighted by how often the question gets answered
 at all. In clinical terms: characterise what you already know before asking about one more symptom.
 
