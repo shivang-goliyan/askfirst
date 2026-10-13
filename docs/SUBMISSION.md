@@ -73,6 +73,15 @@ refusal rule keeps its promise in 33 of 35 cells, and the two it does not are in
 is `log2(number of answers the question admits)`, weighted by how often the question gets answered
 at all. In clinical terms: characterise what you already know before asking about one more symptom.
 
+**What it is worth.** The prices in the cost model are no longer ours: a triage call at C$10–27
+(CCOHTA 2003), and the expected cost of a confident wrong answer from a 4.4% serious-harm rate
+against an 11.1% error rate on dangerous presentations (Newman-Toker, *BMJ Qual Saf* 2024) times a
+$422,000 average paid claim (CRICO). That makes a wrong answer worth 211 to 8,356 handovers, not
+the 20 we had assumed. Carried honestly the objective breaks — above about 4,000:1 the cheapest
+policy is to answer nothing — which is why the product sells throughput at a fixed quality bar
+instead: **answering everything puts 330.5 wrong answers into every 1,000 records; holding a 95%
+bar puts 1.7 there and still takes 35% of the queue off a person's desk.**
+
 **What we got wrong, with dates on it.** Four ranking objectives were tried and three lost to a
 coin — including expected information gain, the objective the literature uses, which measured worse
 than asking nothing at all (39.9% against 42.9%). Then three bugs turned up in that measurement,

@@ -85,10 +85,15 @@ a time, until it stops answering.
 > With a fifth of the evidence — about three findings — that same model is thirty-nine point nine
 > percent right. Refusing the least confident cases takes it back to seventy-three point five.
 >
-> Price it, a confident wrong decision at a hundred, a referral at five, and the interesting part
-> isn't the saving. It's that the right amount to refuse changes fifty-fold: answer ninety-eight
-> percent of complete records, two percent of nearly empty ones. That's a setting, and we can tell
-> you where to put it.
+> And the prices aren't ours. A triage call is ten to twenty-seven dollars; a confident wrong
+> answer, costed from the published harm rate and the average paid claim, is four thousand to a
+> hundred and sixty-seven thousand. So a wrong answer is worth two hundred handovers, not twenty.
+>
+> Which breaks the objective, honestly: above about four thousand to one, the cheapest policy is
+> to answer nothing at all. Clinicians are finite, so that's not an option. Here's the number that
+> survives. Answer everything and you put three hundred and thirty wrong answers into every
+> thousand records. Hold a ninety-five percent bar and you put one point seven — and still take a
+> third of the queue off a person's desk.
 
 **2:20-2:40 — the second domain**
 

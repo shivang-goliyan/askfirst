@@ -25,6 +25,19 @@ pattern of all. Hold that pattern out of the fit and it breaks properly: 92.5% [
 Fixing it needed both the pattern in the fit *and* a feature for how unusual the findings are —
 either alone is worse than neither. Write-up: `results/2026-10-13-missing-not-at-random.md`.
 
+**The prices were made up, so they got looked up** (13 Oct, 14:30). Every economics figure here
+priced a wrong answer at 100 and a handover at 5, and nobody had argued for either. Published:
+a triage call is C$10–27 (CCOHTA 2003); the expected cost of a confident wrong answer is
+P(harm|error) × cost of a harm = 4.4%/11.1% on dangerous presentations (Newman-Toker, BMJ Qual Saf
+2024) × $422,000 average paid claim (CRICO 2009–13) → **$4,220 to $167,000, a ratio of 211:1 to
+8,356:1 against our 20:1.** Every saving published here is therefore conservative.
+
+Then the finding: **above about 4,000:1 — inside that band — expected-cost minimisation says
+answer nothing and refer everything.** The objective is wrong, not the product. The number to sell
+on is throughput at a bar: answering everything puts **330.5 wrong answers per 1,000 records**;
+holding a 95% bar puts **1.7** and still takes 35.2% of the queue. Write-up:
+`results/2026-10-13-what-it-is-worth.md`.
+
 Module B is on the page too, baked: all eleven contested CIViC groups the ESM-2 line can speak on,
 with the strength it is granted as a dial. `#level=B` links straight to the slide-worthy state —
 5 of 11 calls change and the prediction lands on top every time.

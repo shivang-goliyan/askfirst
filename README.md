@@ -157,6 +157,18 @@ likeliest one out of the fit and it breaks by three points, which is the measure
 calibrating against the wrong kind of missingness
 (`docs/results/2026-10-13-missing-not-at-random.md`).
 
+## What it is worth, at prices we did not invent
+
+The economics here used to price a wrong answer at 100 and a handover at 5, with no argument for
+either. Published figures put a triage call at C$10–27 and the expected cost of a confident wrong
+answer at $4,220–$167,000 — **a ratio of 211:1 to 8,356:1 against our 20:1**, so every saving in
+this repo is conservative. Carried honestly, though, expected-cost minimisation says *switch the
+product off*: above about 4,000:1 the cheapest policy answers nothing and refers everything. That
+is a flaw in the objective — clinicians are finite and the queue has to go somewhere. The number
+that survives is throughput at a fixed bar: **answering everything puts 330.5 wrong answers into
+every 1,000 records; holding a 95% bar puts 1.7 there and still takes 35% of the queue**
+(`docs/results/2026-10-13-what-it-is-worth.md`).
+
 ## Data
 
 Everything shipped is redistributable. See [docs/DATA.md](docs/DATA.md).

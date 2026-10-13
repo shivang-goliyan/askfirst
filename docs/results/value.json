@@ -1,0 +1,157 @@
+{
+ "refer": 20.0,
+ "harm": 422000.0,
+ "harm_rate": [
+  0.01,
+  0.396
+ ],
+ "records": 210000,
+ "ratio_band": [
+  211.0,
+  8355.6
+ ],
+ "sweep": [
+  {
+   "ratio": 2,
+   "target": 0.5,
+   "cost": 10.966380952380952,
+   "coverage": 0.49905238095238097,
+   "wrong": 4974,
+   "answer_all": 13.22152380952381,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 5,
+   "target": 0.8,
+   "cost": 12.091809523809523,
+   "coverage": 0.4486,
+   "wrong": 2234,
+   "answer_all": 33.05380952380953,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 20,
+   "target": 0.95,
+   "cost": 13.646952380952381,
+   "coverage": 0.35222380952380955,
+   "wrong": 363,
+   "answer_all": 132.2152380952381,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 50,
+   "target": 0.98,
+   "cost": 14.247238095238096,
+   "coverage": 0.31001904761904764,
+   "wrong": 94,
+   "answer_all": 330.53809523809525,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 100,
+   "target": 0.99,
+   "cost": 14.641904761904762,
+   "coverage": 0.2917142857142857,
+   "wrong": 50,
+   "answer_all": 661.0761904761905,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 211,
+   "target": 0.995,
+   "cost": 15.051904761904762,
+   "coverage": 0.2815666666666667,
+   "wrong": 34,
+   "answer_all": 1394.8707619047618,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 500,
+   "target": 0.995,
+   "cost": 15.987714285714286,
+   "coverage": 0.2815666666666667,
+   "wrong": 34,
+   "answer_all": 3305.3809523809523,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 1000,
+   "target": 0.995,
+   "cost": 17.606761904761903,
+   "coverage": 0.2815666666666667,
+   "wrong": 34,
+   "answer_all": 6610.761904761905,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 4000,
+   "target": 1.01,
+   "cost": 20.0,
+   "coverage": 0.0,
+   "wrong": 0,
+   "answer_all": 26443.04761904762,
+   "refuse_all": 20.0
+  },
+  {
+   "ratio": 8351,
+   "target": 1.01,
+   "cost": 20.0,
+   "coverage": 0.0,
+   "wrong": 0,
+   "answer_all": 55206.47266666667,
+   "refuse_all": 20.0
+  }
+ ],
+ "promises": [
+  {
+   "target": 0.8,
+   "precision": 0.9763,
+   "coverage": 0.4486,
+   "wrong_per_1000": 10.64,
+   "ci": [
+    0.9753,
+    0.9772
+   ]
+  },
+  {
+   "target": 0.9,
+   "precision": 0.9885,
+   "coverage": 0.3992,
+   "wrong_per_1000": 4.61,
+   "ci": [
+    0.9877,
+    0.9892
+   ]
+  },
+  {
+   "target": 0.95,
+   "precision": 0.9951,
+   "coverage": 0.3522,
+   "wrong_per_1000": 1.73,
+   "ci": [
+    0.9946,
+    0.9956
+   ]
+  },
+  {
+   "target": 0.98,
+   "precision": 0.9986,
+   "coverage": 0.31,
+   "wrong_per_1000": 0.45,
+   "ci": [
+    0.9982,
+    0.9988
+   ]
+  },
+  {
+   "target": 0.99,
+   "precision": 0.9992,
+   "coverage": 0.2917,
+   "wrong_per_1000": 0.24,
+   "ci": [
+    0.9989,
+    0.9994
+   ]
+  }
+ ]
+}

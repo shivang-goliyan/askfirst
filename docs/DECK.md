@@ -184,7 +184,25 @@ Say the limit in the same breath: eleven groups is a demo, not a headline, and *
 contested groups cannot take a computational vote at all**. Module A carries the number.
 Link to point at: `askfirst.kgbnetwork.com/#level=B`.
 
-## 11 — Who pays, and what it costs to run
+## 11 — Who pays, with prices that came from somewhere
+
+The placeholder prices (wrong = 100, handover = 5) were never argued for. The literature puts a
+triage call at **C$10–27** (CCOHTA 2003) and the expected cost of a confident wrong answer at
+**$4,220–$167,000** — 4.4% serious harm against 11.1% error per dangerous-disease case
+(Newman-Toker, BMJ Qual Saf 2024) times $422,000 average paid claim (CRICO 2009–2013). **Ratio:
+211:1 to 8,356:1 against our 20:1.** Say out loud that every saving in the deck is therefore
+conservative.
+
+Then the twist that is worth the slide: **above about 4,000:1, inside that band, cost minimisation
+says answer nothing and refer everything.** The objective is wrong, not the product — clinicians
+are finite and the queue has to go somewhere. So the number to sell on is throughput at a bar:
+**answering everything puts 330 wrong answers per 1,000 records; holding a 95% bar puts 1.7 and
+still takes 35% of the queue.**
+
+Keep the old operating-cost note if there is time: one assessment is one generation plus a free
+CPU sweep, and the exhaustive 223-field design would have cost 22 seconds of GPU per case.
+
+## 11b — (old) Who pays, and what it costs to run
 
 The buyer is anyone already deploying a model against incomplete records and carrying the cost of
 its confident mistakes: triage and teleconsult services, decision-support vendors who need a
