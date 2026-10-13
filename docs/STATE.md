@@ -12,8 +12,12 @@ given up on a complete record (99.6%), thirty-three points gained at a fifth of 
 answered wrongly against 1.7.** What it cost: the motivating "40 points underconfident" became
 8.2; "expected information gain loses to a coin and then to silence" is **retracted** (it reaches
 85.5% once the scorer has seen a thin record, against 77.8% for asking nothing); and the
-completeness floor now costs **fourteen points of coverage for no measurable gain** on our own
-scorer, so it stays on a judgement rather than a measurement. Every dated write-up from before
+completeness floor now costs **fourteen points of coverage for no measurable gain in precision** —
+and then the floor was swept properly (fitted on one split, chosen on a second, reported on a
+third) and **priced**, which inverted that: taking it off buys +145 handovers per 1,000 worth
+C$1,452–3,919 and costs +1.01 wrong answers worth $4,280–169,386, so the extra wrong answers cost
+1.1× to 117× the saved reviews. The floor stays on a measurement
+(`results/2026-10-14-where-the-floor-belongs.md`), and "it buys nothing measurable" is retired. Every dated write-up from before
 14 Oct carries a note saying its prose was measured against the previous scorer.
 
 **The evening of 13 Oct was a second review round, and it went badly for several published

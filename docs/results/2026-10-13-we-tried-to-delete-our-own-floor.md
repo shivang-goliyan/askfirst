@@ -159,3 +159,21 @@ threshold on the better scorer still keeps the promise in **1 of 7** folds while
 the stream: making the model better made the naive rule more dangerous, which is the most
 counter-intuitive thing measured in this project and the one we would most like a reviewer to
 check.
+
+
+---
+
+## And "it buys nothing measurable" was the wrong conclusion — 14 October
+
+Everything above measures precision and coverage, and on those two numbers the floor does indeed
+buy nothing. Then it was swept properly and priced, and the conclusion inverts:
+`2026-10-14-where-the-floor-belongs.md`.
+
+At a **fixed precision target** more coverage means more *absolute* wrong answers — the rate holds
+and the count grows. Per 1,000 records, taking the floor off buys +145 handovers worth C$1,452–3,919
+and costs +1.01 wrong answers worth $4,280–169,386 in expected harm, so **the extra wrong answers
+cost 1.1× to 117× what the saved reviews are worth.**
+
+The floor stays, and the reason is now a price rather than a judgement. What this file got right
+is that the floor is not what keeps the *promise*; what it got wrong is treating that as the same
+question as whether the floor is worth having.

@@ -467,16 +467,27 @@ record already declines thin records through the calibration, so the floor has n
 catch.
 
 **So the claim that the floor is what keeps the promise is withdrawn** — here, in `calibrate.py`'s
-docstring, and in the write-up that first made it. It is still on by default, for three reasons
-and one of them is not a measurement:
+docstring, and in the write-up that first made it.
 
-1. It rescues a badly-shaped rule — a per-group threshold goes from 13 of 21 scorer-fold cells to
-   15 of 21 when it is given the floor.
-2. It is the half that runs for a stranger's scorer with nothing fitted.
-3. Answering a two-finding record because the arithmetic cleared a bar is the behaviour this
-   product exists to refuse. That is a judgement, and at 140 cases per 1,000 going to a person
-   who did not need to see them it is an expensive one. `FLOOR` is one constant in
-   `calibrate.py`; the table above is what turning it off would buy.
+**But "it buys nothing" was also the wrong conclusion, and we found that out by pricing it.** The
+floor was swept properly — calibration fitted on one split, floor chosen on a second, everything
+reported on a third — and on precision alone the sweep says take it off: 61.1% coverage against
+46.6%, every completeness level holding, seven folds out of seven. Then price it with this repo's
+own published numbers, per 1,000 records:
+
+| removing the floor entirely | |
+|---|---|
+| records that never reach a person | **+145** → C$1,452–3,919 of review capacity returned |
+| additional wrong answers | **+1.01** → $4,280–169,386 of expected cost |
+
+**The extra wrong answers cost 1.1× to 117× what the saved reviews are worth.** At a *fixed
+precision target* more coverage means more absolute wrong answers — the rate holds and the count
+grows — and the count is the expensive thing. So the floor stays at 0.35 on a measurement rather
+than on the safety judgement this section rested on yesterday, and no lower floor pays for itself
+at the published harm prices (`docs/results/2026-10-14-where-the-floor-belongs.md`).
+
+An operator whose real cost of a missed case sits at the bottom of that band would be right to
+lower it, and the sweep is what they would gain. `FLOOR` is one constant in `calibrate.py`.
 
 **Does training the scorer on records with holes make the gate unnecessary?** It makes the gate
 considerably more valuable:

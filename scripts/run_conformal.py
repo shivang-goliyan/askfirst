@@ -64,7 +64,7 @@ def stream(model, pool, ways, rates):
                 dist = model(record)
                 rows.append({
                     "record": record, "margin": max(dist.values()),
-                    "true_n": case["true_n"], "who": i, "way": name,
+                    "true_n": case["true_n"], "who": i, "way": name, "kept": frac,
                     "right": argmax(dist) == case["pathology"],
                     "group": f"{bucket_of(len(record))}|"
                              f"{band_of(sum(1 - rates.get(n, 0.0) for n in record) / max(len(record), 1))}",

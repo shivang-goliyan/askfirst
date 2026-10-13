@@ -221,3 +221,20 @@ def test_the_real_queue_loss_stays_in_the_window():
     assert quotes(body, pct(nh["missed_share_of_cleared"])), "README lost the miss rate"
     for met in ("not met", "not deployable"):
         assert met in body.lower(), f"README no longer says {met!r}"
+
+
+def test_the_floor_is_priced_not_asserted():
+    """The floor sweep is the one place this repo chose a constant by measurement. The guard is
+    that the pricing stays attached: on precision alone the sweep says remove the floor, and only
+    the cost of the extra wrong answers says keep it."""
+    sweep = load("floor-sweep.json")
+    rows = sweep["test_rows"]
+    bare, shipped = sweep["on_test"]["0.0"], sweep["on_test"][str(sweep["shipped_floor"])]
+    gained = (bare["answered"] - shipped["answered"]) / rows * 1000
+    extra = (bare["wrong"] - shipped["wrong"]) / rows * 1000
+    assert gained > 0 and extra > 0, "the trade has changed shape; rewrite the section"
+    body = text("README.md")["README.md"]
+    assert quotes(body, f"{gained:.0f}"), f"README does not quote the {gained:.0f} records gained"
+    assert quotes(body, f"{extra:.2f}"), f"README does not quote the {extra:.2f} extra wrong"
+    assert sweep["picked_on"].startswith("the second split"), (
+        "the floor is no longer chosen on a split of its own")
