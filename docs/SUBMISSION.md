@@ -62,6 +62,12 @@ in hand, estimates how much of the record is missing to within 0.053, and refuse
 floor. On 30,000 records of undeclared completeness: **99.6% right, 38 wrong, on the 34% of cases
 it chooses to answer** — against 67.1% and 9,874 wrong if it answers everything.
 
+**And it was tested against records that do not go missing at random**, which is what every
+version of this did before. Remove the same number of findings seven realistic ways — the
+follow-ups never happened, no history was available, the detail went and the screen stayed — and
+accuracy at a fifth of a record runs from 19.6% to 73.2% depending only on which fifth. The
+refusal rule keeps its promise in 33 of 35 cells, and the two it does not are in the write-up.
+
 **The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:
 42.9% without it, 47.9% asking at random, **72.5% asking what the engine says**. The ranking rule
 is `log2(number of answers the question admits)`, weighted by how often the question gets answered

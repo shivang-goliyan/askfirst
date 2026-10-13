@@ -141,7 +141,8 @@
     <tr class="key"><td>this rule</td><td>99.6%</td><td>38</td><td>34%</td></tr>
   </table>
   <p class="dim">It now says what it thinks instead of asking: <em>"only about 23% of a record —
-  too little to judge the answer by, whatever the confidence says."</em></p>
+  too little to judge the answer by, whatever the confidence says."</em> Tested against seven ways
+  a record goes short, not just the convenient one: it keeps the promise in 33 of 35 cells.</p>
   <div class="src">docs/results/2026-10-13-the-page-stops-asking.md</div>
 </section>
 
@@ -154,47 +155,58 @@
 → token_logprobs + text_offset over the prompt
    one round trip per label set · vLLM on MI300X, 192 GB HBM3</pre>
   <blockquote>A better model does not make the answers cheaper. It makes more of them answerable.</blockquote>
-  <p>The CPU baseline bottoms out at 5% coverage because a naive Bayes is 21% accurate overall. A
-  stronger scorer moves that optimum to higher coverage at the same cost — a strictly better
-  product, measured against a baseline that already exists.</p>
+  <p>The CPU model is already 99.6% on a complete record, so a bigger one buys nothing there. It
+  buys the thin end. At a fifth of a record the refusal goes <strong>silent</strong> — no cut-off
+  reaches a useful precision, so every one of those cases goes to a person. A stronger scorer
+  raises how much of that the machine can take at the same promise, and the CPU floor is already
+  measured to compare against.</p>
   <div class="src">src/askfirst/model.py — exact label scoring via text_offset, mean-normalised,
   tested against the documented response shape before any GPU hour was spent</div>
 </section>
 
 <section>
-  <div class="tag">What we got wrong, with dates on it</div>
+  <div class="tag">What we got wrong, with dates on it · 1 of 2</div>
   <h2>The biggest thing we got wrong, we found ourselves.</h2>
   <ul>
     <li><strong>We published a headline that measured our own baseline, then killed it.</strong>
     "21% to 85.3% by refusing" came from a naive Bayes at 22.6% top-1. A linear model gets 99.6% in
     31 seconds on a laptop, so the lift was about our classifier, not about medicine. Found by two
     of our own files disagreeing, re-run end to end, old notes kept with a notice on them.</li>
-    <li><strong>Our first ranking objective made things worse than guessing.</strong> Following its
-    advice scored <span class="bad">18.8%</span> against <span class="cool">26.0%</span> for asking
-    at random. Flip probability selects for volatility, not information. Replaced with expected
-    information gain → 28.4%, harm gone.</li>
     <li><strong>A French-to-English label join was broken</strong> — the conditions file is keyed in
     French, the patient labels are English, overlap 1 of 42. Caught before the GPU run, which would
     have scored French predictions against English truth at $1.99 an hour.</li>
-    <li>A d-dimer shows why: <strong>0.264 bits of information at a flip probability of 0.00.</strong>
-    It settles the question without changing the leading answer, and the old objective could not see it.</li>
-    <li><strong>Cheap-proposes-then-model-ablates caps the system near 32%</strong> — shortlist
-    recall at k=20 is 31.8% and stage two can only re-rank what stage one passes. Inverted.</li>
-    <li><strong>Expected information gain — the objective the literature uses — lost to a coin,
-    and then to silence.</strong> <span class="bad">39.9%</span> against
-    <span class="cool">47.9%</span> for asking at random and 42.9% for asking nothing at all. It is
-    an expectation taken under the model's own beliefs, and on a three-finding record those beliefs
-    are wrong. Ranking by how much a question <em>could</em> tell you scores
-    <span class="hot">72.5%</span>.</li>
-    <li><strong>Then we found three bugs in that measurement, all of them in our favour.</strong>
-    A negative answer was switching the evidence feature <em>on</em>; the ranker assumed every
+    <li><strong>Three bugs in our own ranking measurement, every one in our favour.</strong> A
+    negative answer was switching the evidence feature <em>on</em>; the ranker assumed every
     question gets answered; and <code>max()</code> was breaking a three-way tie using the engine's
-    own sort order, worth seven points to us. Fixing the first two made the objective we beat
-    <em>worse</em>. Published with the numbers from after.</li>
+    own sort order, worth seven points to us. Fixing the first two made the published method we
+    beat <span class="bad">worse</span>, not better.</li>
+    <li><strong>The word "calibrated" was doing work it had not earned</strong>, so we checked it.
+    The confidence is honest on a full record and forty points underconfident at 40% evidence.</li>
   </ul>
-  <div class="src">Four objectives tried, three of them worse than a coin, and the winner is a
-  property of the question rather than anything learned. Every failure is dated and committed in
-  docs/results/, in the order it happened.</div>
+  <div class="src">Every failure is dated and committed in docs/results/, in the order it happened.
+  Nothing here was found by a judge.</div>
+</section>
+
+<section>
+  <div class="tag">What we got wrong, with dates on it · 2 of 2</div>
+  <h2>Four ranking objectives. Three of them lost to a coin.</h2>
+  <table>
+    <tr><th>what we ranked questions by</th><th>score</th><th>against</th></tr>
+    <tr><td>flip probability — most likely to change the answer</td><td class="bad">18.8%</td><td>26.0% random</td></tr>
+    <tr><td>pathology-conditioned discrimination</td><td class="bad">14.7%</td><td>20.0% at k=10</td></tr>
+    <tr><td><strong>expected information gain</strong> — what the literature uses</td><td class="bad">39.9%</td><td>47.9% random, 42.9% silence</td></tr>
+    <tr class="key"><td>how many answers the question even admits</td><td>72.5%</td><td>47.9% random</td></tr>
+  </table>
+  <p>The winner is a property of the question, not of anything the model believes. That pattern is
+  the most reliable finding in this project.</p>
+  <p><strong>And our central assumption was that records go missing at random. They do not.</strong>
+  Cut the same number of findings seven realistic ways and accuracy at a fifth of a record runs
+  from <span class="bad">19.6%</span> to <span class="hot">73.2%</span> depending only on which
+  fifth. Our refusal rule broke on the likeliest pattern of all. Fixing it needed the pattern in
+  the fit <em>and</em> a feature for how unusual the findings are — <span class="bad">training on
+  it without the feature measured worse than not training on it</span>.</p>
+  <div class="src">docs/results/2026-10-13-breadth-beats-information.md ·
+  2026-10-13-missing-not-at-random.md</div>
 </section>
 
 <section>

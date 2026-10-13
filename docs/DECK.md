@@ -94,9 +94,14 @@ And the honest framing of what the hardware buys, which is not "faster":
 
 > **A better model does not make the answers cheaper. It makes more of them answerable.**
 
-The CPU baseline reaches its optimum at 5% coverage because a naive Bayes is 21% accurate overall.
-A stronger scorer moves that optimum to higher coverage at the same cost. That is the measured
-baseline the GPU run improves on, and the comparison is the AMD result.
+The CPU model is already 99.6% on a complete record, so a bigger one buys nothing there. It buys
+the thin end: at a fifth of a record the refusal goes **silent**, because no cut-off reaches a
+useful precision, and every one of those cases goes to a person. A stronger scorer raises how much
+of that the machine can take at the same promise. The CPU floor is measured, so the comparison
+*is* the AMD result.
+
+(This paragraph said "a naive Bayes is 21% accurate" until 13 Oct. That scorer has been dead since
+the headline was re-measured; if any other slide still argues from it, it is stale too.)
 
 ## 6b — The hole in that setting, and the fix
 
@@ -111,22 +116,36 @@ answered** against 67.1% and 9,874.
 
 The line to say out loud: *the page now tells you what it thinks instead of asking you.*
 
-## 7 — The honesty slide
+Then the robustness half: records do not go missing at random, and we tested seven ways they
+actually go short. Accuracy at a fifth of a record runs **19.6% to 73.2%** depending only on which
+fifth. The rule holds in 33 of 35 cells; it broke on the likeliest pattern, and fixing it needed
+the pattern in the fit **and** a feature for how unusual the findings are — training on it without
+the feature measured *worse* than not training on it.
 
-Keep it. Four of six winners in this series shipped a visible don't-be-confidently-wrong mechanism,
-and judges in this track reward stated limits.
+## 7a — What we got wrong, 1 of 2: the measurements
 
-- Four dead ends, dated, in the repo — including one where **our own ranking objective made results
-  worse than asking at random** (18.8% vs 26.0%), which we measured, diagnosed and replaced.
-- **Expected information gain — the objective the literature uses — lost to a coin and then to
-  silence**: 39.9% against 47.9% random and 42.9% for asking nothing. Ranking by how many answers
-  a question admits scores 72.5%.
-- **Three bugs in that measurement, found by us after publishing it, all three in our favour.**
-  Negative answers switched the evidence feature on; the ranker assumed every question gets
-  answered; `max()` broke a tie using the engine's own sort order. Fixing the first two made the
-  objective we beat *worse*.
-- DDXPlus is synthetic. Stated, not buried.
-- Not clinically validated. No clinician has reviewed any output.
+Keep both of these. Four of six winners in this series shipped a visible don't-be-confidently-wrong
+mechanism, and judges in this track reward stated limits. It was one slide until it stopped fitting
+on a screen, which is its own kind of signal.
+
+- **The headline that measured our own baseline**, killed by us, re-run end to end.
+- **The French-to-English label join**, caught before the GPU run rather than during it.
+- **Three bugs in our own ranking measurement, all three in our favour.** Fixing the first two made
+  the published method we beat *worse*.
+- **"Calibrated" was a word we had not earned**, so we checked: honest on a full record, forty
+  points underconfident at 40% evidence.
+
+## 7b — What we got wrong, 2 of 2: the objectives and the assumption
+
+- The table of four ranking objectives, three of them below a coin, ending at 72.5% for the one
+  that needs no beliefs at all.
+- **Records do not go missing at random.** Seven realistic patterns; 19.6% to 73.2% at a fifth of a
+  record. The refusal broke on the likeliest one, and fixing it needed the pattern in the fit
+  *and* a feature for how unusual the findings are.
+
+Not on the slide, still in the repo, say it if asked: cheap-proposes-then-model-ablates caps the
+system near 32% because shortlist recall at k=20 is 31.8%. DDXPlus is synthetic. Not clinically
+validated, and no clinician has reviewed any output.
 
 ## 8 — Safety, as the track requires
 
