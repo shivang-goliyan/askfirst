@@ -200,3 +200,18 @@ def test_the_floor_retraction_stays_retracted():
     source = (ROOT / "src/askfirst/calibrate.py").read_text()
     assert "the measurement says you need both:" not in source, (
         "calibrate.py's docstring still claims the measurement says you need both")
+
+
+def test_the_real_queue_loss_stays_in_the_window():
+    """A pre-registered loss is the most deletable thing in a repo. This makes deleting it fail
+    the suite rather than tidy the README."""
+    nh = load("nhamcs.json")
+    body = text("README.md")["README.md"]
+    assert nh["conditions_met"] < 4, (
+        "the real-queue test now passes, so this guard needs rewriting rather than asserting")
+    assert quotes(body, str(nh["missed_escalations"])), (
+        "README does not say how many cleared visits needed a bed")
+    assert quotes(body, f"{nh['auc']:.4f}"), "README lost the AUC"
+    assert quotes(body, pct(nh["missed_share_of_cleared"])), "README lost the miss rate"
+    for met in ("not met", "not deployable"):
+        assert met in body.lower(), f"README no longer says {met!r}"

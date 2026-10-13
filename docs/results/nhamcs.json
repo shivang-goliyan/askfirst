@@ -1,0 +1,157 @@
+{
+ "target": 0.95,
+ "fit_years": [
+  "2018",
+  "2019"
+ ],
+ "test_years": [
+  "2021",
+  "2022"
+ ],
+ "fit_visits": 39772,
+ "test_visits": 32232,
+ "fit_sites": 439,
+ "test_sites": 374,
+ "reason_vocabulary": 60,
+ "features": 237,
+ "answer_everything": 0.8685,
+ "always_discharge": 0.8534,
+ "accepted": 11063,
+ "coverage": 0.3432,
+ "escalation_side": {
+  "flagged": 11,
+  "precision": 1.0,
+  "coverage": 0.0023,
+  "ci": [
+   1.0,
+   1.0
+  ],
+  "escalations": 4726
+ },
+ "discharge_side": {
+  "answered": 11052,
+  "precision": 0.9767,
+  "ci": [
+   0.9726,
+   0.9799
+  ]
+ },
+ "auc": 0.8214,
+ "data_ceiling": [
+  {
+   "flagged": 10,
+   "precision": 1.0,
+   "recall": 0.0021
+  },
+  {
+   "flagged": 25,
+   "precision": 1.0,
+   "recall": 0.0053
+  },
+  {
+   "flagged": 50,
+   "precision": 0.94,
+   "recall": 0.0099
+  },
+  {
+   "flagged": 100,
+   "precision": 0.93,
+   "recall": 0.0197
+  },
+  {
+   "flagged": 250,
+   "precision": 0.844,
+   "recall": 0.0446
+  },
+  {
+   "flagged": 500,
+   "precision": 0.794,
+   "recall": 0.084
+  },
+  {
+   "flagged": 1000,
+   "precision": 0.713,
+   "recall": 0.1509
+  },
+  {
+   "flagged": 2000,
+   "precision": 0.6195,
+   "recall": 0.2622
+  },
+  {
+   "flagged": 4000,
+   "precision": 0.5112,
+   "recall": 0.4327
+  },
+  {
+   "flagged": 8000,
+   "precision": 0.3822,
+   "recall": 0.6471
+  }
+ ],
+ "cleared_to_go_home": 11052,
+ "missed_escalations": 258,
+ "missed_share_of_cleared": 0.0233,
+ "missed_share_of_all_escalations": 0.0546,
+ "ordering": {
+  "everything": {
+   "calibration": {
+    "precision": 0.9767,
+    "n": 11063,
+    "ci": [
+     0.9729,
+     0.9801
+    ]
+   },
+   "raw margin": {
+    "precision": 0.977,
+    "n": 11063,
+    "ci": [
+     0.973,
+     0.9804
+    ]
+   },
+   "ordering_gain": -0.0003
+  },
+  "sparse charts": {
+   "calibration": {
+    "precision": 0.9825,
+    "n": 285,
+    "ci": [
+     0.9686,
+     0.9963
+    ]
+   },
+   "raw margin": {
+    "precision": 0.9789,
+    "n": 285,
+    "ci": [
+     0.9599,
+     0.9931
+    ]
+   },
+   "ordering_gain": 0.0036
+  }
+ },
+ "strata": {
+  "3 or fewer of six vitals": {
+   "visits": 1547,
+   "refused": 0.8158,
+   "answer_everything_precision": 0.8565
+  },
+  "all six charted": {
+   "visits": 26455,
+   "refused": 0.6583,
+   "answer_everything_precision": 0.8662
+  }
+ },
+ "ridge_error_against_observed": 0.0374,
+ "preregistered": {
+  "1. promise holds under real shift": false,
+  "2. calibration buys >=1 point of ordering on sparse charts": false,
+  "3. refuses sparse charts at >=2x the rate": false,
+  "4. sparse charts are genuinely harder": true
+ },
+ "conditions_met": 1,
+ "ci_kind": "bootstrap over hospitals (HOSPCODE paired with year), 400 draws"
+}

@@ -42,6 +42,38 @@ thousands of cases. That batch work is what the AMD GPU is for.
 The served endpoint runs one open model through vLLM. It is sized for a single device, because the
 credit allocation does not support multi-device tensor parallelism for a sustained window.
 
+## NHAMCS — the one real queue
+
+The CDC's National Hospital Ambulatory Medical Care Survey, Emergency Department component.
+Public use files, no registration and no credentialing: 72,004 visits across 2018, 2019, 2021 and
+2022. This is the only data in this project that is not synthetic, and the only place where a
+value is missing because a person did not write it down.
+
+| | |
+|---|---|
+| licence | US government work, public use file, **under the NCHS data use agreement** |
+| what we use | triage-time fields only — age, sex, arrival by ambulance, three reason-for-visit codes, six vitals, pain score, triage immediacy, seen-here-in-72-hours |
+| outcome | escalation: admitted here, admitted to observation then hospitalised, transferred out, or died in the department |
+| record layout | parsed out of the documentation PDFs by `scripts/nhamcs_layout.py`, because the columns move between years |
+
+**The agreement, and how it is honoured.** NCHS permits statistical reporting and analysis only;
+forbids any attempt to identify a person or establishment; and forbids linking the file with
+individually identifiable data from any other source. Violations carry criminal sanctions. Fitting
+and evaluating a triage gate is statistical analysis. We do not link, we do not re-identify, the
+files are gitignored and never committed, and **no national estimate is quoted anywhere** —
+`PATWT` exists for exactly that and nothing here uses it.
+
+Three things a reader should know before trusting a number off it:
+
+- **"Missing" means "not documented".** The file is abstracted from the chart after the visit, so
+  a blank pulse oximetry is something nobody wrote down, which is related to but not the same as
+  something nobody knew at triage.
+- **It clusters by hospital.** `HOSPCODE` identifies the site and some sites chart far less than
+  others, so every interval over this data resamples hospitals rather than visits. The code is
+  reassigned each year, so the cluster key is the year and the code together.
+- **It is where the project's claims stopped transferring.** One of four pre-registered
+  conditions met: `results/2026-10-13-the-real-queue-said-no.md`.
+
 ## Models
 
 | Model | Licence | Used for | Runs on |

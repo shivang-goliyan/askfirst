@@ -384,6 +384,44 @@ A threshold sees that number; the gate sees the record.
 It costs coverage — 29.5% against 47.9% — and we over-deliver precision when asked for 95%,
 which is the open engineering item (`docs/results/2026-10-13-is-it-a-layer-or-is-it-our-model.md`).
 
+## The first time it met a real queue, it did not transfer
+
+Everything above is DDXPlus: synthetic patients, with evidence hidden the seven ways *we* chose.
+So we took **72,004 real emergency department visits** from the CDC's NHAMCS public-use files —
+fitted on 2018–2019, measured on 2021–2022, 374 test sites sharing none with the fit years, and
+a shift we did not choose: fully-charted visits fall from 43.3% to 39.1% across the pandemic.
+
+**Four conditions were pre-registered before it ran.** One was met.
+
+| | |
+|---|---|
+| the promise holds under real shift | **not met** |
+| the calibration buys ≥1 point of ordering on sparse charts | **not met** (+0.36) |
+| the gate refuses sparse charts at ≥2× the rate | **not met** (1.24×) |
+| sparse charts are genuinely harder | met (85.7% vs 86.6%) |
+
+And the number that matters more than the four: at a 95% target, of the **11,052 visits the gate
+cleared to go home, 258 needed a bed** — 2.3% of the cleared visits, 5.5% of every escalation in
+the test years. **On this task, on this data, it is not deployable.**
+
+**Why, which is the useful part.** The failure is not the gate, it is the task — and we measured
+that rather than guessing. AUC for escalation from the triage form alone is **0.8214**, a working
+scorer. But the ceiling *any* rule can reach on this data is 94.0% precision at 1.0% recall, 79.4%
+at 8.4%, 71.3% at 15.1%. **A 95% bar at 10% coverage does not exist here for any rule.** Our gate
+sits on that frontier at its conservative end. We set a bar above what the data could supply, and
+we should have measured the frontier before writing the bar, not after.
+
+**What it changes about the product.** The gate needs a scorer that can be *certain*, and that
+needs a task with room in it. DDXPlus has 49 conditions and 223 findings, so a confident correct
+posterior is reachable. A 15-field triage form over a binary outcome at a 14.7% base rate does
+not — the posterior is almost never extreme, so a precision gate either answers nothing or
+answers the easy majority class. So the buyer in `BUSINESS.md` is narrower than claimed: **an
+operator whose engine produces a rich differential over many conditions**, not acuity prediction
+from vitals. That is now a measurement rather than an opinion.
+
+Full result, including the three named follow-ups and what the pre-registration got wrong about
+itself: `docs/results/2026-10-13-the-real-queue-said-no.md`.
+
 ## We tried to delete our own floor, and mostly succeeded
 
 Two questions from a reviewer, both designed to remove parts of this rather than improve them.

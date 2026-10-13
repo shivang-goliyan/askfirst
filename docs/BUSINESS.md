@@ -7,7 +7,16 @@ repo or sourced, and the ones that are neither are marked as assumptions.
 ## The buyer is an operator whose cost line is clinician-minutes
 
 Not "healthcare". Specifically: **an organisation that already pays a clinician to look at cases
-one at a time.** Nurse triage lines, teleconsultation platforms, digital front doors, and the
+one at a time, whose model produces a rich differential over many conditions.**
+
+> **That second clause was added on the evening of 13 Oct and it cost us most of the market this
+> document used to claim.** Measured on 72,004 real emergency department visits, the gate does not
+> work on a binary disposition call from a fifteen-field triage form: the posterior is almost never
+> extreme, so a precision gate either answers nothing or answers the easy majority class, and at a
+> 95% target it cleared 258 people who needed a bed. It needs a task with room in it — 49
+> conditions and 223 findings, not a form and a yes/no. So a symptom-checker or a differential
+> engine is a buyer and acuity-prediction-from-vitals is not, and that is now a measurement rather
+> than a preference (`results/2026-10-13-the-real-queue-said-no.md`). Nurse triage lines, teleconsultation platforms, digital front doors, and the
 symptom-checker vendors who sell into them. Three properties make them the buyer:
 
 - **They already have the cost.** A reviewed case costs them money today — C$10–27 per triage
