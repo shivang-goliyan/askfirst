@@ -66,6 +66,8 @@ if [ "${1:-}" = "--all" ]; then
   check docs/results/portability.json
   $PY scripts/run_make_it_unnecessary.py "$DATA" 1200 >/dev/null || failed=1
   check docs/results/make-it-unnecessary.json
+  $PY scripts/run_floor_sweep.py "$DATA" 2000 >/dev/null || failed=1
+  check docs/results/floor-sweep.json
   $PY scripts/run_decision_value.py "$DATA" 4000 >/dev/null || failed=1
   check docs/results/decision-value.json
   $PY scripts/run_missingness.py "$DATA" >/dev/null || failed=1
