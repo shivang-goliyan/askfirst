@@ -45,6 +45,23 @@ The image is built on the box, because only ~200 KB of source needs to cross the
 the upstream link stalls on large uploads. The container is capped at 400 MB and actually uses
 about 33 MB, which matters because that box runs other things that are not allowed to fall over.
 
+## What it stands up to, measured
+
+Judges poke a thing at the same time, so this was measured against the live URL rather than
+assumed. An assessment is CPU-bound numpy, which the GIL serialises, so one worker was taking 11
+seconds to clear 24 simultaneous requests. Two workers:
+
+| at once | wall clock | slowest single request |
+|---|---|---|
+| 4 | 3.3s | 3.3s |
+| 12 | 3.9s | 3.9s |
+| 24 | 7.1s | 7.1s |
+
+It degrades by queueing rather than by falling over: no failed requests, no restarts, no OOM kill
+across any burst. Memory sits at **142 MB of the 400 MB cap** with both workers warm and all the
+baked artifacts loaded, on a box that is running other people's things. The static endpoints —
+the curve, the cases, the variant panel — are flat JSON and are not affected by any of this.
+
 **What the deploy touched, so it can be undone:** one container named `askfirst` bound to
 `127.0.0.1:3330`, and one appended block in `/etc/caddy/Caddyfile`. The Caddyfile was backed up
 first to `/etc/caddy/Caddyfile.bak-askfirst-20261012-193120`, validated before reloading, and

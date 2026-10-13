@@ -29,4 +29,7 @@ USER app
 
 EXPOSE 7860
 
-CMD ["sh", "-c", "uvicorn askfirst.api:app --host 0.0.0.0 --port ${PORT}"]
+# Two workers, because an assessment is CPU-bound numpy under the GIL and one process serialises
+# them: 24 simultaneous requests took 11 seconds on one worker. Two processes hold ~136 MB of the
+# 400 MB cap, which leaves room on a box that is running other people's things.
+CMD ["sh", "-c", "uvicorn askfirst.api:app --host 0.0.0.0 --port ${PORT} --workers 2"]
