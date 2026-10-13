@@ -44,7 +44,13 @@ Same line, same score, same groups. Only the strength it is granted changes.
 | **B — clinical, roughly how predictors get used in practice** | **5** | 5 |
 | A — validated | 9 | 9 |
 
-**At the strength ACMG actually permits, nothing moves. Granted clinical strength, it changes
+> **Update, same day.** Everything below is the 35M ESM-2. Re-run with the 650M model on a
+> rented GPU, **4 of 28 calls change at supporting strength rather than 0 of 11**, because the
+> bigger model is confident enough to speak on every eligible group. The conclusion that the cap
+> alone holds is a property of the small model. See
+> `2026-10-13-the-cap-is-not-enough.md`.
+
+**At the strength an uncalibrated predictor belongs at, nothing moves. Granted clinical strength, it changes
 nearly half the calls — and every single time, the computational label itself ends up on top of
 the distribution,** outranking the documented clinical evidence in the same group. The cap is not
 bureaucratic caution. It is the thing standing between a predictor and the call.

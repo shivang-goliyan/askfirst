@@ -89,8 +89,16 @@ mapping never became the time sink the plan feared. **21 variants were dropped b
 canonical sequence does not carry the stated wild-type residue** — those would have produced
 normal-looking, meaningless scores.
 
-Caveat first: this is the 34M ESM-2, chosen because it runs on a laptop in 200 seconds. The 650M
-run is queued for the GPU and the figure will be re-reported either way.
+Caveat first: this is the 34M ESM-2, chosen because it runs on a laptop in 200 seconds.
+
+**Re-reported early, on a rented GPU, 13 Oct.** The 650M model gets the sign wrong on **6.6%**
+rather than 21.9%, and clears the threshold on 414 of 534 variants rather than 201. Re-running the
+ablation with it, **4 of 28 contested calls change at supporting strength instead of 0 of 11** —
+so "the cap alone holds" is a property of the small model, and the real conclusion is that a
+better predictor needs the abstention more, not less. This is the clearest answer the project has
+to why the hardware matters: the conclusion changed, not the throughput. Nothing is baked; the
+shipped numbers stay the 35M ones until the AMD run.
+Write-up: `results/2026-10-13-the-cap-is-not-enough.md`.
 Full write-up: `results/2026-10-13-esm2-evidence-line.md`.
 
 Then the question that matters — is that line load-bearing? Put the score into a CIViC group as one

@@ -41,8 +41,10 @@ def as_row(item):
     }
 
 
-def main(path, threshold=2.0):
-    scores = {v["profile"]: v["llr"] for v in json.loads(SCORES.read_text())["variants"]}
+def main(path, threshold=2.0, scores_path=None, bake=True):
+    blob = json.loads(Path(scores_path or SCORES).read_text())
+    scores = {v["profile"]: v["llr"] for v in blob["variants"]}
+    print(f"scores from {blob['model']} ({blob['scored']} variants, {blob['device']})\n")
     groups = load_groups(path)
     fought = contested(groups)
 
@@ -88,7 +90,9 @@ def main(path, threshold=2.0):
             print(f"  {profile:16} llr {llr:>+6.2f}  {before!r} -> {after!r}")
             print(f"      {disease[:60]}")
 
-    out = Path("docs/results/variant-ablation.json")
+    # a rehearsal must not land on top of a published artifact. It did once.
+    out = Path("docs/results/variant-ablation.json" if bake
+               else "docs/results/rehearsal-variant-ablation.json")
     out.write_text(json.dumps({"threshold": threshold, "contested": len(fought),
                                "eligible": len(eligible), "scoreable": len(scoreable),
                                "sweep": rows}, indent=2))
@@ -115,7 +119,10 @@ def main(path, threshold=2.0):
             "calls": calls,
         })
 
-    meta = json.loads(SCORES.read_text())
+    if not bake:
+        print("\n(rehearsal — nothing baked)")
+        return
+    meta = blob
     BAKED.write_text(json.dumps({
         "model": meta["model"],
         "threshold": threshold,
@@ -132,4 +139,6 @@ def main(path, threshold=2.0):
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else "data/civic/evidence.tsv",
-         float(sys.argv[2]) if len(sys.argv) > 2 else 2.0)
+         float(sys.argv[2]) if len(sys.argv) > 2 else 2.0,
+         sys.argv[3] if len(sys.argv) > 3 else None,
+         bake=len(sys.argv) <= 3)
