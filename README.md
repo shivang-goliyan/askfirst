@@ -254,6 +254,25 @@ the distribution-derived objectives we tried, including theirs. The honest state
 difference is that **we went looking for a patient-specific ranking and found that a
 patient-independent one wins.**
 
+## Who pays
+
+An operator whose cost line is clinician-minutes: nurse triage lines, teleconsultation platforms,
+the symptom-checker vendors selling into them. They already have the cost, already have a person
+at the other end for a refusal to reach, and already carry the liability for a confident wrong
+call.
+
+Per 1,000 records at a 95% bar: **352 never reach a person**, 1.7 are answered wrongly against
+330.5 if everything is answered, **C$3,500–9,500 of review capacity returned**, and a **cost to
+serve of $0.0005** — an assessment is 58 ms of CPU with no GPU and no model call. Priced at C$500
+per thousand that is a 7–19× return for the buyer at close to 100% gross margin.
+
+The defensibility came out of a limitation: the calibration has to be fitted against the way
+records go short where it runs, and we measured that getting it wrong costs about two points of
+precision. The deployed thing is fitted to one operator's intake behaviour and does not transfer.
+
+Nobody has bought it, there is no pilot, and the throughput is measured on synthetic patients.
+Full case, including what would have to be true: [docs/BUSINESS.md](docs/BUSINESS.md).
+
 ## Data
 
 Everything shipped is redistributable. See [docs/DATA.md](docs/DATA.md).

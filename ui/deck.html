@@ -288,13 +288,35 @@
   the cheapest policy answers nothing. <strong>That is a flaw in the objective</strong>: clinicians
   are finite and the queue has to go somewhere.</p>
   <table>
-    <tr><th>210,000 records · seven ways of going short</th><th>precision</th><th>queue it takes</th><th>wrong per 1,000</th></tr>
+    <tr><th>per 1,000 records</th><th>precision</th><th>queue it takes</th><th>wrong</th></tr>
     <tr><td>answer everything</td><td>66.9%</td><td>100%</td><td class="bad">330.5</td></tr>
     <tr class="key"><td>hold a 95% bar</td><td>99.5%</td><td>35.2%</td><td>1.7</td></tr>
   </table>
-  <blockquote>It knows when it doesn't know. That's the product.</blockquote>
   <div class="src">docs/results/2026-10-13-what-it-is-worth.md — the throughput table is DDXPlus,
   which is synthetic; the price band is the literature and does not depend on our data</div>
+</section>
+
+<section>
+  <div class="tag">The business, in numbers we measured ourselves</div>
+  <h2>Thousands of dollars of clinician time returned per thousand records. $0.0005 to run.</h2>
+  <p>The buyer is an operator whose cost line is <strong>clinician-minutes</strong>: a nurse
+  triage line, a teleconsultation platform, the symptom-checker vendors selling into them. They
+  already have the cost, already have a person for a refusal to reach, and already carry the
+  liability.</p>
+  <table>
+    <tr><th>per 1,000 records, at a 95% bar</th><th></th></tr>
+    <tr><td>never reach a person</td><td><strong>352</strong></td></tr>
+    <tr><td>review capacity returned, at C$10–27 a call</td><td><strong>C$3,500 – C$9,500</strong></td></tr>
+    <tr class="key"><td>cost to serve — 58 ms of CPU, no GPU, no model call</td><td><strong>$0.0005</strong></td></tr>
+  </table>
+  <p class="lede">Price it at C$500 per thousand: a 7–19× return for them, and a gross margin a
+  rounding error away from 100% at every volume.</p>
+  <p><strong>And they cannot take it with them.</strong> The calibration has to be fitted to
+  <em>their</em> missingness — measured, worth two points of precision. The moat came out of a
+  limitation rather than a roadmap. <span class="dim">Nobody has bought it, there is no pilot, and
+  the throughput is measured on synthetic patients. That is the gap.</span></p>
+  <div class="src">docs/BUSINESS.md — including what would have to be true and is not yet ·
+  <em>It knows when it doesn't know. That's the product.</em></div>
 </section>
 
 </div>
