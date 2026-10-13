@@ -148,7 +148,7 @@
   complete records promises 95% and delivers <span class="bad">48%</span> on a tenth of one.</p>
   <p>Two pieces, because one measured insufficient. Calibrate against <strong>findings in
   hand</strong> — observable, where the fraction is not. Then <strong>estimate how much of the
-  record is missing</strong> (error 0.057) and refuse below a floor whatever the confidence says.</p>
+  record is missing</strong> (mean absolute error 0.057) and refuse below a floor whatever the confidence says.</p>
   <table>
     <tr><th>30,000 records, completeness undeclared</th><th>right</th><th>wrong</th><th>answered</th></tr>
     <tr><td>answer everything</td><td>67.1%</td><td class="bad">9,874</td><td>100%</td></tr>
@@ -156,7 +156,7 @@
   </table>
   <p class="dim">It now says what it thinks instead of asking: <em>"only about 23% of a record —
   too little to judge the answer by, whatever the confidence says."</em> Tested against seven ways
-  a record goes short, not just the convenient one: the promise is tested in 22 of the 35 cells — the other 13 go silent, which is the floor working rather than a promise kept — and holds in all 22.</p>
+  a record goes short, not just the convenient one: the promise is tested in 22 of the 35 cells — the other 13 go silent, which is the floor working rather than a promise kept — and <strong>20 of the 22 clear it</strong>. One lands at 93.6% on 547 answers, and one answered a single case and got it wrong.</p>
   <div class="src">docs/results/2026-10-13-the-page-stops-asking.md</div>
 </section>
 
@@ -329,7 +329,7 @@
 
 <section>
   <div class="tag">The business, in numbers we measured ourselves</div>
-  <h2>Thousands of dollars of clinician time returned per thousand records. $0.0005 to run.</h2>
+  <h2>Thousands of dollars of clinician time returned per thousand records. $0.0004 to run.</h2>
   <p>The buyer is an operator whose cost line is <strong>clinician-minutes</strong>: a nurse
   triage line, a teleconsultation platform, the symptom-checker vendors selling into them. They
   already have the cost, already have a person for a refusal to reach, and already carry the
@@ -338,7 +338,7 @@
     <tr><th>per 1,000 records, at a 95% bar</th><th></th></tr>
     <tr><td>never reach a person</td><td><strong>352</strong></td></tr>
     <tr><td>review capacity returned, at C$10–27 a call</td><td><strong>C$3,500 – C$9,500</strong></td></tr>
-    <tr class="key"><td>cost to serve — 58 ms of CPU, no GPU, no model call</td><td><strong>$0.0005</strong></td></tr>
+    <tr class="key"><td>cost to serve — 47 ms of CPU, no GPU, no model call</td><td><strong>$0.0004</strong></td></tr>
   </table>
   <p class="lede">Price it at C$500 per thousand: a 7–19× return for them, and a gross margin a
   rounding error away from 100% at every volume.</p>

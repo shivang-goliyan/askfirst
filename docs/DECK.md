@@ -117,7 +117,7 @@ the margin is honest on a full record and **40 points underconfident at 40% evid
 cut-off chosen on complete records promises 95% and delivers **48%** on a tenth of one.
 
 Two pieces, because one measured insufficient: calibrate on **findings in hand** (observable where
-the fraction is not), and **estimate how much of the record is missing** (error 0.057), refusing
+the fraction is not), and **estimate how much of the record is missing** (mean absolute error 0.057), refusing
 outright below a floor. On 30,000 records of undeclared completeness: **99.6% right, 45 wrong, 35%
 answered** against 67.1% and 9,874.
 
@@ -125,7 +125,7 @@ The line to say out loud: *the page now tells you what it thinks instead of aski
 
 Then the robustness half: records do not go missing at random, and we tested seven ways they
 actually go short. Accuracy at a fifth of a record runs **19.2% to 73.2%** depending only on which
-fifth. The rule was tested in 22 of the 35 cells, the other 13 going silent, and holds in all 22; it broke on the likeliest pattern, and fixing it needed
+fifth. The rule was tested in 22 of the 35 cells, the other 13 going silent, and 20 of the 22 clear 95%; it broke on the likeliest pattern, and fixing it needed
 the pattern in the fit **and** a feature for how unusual the findings are, and even then it reaches
 only 93.6% against a 95% promise. Say that we could not fully fix it.
 

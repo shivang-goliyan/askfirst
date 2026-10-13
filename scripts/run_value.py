@@ -39,7 +39,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from askfirst.ablation import argmax  # noqa: E402
 from askfirst.calibrate import FLOOR, Calibrator, Completeness  # noqa: E402
 from askfirst.ddxplus import load_patients  # noqa: E402
-from askfirst.metrics import wilson  # noqa: E402
+from askfirst.metrics import clustered, wilson  # noqa: E402
 from askfirst.missing import cut, mechanisms  # noqa: E402
 from askfirst.schema import load_schema  # noqa: E402
 from askfirst.softmax import SoftmaxScorer  # noqa: E402
@@ -72,31 +72,6 @@ def stream(model, pool, ways):
                              "who": who, "right": argmax(dist) == case["pathology"]})
     return rows
 
-
-def clustered(answered, patients, draws=400, seed=19):
-    """Bootstrap over PATIENTS, not over rows. Resample the people, take every view each
-    resampled person contributed, and recompute. Wilson over rows assumes independence that
-    repeated views of one patient do not have."""
-    import random as _random
-
-    by_who = {}
-    for row in answered:
-        by_who.setdefault(row["who"], []).append(row["right"])
-    who = list(by_who)
-    if not who:
-        return None, None
-    rng = _random.Random(seed)
-    spread = []
-    for _ in range(draws):
-        hits = seen = 0
-        for _ in range(len(who)):
-            for right in by_who[who[rng.randrange(len(who))]]:
-                seen += 1
-                hits += right
-        if seen:
-            spread.append(hits / seen)
-    spread.sort()
-    return spread[int(0.025 * len(spread))], spread[int(0.975 * len(spread)) - 1]
 
 
 def policy(rows, target):

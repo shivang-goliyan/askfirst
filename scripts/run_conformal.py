@@ -1,25 +1,35 @@
-"""Why not just use conformal prediction? Measured, rather than argued.
+"""Why not just use conformal prediction? Measured, rather than argued — and measured fairly,
+which took two attempts.
 
-    python3 scripts/run_conformal.py data/ddxplus/release_validate_patients
+    python3 scripts/run_conformal.py data/ddxplus/release_validate_patients [patients]
 
 Selective prediction with a precision target is not a new idea and conformal prediction is the
 framework for it. The honest thing is to name it, implement the standard version, and show where
 ours differs and why — not to invent vocabulary and hope nobody asks.
 
-Three rules, same scorer, same test stream, same target:
+WHAT THE FIRST VERSION GOT WRONG. It reported that under missingness shift the per-group
+threshold fell to 92.7% while ours held at 98.9%. That comparison was rigged, and not subtly:
+the baselines were refitted on six patterns and tested on the seventh, while *ours* was the
+shipped calibrator — loaded off disk, fitted on all seven, including the one being held out. It
+had seen the test condition and they had not. The result said nothing about robustness.
 
-  marginal       one global threshold on the margin, chosen on a calibration split. This is
-                 split-conformal selective prediction in its plainest form.
-  Mondrian       a separate threshold per group, the group being how many findings are in hand
-                 and how unusual they are. Vovk's Mondrian/class-conditional predictors are the
-                 same idea with the partition chosen differently.
-  what we ship   the Mondrian partition, but an isotonic fit of P(correct) inside each group
-                 rather than a quantile, plus a refusal below an estimated-completeness floor
-                 that no conformal variant has an equivalent of.
+This version fixes four things, all of which make the comparison harder for us:
 
-The last one is the only one that can refuse a record for being too thin REGARDLESS of what the
-score says, which matters because the exchangeability that conformal guarantees rest on is
-exactly what `2026-10-13-missing-not-at-random.md` measured failing."""
+  - every component is refitted per fold, ours included, on the six patterns only;
+  - all seven leave-one-pattern-out folds are run, not the one that flattered us;
+  - the baselines are offered the same completeness floor, so the floor is isolated from the
+    calibration rather than being ours alone;
+  - at matched coverage the baselines are allowed to pick their operating point ON THE TEST
+    ranking, which we are not. That flatters them on purpose: if we still come out ahead against
+    a baseline reading its own answers, the margin is real.
+
+A NOTE ON THE NAME. `threshold()` below is a quantile of the calibration scores chosen so the
+accepted set hits a target accuracy. That is selective prediction with a Mondrian-style
+partition — it is the standard practical construction, and it is NOT a conformal prediction set
+and carries no conformal coverage guarantee. Conformal guarantees marginal coverage of a
+prediction SET; what a buyer here asks for is precision conditional on having answered, which is
+a different quantity (Angelopoulos & Bates, arXiv:2107.07511; Vovk, Gammerman & Shafer 2005 for
+the Mondrian partition). The baselines are named for what they are and the write-up says so."""
 
 import json
 import sys
@@ -29,9 +39,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 sys.path.insert(0, str(Path(__file__).parent))
 
 from askfirst.ablation import argmax  # noqa: E402
-from askfirst.calibrate import CEILING, FLOOR, Calibrator, Completeness, bucket_of, band_of  # noqa: E402
+from askfirst.calibrate import CEILING, FLOOR, Calibrator, Completeness, band_of, bucket_of  # noqa: E402
 from askfirst.ddxplus import load_patients  # noqa: E402
-from askfirst.metrics import wilson  # noqa: E402
+from askfirst.metrics import clustered  # noqa: E402
 from askfirst.missing import cut, mechanisms  # noqa: E402
 from askfirst.schema import load_schema  # noqa: E402
 from askfirst.softmax import SoftmaxScorer  # noqa: E402
@@ -40,18 +50,21 @@ from run_abstention import KEPT, WEIGHTS  # noqa: E402
 BAKE = Path("src/askfirst/baked")
 OUT = Path("docs/results/conformal.json")
 TARGET = 0.95
-CASES = 3000
+CASES = 2000
 
 
 def stream(model, pool, ways, rates):
+    """Every record, every way of going short, every level — tagged with which way, so a fold
+    can be sliced out of one pass instead of rebuilding the stream seven times."""
     rows = []
-    for key in ways.values():
+    for name, key in ways.items():
         for frac in KEPT:
-            for case in cut(pool, frac, key):
+            for i, case in enumerate(cut(pool, frac, key)):
                 record = case["evidences"]
                 dist = model(record)
                 rows.append({
                     "record": record, "margin": max(dist.values()),
+                    "true_n": case["true_n"], "who": i, "way": name,
                     "right": argmax(dist) == case["pathology"],
                     "group": f"{bucket_of(len(record))}|"
                              f"{band_of(sum(1 - rates.get(n, 0.0) for n in record) / max(len(record), 1))}",
@@ -60,8 +73,10 @@ def stream(model, pool, ways, rates):
 
 
 def threshold(rows, target):
-    """Lowest margin whose accepted set still hits the target. The conformal construction, in
-    the form selective prediction needs: a quantile of the calibration scores."""
+    """Lowest margin whose accepted set still hits the target on the calibration split.
+
+    A quantile of the calibration scores. Standard practice for selective prediction; see the
+    note at the top of this file about why calling it conformal would be an overclaim."""
     ranked = sorted(rows, key=lambda r: -r["margin"])
     best, hits = None, 0
     for i, r in enumerate(ranked, start=1):
@@ -71,99 +86,152 @@ def threshold(rows, target):
     return best
 
 
-def report(name, accepted, total, out):
+def score(name, accepted, total, patients):
     if not accepted:
-        print(f"  {name:38} {'silent':>10} {0.0:>11.1%}")
-        out[name] = None
-        return
-    right = sum(accepted)
-    lo, hi = wilson(right, len(accepted))
-    print(f"  {name:38} {right / len(accepted):>10.1%} {len(accepted) / total:>11.1%} "
-          f"  [{lo:.1%}, {hi:.1%}]")
-    out[name] = {"precision": round(right / len(accepted), 4),
-                 "coverage": round(len(accepted) / total, 4),
-                 "answered": len(accepted), "ci": [round(lo, 4), round(hi, 4)]}
+        return {"rule": name, "precision": None, "coverage": 0.0, "answered": 0, "ci": None,
+                "keeps_promise": None}
+    right = sum(1 for r in accepted if r["right"])
+    lo, hi = clustered(accepted, patients)
+    return {"rule": name, "precision": round(right / len(accepted), 4),
+            "coverage": round(len(accepted) / total, 4), "answered": len(accepted),
+            "ci": [round(lo, 4), round(hi, 4)] if lo is not None else None,
+            "keeps_promise": None if lo is None else bool(lo >= TARGET - 0.005)}
 
 
-def main(path):
-    schema = load_schema("ddxplus")
-    rates = json.loads((BAKE / "ddxplus_priors.json").read_text())["rates"]
-    model = SoftmaxScorer.load(WEIGHTS, schema)
-    cal = Calibrator.load(BAKE / "calibrator.json")
-    seen = Completeness.load(BAKE / "completeness.npz", model.encode)
-    ways = mechanisms(schema, rates)
+def show(rows):
+    print(f"  {'rule':44} {'precision':>10} {'coverage':>10}   {'clustered':>18}  promise")
+    for r in rows:
+        if r["precision"] is None:
+            print(f"  {r['rule']:44} {'silent':>10} {0.0:>10.1%}   {'—':>18}")
+            continue
+        band = f"[{r['ci'][0]:.1%}, {r['ci'][1]:.1%}]" if r["ci"] else "—"
+        mark = "kept" if r["keeps_promise"] else "BROKEN"
+        print(f"  {r['rule']:44} {r['precision']:>10.1%} {r['coverage']:>10.1%}   "
+              f"{band:>18}  {mark}")
 
-    patients = [p for p in load_patients(path, limit=60000) if p["evidences"]]
-    fit = stream(model, patients[40000:40000 + CASES], ways, rates)
-    test = stream(model, patients[46000:46000 + CASES], ways, rates)
-    print(f"{len(fit):,} calibration rows, {len(test):,} test rows, target {TARGET:.0%}\n")
-    print(f"  {'rule':38} {'precision':>10} {'coverage':>11}   95% interval")
 
-    out = {}
-    # 1. split-conformal, marginal
-    cut_marginal = threshold(fit, TARGET)
-    report("split-conformal, one threshold",
-           [r["right"] for r in test if cut_marginal and r["margin"] >= cut_marginal],
-           len(test), out)
+def rules_on(fit, test, patients, rates, encode):
+    """Fit every rule on `fit` and score every rule on `test`. Nothing is loaded off disk, so
+    whatever `fit` has not seen, no rule has seen."""
+    out = []
 
-    # 2. Mondrian: a threshold per group
+    cut_one = threshold(fit, TARGET)
+    out.append(score("one global threshold",
+                     [r for r in test if cut_one is not None and r["margin"] >= cut_one],
+                     len(test), patients))
+
     groups = {}
     for r in fit:
         groups.setdefault(r["group"], []).append(r)
     per = {g: threshold(rows, TARGET) for g, rows in groups.items()}
-    report("Mondrian, a threshold per group",
-           [r["right"] for r in test
-            if per.get(r["group"]) is not None and r["margin"] >= per[r["group"]]],
-           len(test), out)
+    mondrian = [r for r in test
+                if per.get(r["group"]) is not None and r["margin"] >= per[r["group"]]]
+    out.append(score("a threshold per group (Mondrian partition)", mondrian, len(test), patients))
 
-    # 3. what ships
-    report("ours: isotonic in-group + the floor",
-           [r["right"] for r in test
+    seen = Completeness(encode).fit([(r["record"], r["true_n"]) for r in fit])
+    out.append(score("a threshold per group + the same floor",
+                     [r for r in mondrian if seen(r["record"]) >= FLOOR],
+                     len(test), patients))
+
+    cal = Calibrator(rates).fit(
+        [(r["margin"], r["record"], r["right"]) for r in fit]).thin()
+    ours = [r for r in test
             if seen(r["record"]) >= FLOOR and len(r["record"]) <= CEILING
-            and cal(r["margin"], r["record"]) >= TARGET],
-           len(test), out)
+            and cal(r["margin"], r["record"]) >= TARGET]
+    out.append(score("ours: isotonic in-group + the floor", ours, len(test), patients))
 
-    # 4. and the floor's own contribution, with the calibration removed
-    report("the floor alone, no calibration",
-           [r["right"] for r in test if seen(r["record"]) >= FLOOR],
-           len(test), out)
+    out.append(score("the floor alone, no calibration",
+                     [r for r in test if seen(r["record"]) >= FLOOR], len(test), patients))
 
-    # The comparison above fits every rule on the same mixture the test comes from, which is the
-    # friendly case. The one that matters is shift: fit on six ways a record goes short and test
-    # on the seventh, which is the situation any deployment is actually in.
-    held = "standard questions, no follow-ups"
-    some = {k: v for k, v in ways.items() if k != held}
-    fit_part = stream(model, patients[40000:40000 + CASES], some, rates)
-    test_held = stream(model, patients[46000:46000 + CASES],
-                       {held: ways[held]}, rates)
-    print(f"\nAnd under shift — fitted on six patterns, tested on the seventh "
-          f"({held!r}):\n")
-    print(f"  {'rule':38} {'precision':>10} {'coverage':>11}   95% interval")
+    # And the fair-to-them reading. Every threshold rule accepts a prefix of the margin ranking,
+    # so "the Mondrian rule at our coverage" and "the global rule at our coverage" are the same
+    # set of rows — there is one comparison here, not two, and the first version of this printed
+    # it twice at identical values before anyone noticed what that meant.
+    #
+    # It is the honest test of the CALIBRATION as distinct from the floor: stop the raw margin
+    # ranking exactly where we stopped and see whether reading P(correct) bought any accuracy.
+    # The ranking gets to choose its cut-off on the TEST set, which we never do.
+    matched = []
+    if ours:
+        best = sorted(test, key=lambda r: -r["margin"])[:len(ours)]
+        row = score("the raw margin ranking, stopped at our coverage", best, len(test), patients)
+        row["note"] = ("cut-off read off the test ranking, which no deployable rule can do — "
+                       "this flatters the baseline on purpose")
+        matched.append(row)
+    return out, matched
 
-    shifted = {}
-    cut_m = threshold(fit_part, TARGET)
-    report("split-conformal, one threshold",
-           [r["right"] for r in test_held if cut_m and r["margin"] >= cut_m],
-           len(test_held), shifted)
-    g2 = {}
-    for r in fit_part:
-        g2.setdefault(r["group"], []).append(r)
-    per2 = {g: threshold(rows, TARGET) for g, rows in g2.items()}
-    report("Mondrian, a threshold per group",
-           [r["right"] for r in test_held
-            if per2.get(r["group"]) is not None and r["margin"] >= per2[r["group"]]],
-           len(test_held), shifted)
-    report("ours: isotonic in-group + the floor",
-           [r["right"] for r in test_held
-            if seen(r["record"]) >= FLOOR and len(r["record"]) <= CEILING
-            and cal(r["margin"], r["record"]) >= TARGET],
-           len(test_held), shifted)
 
-    OUT.write_text(json.dumps({"target": TARGET, "calibration_rows": len(fit),
-                               "test_rows": len(test), "rules": out,
-                               "held_out_pattern": held, "under_shift": shifted}, indent=1))
+def main(path, cases=CASES):
+    schema = load_schema("ddxplus")
+    rates = json.loads((BAKE / "ddxplus_priors.json").read_text())["rates"]
+    model = SoftmaxScorer.load(WEIGHTS, schema)
+    ways = mechanisms(schema, rates)
+
+    patients = [p for p in load_patients(path, limit=46000 + cases) if p["evidences"]]
+    fit_pool = patients[40000:40000 + cases]
+    test_pool = patients[46000:46000 + cases]
+    fit = stream(model, fit_pool, ways, rates)
+    test = stream(model, test_pool, ways, rates)
+    print(f"{len(fit):,} calibration rows and {len(test):,} test rows, from {cases:,} and "
+          f"{cases:,} patients, target {TARGET:.0%}")
+    print(f"intervals are bootstrapped over patients, because {len(KEPT)} levels x "
+          f"{len(ways)} patterns is 35 views of each person\n")
+
+    print("In distribution — every rule fitted on all seven patterns, tested on all seven:\n")
+    plain, matched = rules_on(fit, test, len(test_pool), rates, model.encode)
+    show(plain)
+    if matched:
+        print()
+        show(matched)
+
+    print(f"\n\nUnder shift — fit on six patterns, test on the seventh. Every component "
+          f"refitted,\nours included. All {len(ways)} folds:\n")
+    folds = {}
+    for held in ways:
+        fold_fit = [r for r in fit if r["way"] != held]
+        fold_test = [r for r in test if r["way"] == held]
+        print(f"  held out: {held!r}  ({len(fold_fit):,} fit rows, {len(fold_test):,} test)")
+        rows, extra = rules_on(fold_fit, fold_test, len(test_pool), rates, model.encode)
+        show(rows)
+        if extra:
+            show(extra)
+        print()
+        folds[held] = {"rules": rows, "at_matched_coverage": extra}
+
+    print("Across the seven folds:\n")
+    print(f"  {'rule':44} {'worst precision':>16} {'folds kept':>11} {'mean coverage':>14}")
+    tally = {}
+    names = [r["rule"] for r in folds[next(iter(folds))]["rules"]]
+    for name in names:
+        rows = [next(r for r in folds[h]["rules"] if r["rule"] == name) for h in folds]
+        live = [r for r in rows if r["precision"] is not None]
+        if not live:
+            continue
+        worst = min(live, key=lambda r: r["precision"])
+        kept = sum(1 for r in live if r["keeps_promise"])
+        cov = sum(r["coverage"] for r in live) / len(live)
+        tally[name] = {"worst_precision": worst["precision"], "worst_fold": None,
+                       "folds_kept": kept, "folds": len(live), "mean_coverage": round(cov, 4)}
+        for h in folds:
+            if next(r for r in folds[h]["rules"] if r["rule"] == name) is worst:
+                tally[name]["worst_fold"] = h
+        print(f"  {name:44} {worst['precision']:>15.1%}  {f'{kept}/{len(live)}':>11} "
+              f"{cov:>14.1%}")
+
+    OUT.write_text(json.dumps({
+        "target": TARGET, "floor": FLOOR, "patients_each_split": cases,
+        "calibration_rows": len(fit), "test_rows": len(test),
+        "ci_kind": "bootstrap over patients, 400 draws",
+        "in_distribution": plain, "in_distribution_at_matched_coverage": matched,
+        "leave_one_pattern_out": folds, "across_folds": tally,
+        "retracted": "An earlier version of this experiment refitted only the baselines on six "
+                     "patterns and reused the shipped calibrator, which had been fitted on all "
+                     "seven. It reported 98.9% for us against 92.7% for Mondrian under shift. "
+                     "That comparison was invalid and those two numbers should not be quoted.",
+    }, indent=1))
     print(f"\nwrote {OUT}")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "data/ddxplus/release_validate_patients")
+    main(sys.argv[1] if len(sys.argv) > 1 else "data/ddxplus/release_validate_patients",
+         int(sys.argv[2]) if len(sys.argv) > 2 else CASES)

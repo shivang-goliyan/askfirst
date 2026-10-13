@@ -58,7 +58,7 @@ across them. On a complete record the product is nearly pointless, and the page 
 problem, not an input to it. The scorer's confidence turns out to be honest on a complete record
 and 40 points underconfident at 40% evidence, so a cut-off chosen on full records promises 95%
 precision and delivers 48% on a tenth of one. It now calibrates against how many findings it has
-in hand, estimates how much of the record is missing to within 0.057, and refuses outright below a
+in hand, estimates how much of the record is missing to a mean absolute error of 0.057, and refuses outright below a
 floor. On 30,000 records of undeclared completeness: **99.6% right, 45 wrong, on the 35% of cases
 it chooses to answer** — against 67.1% and 9,874 wrong if it answers everything.
 
@@ -66,7 +66,9 @@ it chooses to answer** — against 67.1% and 9,874 wrong if it answers everythin
 version of this did before. Remove the same number of findings seven realistic ways — the
 follow-ups never happened, no history was available, the detail went and the screen stayed — and
 accuracy at a fifth of a record runs from 19.2% to 73.2% depending only on which fifth. The
-refusal rule was tested in 22 of 35 cells, the other 13 going silent, and keeps its promise in all 22, and the two it does not are in the write-up.
+refusal rule was tested in 22 of 35 cells, the other 13 going silent, and keeps its promise in 20
+of the 22. The two it does not are in the write-up: 93.6% on 547 answers, and a cell that
+answered one case and got it wrong.
 
 **The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:
 42.7% without it, 43.7% asking at random, **72.3% asking what the engine says**. The ranking rule

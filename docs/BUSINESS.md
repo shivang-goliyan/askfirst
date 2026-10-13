@@ -32,11 +32,12 @@ need the expensive one.
 | never reach a person | **352** (measured, at a 95% bar, on records of undeclared completeness) |
 | answered wrongly | **1.7** (against 330.5 if everything is answered) |
 | review capacity returned | **C$3,500 – C$9,500** at C$10–27 a call |
-| **cost to serve** | **$0.0005** |
+| **cost to serve** | **$0.0004** |
 
-The cost line is the one that is easy to miss. An assessment is 58 ms of CPU — no GPU, no model
-call, 142 MB resident. On the commodity instance this is already deployed to, a thousand
-assessments cost **five hundredths of one cent**. The product that returns thousands of dollars of
+The cost line is the one that is easy to miss. An assessment is 47 ms of CPU — 53 ms on the
+thinnest records, which are the slowest because the gate does more work before giving up — with
+no GPU, no model call and 142 MB resident. On the commodity instance this is already deployed to,
+a thousand assessments cost **four hundredths of one cent**. The product that returns thousands of dollars of
 capacity per thousand records costs less than a cent to run per *million*.
 
 That asymmetry is the business: **gross margin is a rounding error away from 100%**, and it stays

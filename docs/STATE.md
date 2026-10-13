@@ -33,7 +33,7 @@ visitor pick a completeness level and read the threshold off that curve, which i
 deployment cannot know. Measured: the margin is honest on a full record and **40 points
 underconfident at 40% evidence**, so a threshold chosen on complete records promises 95% and
 delivers 48% on a tenth of one. Fixed with two pieces — an isotonic calibration on findings in
-hand, and a ridge estimate of how much of the record is missing (error 0.057) that refuses
+hand, and a ridge estimate of how much of the record is missing (mean absolute error 0.057) that refuses
 outright below 35%. On 30,000 records of undeclared completeness: **99.6% right, 45 wrong, on
 34.9% of cases**, against 67.1% and 9,874 wrong answering everything. The only dial left on the
 live case is the target precision. Write-up: `results/2026-10-13-the-page-stops-asking.md`.
@@ -41,8 +41,12 @@ live case is the target precision. Write-up: `results/2026-10-13-the-page-stops-
 **And then the uniform-missingness assumption got tested** (13 Oct, 12:30). Every number before
 this hid evidence at random. Cut the same number of findings seven different realistic ways and
 top-1 at a fifth of a record runs from **19.2% to 73.2%** — "20% of a record" is not one thing.
-The calibrated rule was tested in 22 of the 35 cells — the other 13 go silent — and holds in all 22; its worst is 93.6% [91.2%, 95.4%] on the likeliest
-pattern of all. Hold that pattern out of the fit and it breaks properly: 92.5% [90.2%, 94.3%].
+The calibrated rule is tested in 22 of the 35 cells — the other 13 go silent. **20 of the 22
+clear 95%**, not all of them: one lands at 93.6% [91.2%, 95.4%] on 547 answers, on the likeliest
+pattern of all, and one answered a single case and got it wrong. An earlier version of this line
+said "holds in all 22", which the artifact never supported — the script only flags a cell as
+broken when its interval excludes the target, and failing to prove a break is not a promise
+kept. Hold that pattern out of the fit and it breaks properly: 92.5% [90.2%, 94.3%].
 **We could not fully fix that cell.** Fitting against the pattern and adding a feature for how
 unusual the findings are takes it from 91.5% to 93.6%, short of the 95% promised; each ingredient
 helps a little and monotonically. An earlier version of that ladder claimed the fix worked and

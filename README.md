@@ -11,7 +11,7 @@ wrong answers for the other 80.8%, at a mean confidence of 0.69 (arXiv 2608.0908
 So we deleted four fifths of a patient record and asked an open model again. **Its confidence fell
 12%. A classifier fitted to the same data lost 83% of its confidence on the same deletion.** That
 gap is the product: askfirst works out how much of a record is missing *without being told*, to
-within 0.057, and refuses below a floor whatever the confidence says. On **30,000 held-out records
+off by 0.057 on average, and refuses below a floor whatever the confidence says. On **30,000 held-out records
 of undeclared completeness it answers 35% of them at 99.6% — 45 wrong instead of 9,874** — and
 hands the rest to a person with a ranked list of what to go and get.
 
@@ -167,7 +167,7 @@ outcomes rather than from a population marginal — scores 41.3%, worse than ask
 2. **A fitted scorer returns a distribution** over outcomes. Not a sampled answer: the posterior,
    because everything downstream is a function of it.
 3. **Two checks about the record itself**, neither of which depends on what did the scoring. How
-   much of the record is here, estimated to within 0.057 — below 35% it hands over whatever the
+   much of the record is here, with a mean absolute error of 0.057 — below 35% it hands over whatever the
    confidence says. And could this have come from a patient at all: no real record in 60,000 holds
    more than 38 findings, so above 44 it refuses without scoring.
 4. **One check about the answer.** The margin is turned into P(this is right) by a calibration
@@ -188,7 +188,7 @@ cannot ask it 208 yes/no questions about a note for the price of one shared pref
 It used to. Measured: the scorer's margin is honest on a complete record and **40 points
 underconfident at 40% evidence**, so a threshold chosen on full records promises 95% precision and
 delivers 48% on a tenth of one. The app now calibrates P(right) against how many findings it has
-in hand, estimates how much of the record is missing to within 0.057, and refuses outright below a
+in hand, estimates how much of the record is missing to a mean absolute error of 0.057, and refuses outright below a
 floor. On 30,000 records of undeclared completeness it is **99.6% right on the 35% it answers —
 45 wrong, against 9,874** if it answers everything
 (`docs/results/2026-10-13-the-page-stops-asking.md`).
@@ -198,7 +198,9 @@ floor. On 30,000 records of undeclared completeness it is **99.6% right on the 3
 So we stopped assuming they do. The same number of findings removed seven realistic ways — the
 follow-ups never happened, no history was available, the detail went and the screen stayed — and
 at a fifth of a record top-1 runs from **19.2% to 73.2% depending only on which fifth**. The
-calibrated refusal was tested in 22 of the 35 cells — the other 13 go silent — and holds in all 22 and is fitted against all seven patterns; hold the
+calibrated refusal is tested in 22 of the 35 cells — the other 13 go silent. **20 of those 22
+clear 95%**; one lands at 93.6% [91.2%, 95.4%] on 547 answers and one answered a single case and
+got it wrong. It is fitted against all seven patterns; hold the
 likeliest one out of the fit and it breaks by three points, which is the measured cost of
 calibrating against the wrong kind of missingness
 (`docs/results/2026-10-13-missing-not-at-random.md`).
@@ -217,7 +219,11 @@ every 1,000 records; holding a 95% bar puts 1.7 there and still takes 35% of the
 
 ## What this is not
 
-- Not a diagnostic tool, and not medical advice. It outputs no diagnosis and no therapy.
+- Not a diagnostic tool, not a medical device, and not medical advice. When it accepts a case it
+  **does name the condition it thinks most likely** — an earlier version of this line said it
+  "outputs no diagnosis", which is not what the code does (`api.py` returns `answer.label`). The
+  accurate description is a research prototype for *selective* diagnosis: it either names a
+  condition or hands over, and the handover is the part that was measured. It prescribes nothing.
 - Not clinically validated. No clinician has reviewed its output. Every figure is measured
   behaviour on public data and nothing more.
 - Not molecular design. Module B reads *existing published evidence about* variants. It does no
@@ -263,22 +269,35 @@ precision target is conformal prediction's problem (Vovk, Gammerman & Shafer, 20
 is a **Mondrian predictor** — a threshold per group, the group being how many findings are in hand
 and how unusual they are — with an isotonic fit instead of a quantile, plus a record-level floor.
 
-Implemented the standard version against ours, 105,000 calibration and 105,000 test rows:
+Implemented the standard version against ours. **The first version of this comparison was
+rigged in our favour and a reviewer caught it** — it refitted only the baselines on six
+missingness patterns while scoring us with a calibrator that had seen all seven. Those numbers
+are withdrawn. Redone with every component refitted per fold, all seven leave-one-pattern-out
+folds, the floor offered to the baselines, and intervals bootstrapped over patients:
 
-| | precision | coverage |
+| fitted on all seven, tested on all seven | precision | queue taken |
 |---|---|---|
-| split-conformal, one threshold | 94.5% *(misses)* | 57.8% |
-| **Mondrian, per group** | **95.9%** | **53.5%** |
-| ours | 99.5% | 35.1% |
+| one global threshold | 94.9% *(misses)* | 57.0% |
+| **a threshold per group (Mondrian partition)** | **96.2%** | **52.9%** |
+| a threshold per group + the same floor | 97.0% | 46.3% |
+| ours: isotonic in-group + the floor | 99.5% | 35.8% |
 
-**In distribution the standard tool beats us** — same bar, eighteen more points of coverage. Then
-fit on six missingness patterns and test on the seventh: **Mondrian falls to 92.7% and stops
-keeping its word; ours holds at 98.9%.** Conformal guarantees rest on exchangeability, and
-records do not go short the same way twice. The part that survives is the one conformal has no
-equivalent of — a refusal on a property of the *record* rather than of the score.
+**In distribution the standard tool beats us on coverage** — same bar, seventeen more points.
+Under shift, across all seven folds, ours is the only rule that keeps the 95% promise every time:
+**7 of 7, worst fold 98.5%**, against 5 of 7 for the per-group threshold (worst 91.3%) and 5 of 7
+when that threshold is given our floor as well (worst 92.7%). Neither piece is sufficient on its
+own — the floor alone keeps 3 of 7.
 
-The trade is robustness bought with coverage, and the over-delivery (99.5% when asked for 95%) is
-a defect we can name but have not fixed (`docs/results/2026-10-13-why-not-conformal.md`).
+One row of that experiment costs us something: stop the **raw, uncalibrated margin ranking** at
+exactly our coverage and it is equally precise (99.46% against 99.45%). The calibration is not
+buying ordering. What it buys is a stopping point chosen *without* seeing the answers — and every
+rule above that had to choose blind, except ours, broke the promise at least twice in seven folds.
+
+These baselines are selective prediction over a Mondrian partition, not conformal prediction
+sets, and they carry no conformal guarantee; calling them conformal was sloppy and is corrected
+in the write-up. The trade is robustness bought with coverage, and the over-delivery (99.5% when
+asked for 95%) remains a defect we can name and have not fixed
+(`docs/results/2026-10-13-the-comparison-was-rigged.md`).
 
 ## Prior work
 
@@ -333,12 +352,12 @@ call.
 
 Per 1,000 records at a 95% bar: **352 never reach a person**, 1.7 are answered wrongly against
 330.5 if everything is answered, **C$3,500–9,500 of review capacity returned**, and a **cost to
-serve of $0.0005** — an assessment is 58 ms of CPU with no GPU and no model call. Priced at C$500
+serve of $0.0004** — an assessment is 47 ms of CPU with no GPU and no model call. Priced at C$500
 per thousand that is a 7–19× return for the buyer at close to 100% gross margin.
 
 The defensibility came out of a limitation: the calibration has to be fitted against the way
-records go short where it runs, and we measured that getting it wrong costs about two points of
-precision. The deployed thing is fitted to one operator's intake behaviour and does not transfer.
+records go short where it runs, and we measured that getting it wrong costs about 1.1 points of
+precision — on intervals that overlap, so it is a real effect we cannot size precisely yet. The deployed thing is fitted to one operator's intake behaviour and does not transfer.
 
 Nobody has bought it, there is no pilot, and the throughput is measured on synthetic patients.
 Full case, including what would have to be true: [docs/BUSINESS.md](docs/BUSINESS.md).

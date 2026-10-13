@@ -116,3 +116,47 @@ def test_the_floor_and_ceiling_are_stated():
     body = (ROOT / "docs/SAFETY.md").read_text()
     assert f"{FLOOR * 100:.0f}%" in body, "SAFETY.md does not say where the floor is"
     assert str(CEILING) in body, "SAFETY.md does not say where the ceiling is"
+
+
+def test_cost_to_serve_quoted_right():
+    """This one drifted quietly: four files said 58 ms and $0.0005 when the artifact had never
+    held either number. Nothing caught it because the cost line had no assertion."""
+    cost = load("cost-to-serve.json")
+    usd = f"${cost['mean_usd_per_1000']:.4f}"
+    ms = f"{cost['mean_cpu_ms']:.0f} ms"
+    for name, body in text("README.md", "ui/deck.html", "docs/BUSINESS.md").items():
+        assert quotes(body, usd), f"{name} does not quote the measured cost {usd}"
+        assert ms in body, f"{name} does not quote the measured {ms} per assessment"
+        assert "58 ms" not in body, f"{name} still quotes 58 ms, which was never measured"
+
+
+def test_conformal_fold_tally_quoted_right():
+    """The comparison this guards was rigged once already: the baselines were refitted on six
+    missingness patterns and ours was not. These assertions pin the fair version."""
+    conf = load("conformal.json")
+    folds = conf["across_folds"]
+    ours = folds["ours: isotonic in-group + the floor"]
+    mondrian = folds["a threshold per group (Mondrian partition)"]
+    body = text("README.md")["README.md"]
+    assert quotes(body, f"{ours['folds_kept']} of {ours['folds']}"), (
+        "README does not say how many folds our rule kept the promise in")
+    assert quotes(body, pct(ours["worst_precision"])), "README lost our worst fold"
+    assert quotes(body, pct(mondrian["worst_precision"])), "README lost the baseline's worst fold"
+    for ghost in ("98.9%", "92.7% and stops"):
+        assert ghost not in body, f"README still quotes the retracted figure {ghost!r}"
+
+
+def test_the_missingness_grid_is_counted_honestly():
+    """"holds in all 22" survived in five files. It was never in the artifact: the script only
+    flags a cell broken when its interval excludes the target, which is not the same thing."""
+    grid = load("missingness.json")["shipped"]
+    cells = [c for levels in grid.values() for c in levels.values() if c and c.get("answered")]
+    clear = sum(1 for c in cells if c["precision"] >= 0.95)
+    for name, body in text("README.md", "docs/STATE.md", "ui/deck.html", "docs/SUBMISSION.md",
+                           "docs/DECK.md").items():
+        # emphasis and line breaks sit inside the phrase, so flatten before looking for it
+        flat = re.sub(r"\s+", " ", re.sub(r"\*+|</?strong>|</?em>", "", body))
+        assert re.search(rf"{clear} of (?:the |those )?{len(cells)}", flat), (
+            f"{name} does not say {clear} of {len(cells)} cells clear the bar")
+        assert "holds in all 22" not in body or "never supported" in body, (
+            f"{name} still claims the rule holds in all 22 cells")

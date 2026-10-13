@@ -60,3 +60,32 @@ def ece(scored, bins=10):
     if not total:
         return 0.0
     return sum(r["n"] / total * abs(r["accuracy"] - r["confidence"]) for r in rows)
+
+
+def clustered(answered, patients, draws=400, seed=19):
+    """Bootstrap over PATIENTS, not over rows. Resample the people, take every view each
+    resampled person contributed, and recompute. Wilson over rows assumes independence that
+    repeated views of one patient do not have.
+
+    `answered` rows need a "who" and a "right"; `patients` is how many people were in the pool,
+    which is only used to keep callers honest about what they are resampling."""
+    import random as _random
+
+    by_who = {}
+    for row in answered:
+        by_who.setdefault(row["who"], []).append(row["right"])
+    who = list(by_who)
+    if not who:
+        return None, None
+    rng = _random.Random(seed)
+    spread = []
+    for _ in range(draws):
+        hits = seen = 0
+        for _ in range(len(who)):
+            for right in by_who[who[rng.randrange(len(who))]]:
+                seen += 1
+                hits += right
+        if seen:
+            spread.append(hits / seen)
+    spread.sort()
+    return spread[int(0.025 * len(spread))], spread[int(0.975 * len(spread)) - 1]

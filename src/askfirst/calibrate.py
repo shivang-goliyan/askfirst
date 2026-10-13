@@ -14,8 +14,8 @@ completeness — nobody deploying this knows a record is 40% complete, but every
 things are written on it.
 
 `Completeness` estimates what fraction of the record is present, by predicting how many findings
-this patient would have had. Within 0.08 on held-out data, which is enough to refuse outright
-below a floor — and below that floor no threshold reaches a useful precision anyway."""
+this patient would have had. Mean absolute error 0.057 on held-out data — an average, not a
+bound, and the tail is what matters at the boundary. Enough to refuse outright below a floor — and below that floor no threshold reaches a useful precision anyway."""
 
 import bisect
 import json

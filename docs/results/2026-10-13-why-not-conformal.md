@@ -1,5 +1,15 @@
 # Why not conformal prediction? — 13 October 2026
 
+> **Superseded, and partly retracted, the same evening.** The shift test below refitted only the
+> baselines on six missingness patterns; our own rule was the shipped calibrator, which had been
+> fitted on all seven including the held-out one. The two numbers it produced — **Mondrian 92.7%
+> against ours 98.9%** — are withdrawn and should not be quoted. The experiment was redone with
+> every component refitted per fold, across all seven folds, with the floor offered to the
+> baselines: `2026-10-13-the-comparison-was-rigged.md`. The in-distribution table here also moved
+> slightly when the sample was resized, and the word "conformal" is used too loosely throughout —
+> these are selective-prediction baselines over a Mondrian partition, not conformal prediction
+> sets. Read the replacement instead; this file is kept because the retraction is the point.
+
 Selective prediction with a precision target is not a new idea, and **conformal prediction** is
 the framework for it (Vovk, Gammerman & Shafer, *Algorithmic Learning in a Random World*, 2005).
 Mondrian — class- or group-conditional — predictors calibrate a separate threshold per partition
