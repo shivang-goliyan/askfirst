@@ -306,7 +306,7 @@ function draw(r, cov){
       ? 'Bits per unit of cost &mdash; after dropping anything that settles less than a quarter of what the best option settles. Cheapness only breaks ties between useful questions.'
       : 'Ordered by how many answers the question admits, not by the bits. Ranking by expected '
         + 'information gain measured <span class="warn">worse than asking nothing at all</span> '
-        + '(39.9% against 42.9%); this order gets 72.5%. The bits are shown because they are '
+        + '(39.9% against 42.9%); this order gets 72.2%. The bits are shown because they are '
         + 'what we expected to work.'}</div>
     ${rests ? `<h2 style="margin-top:20px">What the answer currently rests on</h2>
       <table><tr><th>already known</th><th class="num">influence</th></tr>${rests}</table>` : ''}`;

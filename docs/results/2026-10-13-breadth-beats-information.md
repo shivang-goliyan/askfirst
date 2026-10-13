@@ -14,15 +14,15 @@ to a handful of findings, **one question allowed**. The candidate pool is everyt
 actually has that we have not seen, plus 25 fields they do not have, so a strategy is not rewarded
 for knowing which questions have answers.
 
-| findings in hand | no question | ask at random | by expected information | by answer rate | by answer breadth | breadth × rate | *oracle: widest the patient can answer* |
-|---|---|---|---|---|---|---|---|
-| 2 | 26.5% | 32.1% | 22.8% | 24.2% | 59.6% | **61.3%** | *63.0%* |
-| 3 | 42.9% | 47.9% | 39.9% | 42.0% | 71.6% | **72.5%** | *74.3%* |
-| 5 | 70.3% | 72.9% | 68.1% | 70.1% | 85.9% | **86.4%** | *87.1%* |
+| findings in hand | no question | ask at random | expected information, **as the literature states it** | expected information, population marginals | whatever usually answers | whatever *this patient* can answer | by answer breadth | breadth × rate | *oracle* |
+|---|---|---|---|---|---|---|---|---|---|
+| 2 | 26.5% | 32.0% | **23.6%** | 22.8% | 24.1% | 50.2% | 60.5% | **61.8%** | *63.8%* |
+| 3 | 42.9% | 47.9% | **41.0%** | 39.9% | 41.8% | 64.2% | 71.4% | **72.2%** | *74.2%* |
+| 5 | 70.3% | 72.9% | **69.5%** | 68.1% | 70.3% | 83.2% | 86.1% | **86.6%** | *87.4%* |
 
 95% intervals at three findings (n=4,000): no question [41.3%, 44.4%], random [46.3%, 49.4%],
-expected information [38.4%, 41.4%], answer rate [40.5%, 43.6%], breadth [70.2%, 73.0%],
-breadth × rate [71.1%, 73.8%].
+expected information [39.5%, 42.6%], answerable [62.7%, 65.6%], breadth [70.0%, 72.8%],
+breadth × rate [70.7%, 73.5%].
 
 Two things to take from that table.
 
@@ -30,7 +30,17 @@ Two things to take from that table.
 than leaving the record alone, at all three starting sizes, with intervals that do not touch. It
 picks a question, you go and get the answer, and the decision gets *worse*.
 
-**Ranking by `log2(number of answers the question admits)` adds 13 to 29 points over a coin** — 24.6 at three findings, 29.2 at two, 13.5 at five, and
+That now holds against the objective **implemented properly**, which it did not before. A review
+pointed out that our P(value) was the population marginal — the same for every patient — which is
+not what BALAR or MedClarify do and is a strawman version of them. It is now computed the way the
+literature states it, by going through the outcomes:
+
+    P(value | record) = Σ over outcomes of P(value | outcome) × P(outcome | record)
+
+with the first term counted once from the 30,000 fitting patients and the second taken from the
+scorer. **Doing it correctly is worth about one point and does not change the conclusion.**
+
+**Ranking by `log2(number of answers the question admits)` adds 13 to 29 points over a coin** — 24.3 at three findings, 29.2 at two, 13.5 at five, and
 lands within 2 points of an oracle that is told which questions this patient can actually answer.
 
 ## Why the principled objective loses
@@ -50,14 +60,35 @@ before asking about one more symptom.** Of DDXPlus's 223 fields only 13 admit mo
 answers — pain intensity, where it is, how fast it came on, what it feels like — and they carry
 most of the discriminating signal. Ranking by breadth finds them without being told which they are.
 
-## The ablation that matters
+## The ablation that matters, and the one that corrected it
 
 Breadth × answer rate is the order the engine ships. The obvious objection is that the rate term
-is doing the work — that this is really "ask whatever usually gets answered" wearing a disguise.
-It is not: **answer rate on its own scores 42.0%, below a coin's 47.9% and below asking nothing.**
-Breadth alone gets 71.6%. The product is worth about one further point and its interval overlaps
-breadth's, so the multiplier is kept because it never measured worse, not because it is
-established.
+is doing the work — that this is really "ask whatever usually gets answered" in disguise. It is
+not: **the population answer rate on its own scores 41.8%, below a coin's 47.9% and below asking
+nothing at all.** Breadth alone gets 71.4%. The product is worth about one further point with
+overlapping intervals, so the multiplier is kept because it never measured worse, not because it
+is established.
+
+**But a conditional answer rate is a different thing, and it is not worthless.** Asking whatever
+*this patient* is likeliest to be able to answer — P(the question returns anything | record),
+from the same conditional table — scores **64.2%**, far above a coin and far above the population
+rate. It is still seven points behind breadth, and both are behind the oracle. An earlier version
+of this note said flatly that answer rate is worth nothing; that was true of the marginal and
+false of the conditional, and the distinction is the interesting part rather than a detail.
+
+## Why the bits come out negative, which is not the priors' fault
+
+The page prints information gains like −0.193 bits, and a mutual information cannot be negative.
+The first guess was the marginal priors. It is not: on a three-finding record, **210 of 220
+candidate questions still have negative gain after conditioning properly.**
+
+The real reason is that the scorer is discriminative. H(outcome | value) is obtained by re-running
+a classifier with one more feature switched on, and a classifier is under no obligation to reduce
+its own entropy when you do that — it is not performing a Bayesian update of the posterior it just
+produced. Information gain is only guaranteed non-negative when both terms come from one coherent
+joint model, and here they do not. That is worth stating because it means the objective was never
+going to behave, whatever the priors, as long as the thing computing the entropies is a separately
+trained classifier.
 
 ## Three bugs, all of them in our favour
 
@@ -100,7 +131,7 @@ caught its own error before publication rather than after.
    hypotheses" is not "what is missing from this record".
 3. **Expected information gain** — 39.9% against 47.9% for random and 42.9% for asking nothing.
    The principled choice the literature uses, and the only one that is worse than silence.
-4. **Answer breadth** — 71.6%, or 72.5% weighted by how often the question gets answered. No model
+4. **Answer breadth** — 71.4%, or 72.2% weighted by how often the question gets answered. No model
    beliefs involved.
 
 Four attempts, three of them worse than a coin, and the winner is a property of the question rather
@@ -116,7 +147,7 @@ checked on the live API; all three return the same first four questions.
 That is not a bug being excused. It is the result. Four patient-specific objectives were tried —
 flip probability, pathology-conditioned discrimination, expected information gain, answer rate —
 and three of them lost to a coin. **We went looking for a patient-specific ranking and found that
-a patient-independent one wins**, on this benchmark, by 24.6 points at three findings.
+a patient-independent one wins**, on this benchmark, by 24.3 points at three findings.
 
 What *is* patient-specific is everything shown beside the order: what the current answer rests on,
 what each answer would settle in bits, how often one more fact would change the decision. Those

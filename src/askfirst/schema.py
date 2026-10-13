@@ -151,6 +151,44 @@ def fit_ask_rates(records, schema):
     return {name: hits / n for name, hits in seen.items()}
 
 
+def fit_conditional(labelled, schema, smoothing=1.0):
+    """P(this question comes back as this value | the condition is X), for every field.
+
+    The thing a marginal prior cannot do. Expected information gain is supposed to weight each
+    possible answer by how likely it is GIVEN WHAT WE ALREADY BELIEVE — P(value | record) — and
+    the way to get there is to go through the outcomes:
+
+        P(value | record) = sum over outcomes of P(value | outcome) x P(outcome | record)
+
+    The first term is counted here, once, from labelled training patients. The second is what the
+    scorer already returns. Without this the ranker uses the population marginal, which is the
+    same for every patient and lets the quantity come out negative — a mutual information cannot.
+
+    `labelled` is pairs of (record as it arrived, the outcome it really was). The mass that is
+    missing from each row is the chance the question returns nothing at all, which is left out
+    rather than renormalised away, because it is real."""
+    seen = {o: smoothing * len(schema.fields) for o in schema.outcomes}
+    tally = {name: {o: {v: smoothing for v in spec.values} for o in schema.outcomes}
+             for name, spec in schema.fields.items()}
+    totals = {o: smoothing * 2 for o in schema.outcomes}
+
+    for record, outcome in labelled:
+        if outcome not in totals:
+            continue
+        totals[outcome] += 1.0
+        for name, value in record.items():
+            if name not in tally:
+                continue
+            for v in (value if isinstance(value, list) else [value]):
+                if v in tally[name][outcome]:
+                    tally[name][outcome][v] += 1.0
+
+    return {
+        name: {o: {v: c / totals[o] for v, c in row.items()} for o, row in by_outcome.items()}
+        for name, by_outcome in tally.items()
+    }
+
+
 def fit_priors(records, schema, smoothing=1.0):
     """Count how often each value actually shows up. Laplace-smoothed so a value that never
     appears in the sample doesn't get written off as impossible."""

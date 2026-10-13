@@ -69,7 +69,7 @@ accuracy at a fifth of a record runs from 19.2% to 73.2% depending only on which
 refusal rule keeps its promise in 33 of 35 cells, and the two it does not are in the write-up.
 
 **The advice half.** One question, from a record cut to three findings, 4,000 held-out patients:
-42.9% without it, 47.9% asking at random, **72.5% asking what the engine says**. The ranking rule
+42.9% without it, 47.9% asking at random, **72.2% asking what the engine says**. The ranking rule
 is `log2(number of answers the question admits)`, weighted by how often the question gets answered
 at all. In clinical terms: characterise what you already know before asking about one more symptom.
 

@@ -17,7 +17,7 @@ question: *is there enough here?* When there isn't, it refuses and names what to
 
 That ordering is deliberately a property of the questions rather than of the patient, and it is
 the whole finding: every patient-specific objective we tried lost to a coin, and this one beat
-them all by 24.6 points at three findings (13 to 29 across the three record sizes). The patient-specific numbers are still on the page beside it — what the
+them all by 24.3 points at three findings (13 to 29 across the three record sizes). The patient-specific numbers are still on the page beside it — what the
 current answer rests on, what each answer would settle, how often one more fact would change the
 decision — they just do not decide the order.
 
@@ -152,9 +152,10 @@ patients, 49 conditions, chance 2.0%:
 On a complete record this product is nearly pointless, and the page says so.
 
 **The advice works, and the principled objective is what was wrong.** One question from a
-three-finding record, 4,000 patients: 42.9% asking nothing, 47.9% asking at random, **72.5%
+three-finding record, 4,000 patients: 42.9% asking nothing, 47.9% asking at random, **72.2%
 asking what the engine says**. Ranking by expected information gain — the objective the
-literature uses — scores 39.9%, worse than asking nothing at all.
+literature uses, now implemented the way it states it, with P(value | record) taken through the
+outcomes rather than from a population marginal — scores 41.0%, worse than asking nothing at all.
 
 ## How it works
 
@@ -237,11 +238,13 @@ and the comparison against it is the point rather than something to avoid:
 - **ALFA** (arXiv 2502.14860) — aligning models to ask better clinical questions.
 - **BALAR / MedClarify** — choose the next question by expected information gain over a
   predefined question set. **We implemented that objective and measured it losing to a coin —
-  and then to silence:** 39.9% against 47.9% for asking at random and 42.9% for asking nothing at
+  and then to silence:** 41.0% against 47.9% for asking at random and 42.9% for asking nothing at
   all, one question from a three-finding record, 4,000 held-out patients. It is an expectation
-  taken under the model's own beliefs, and on a sparse record those beliefs are wrong. Two bugs
-  in our own implementation of it had been flattering it; fixing them made it worse. Ranking
-  instead by how much a question *could* tell you scores 72.5%
+  taken under the model's own beliefs, and on a sparse record those beliefs are wrong. Our first
+  implementation weighted answers by a population marginal, which is not what they do; computing
+  P(value | record) through the outcomes the way they state it is worth about one point and does
+  not change the result. Ranking
+  instead by how much a question *could* tell you scores 72.2%
   (`docs/results/2026-10-13-breadth-beats-information.md`).
 
 Those methods select from a question set, or prompt the model to ask. askfirst scores every

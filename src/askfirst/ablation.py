@@ -46,8 +46,8 @@ def answer_breadth(spec):
         ask at random                    47.9%
         ask by expected information      39.9%   <- worse than asking nothing
         ask whatever usually answers     42.0%   <- also worse than random
-        ask the widest question          71.6%
-        widest, weighted by answer rate  72.5%
+        ask the widest question          71.4%
+        widest, weighted by answer rate  72.2%
         (upper bound: widest question the patient can actually answer, 74.3%)
 
     Because both terms are properties of the QUESTION, the resulting order is the same for every
@@ -122,7 +122,33 @@ def sensitivity_map(record, scorer, schema):
     return sorted(out, key=lambda i: -i.shift)
 
 
-def rank_gaps(record, scorer, schema, candidates=None):
+def answer_odds(name, schema, base, conditional):
+    """How likely each answer is GIVEN what we already believe, not in the population.
+
+        P(value | record) = sum over outcomes of P(value | outcome) x P(outcome | record)
+
+    The first term is counted once from labelled patients, the second is what the scorer just
+    returned. Whatever mass is left over is the chance the question comes back with nothing,
+    which is a real outcome and is not renormalised away.
+
+    Without this the weights are population marginals — identical for every patient — and that
+    is the thing a reviewer correctly called a strawman version of the published objective."""
+    spec = schema.fields[name]
+    table = conditional.get(name) if conditional else None
+    if not table:
+        return schema.priors_for(name), spec.asked_rate
+
+    weight = {}
+    for value in spec.values:
+        weight[value] = sum(table.get(o, {}).get(value, 0.0) * p for o, p in base.items())
+    answered = sum(weight.values())
+    if answered <= 0:
+        return schema.priors_for(name), spec.asked_rate
+    rate = min(1.0, answered)
+    return {v: w / answered for v, w in weight.items()}, rate
+
+
+def rank_gaps(record, scorer, schema, candidates=None, conditional=None):
     """For each thing we don't have, try every value it could come back as, and weight the
     result by how likely that value is. flip_prob is then a real probability: the chance that
     going and getting this field changes the decision."""
@@ -137,8 +163,7 @@ def rank_gaps(record, scorer, schema, candidates=None):
         if not values:
             continue
 
-        priors = schema.priors_for(name)
-        rate = schema.fields[name].asked_rate
+        priors, rate = answer_odds(name, schema, base, conditional)
         rows = []
         for value in values:
             dist = scorer({**record, name: value})
@@ -174,7 +199,7 @@ def rank_gaps(record, scorer, schema, candidates=None):
     # Breadth, discounted by how often the question comes back with anything; expected
     # information only breaks ties. Ranking by expected information gain measured WORSE than
     # asking nothing at all (39.9% against 42.9%), and worse than a coin (47.9%). Breadth alone
-    # gives 71.6% and breadth x answer rate gives 72.5%, against 74.3% for being told which
+    # gives 71.4% and breadth x answer rate gives 72.2%, against 74.3% for being told which
     # questions this patient can answer. The bits are still computed and still shown; they just
     # do not decide the order, because they are an expectation taken under beliefs that are
     # wrong on exactly the sparse records where the advice matters.
