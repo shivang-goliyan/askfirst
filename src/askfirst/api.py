@@ -23,7 +23,7 @@ from .ablation import (
     entropy,
     rank_gaps,
     sensitivity_map,
-    sufficiency,
+    most_telling_gap,
 )
 from .model import Endpoint, ModelScorer
 from .schema import load_schema
@@ -311,7 +311,7 @@ def assess(case: Case):
         "threshold": round(threshold, 4),
         "threshold_calibrated": calibrated,
         "entropy_bits": round(entropy(dist), 3),
-        "sufficiency": sufficiency(case.record, scorer, schema, gaps),
+        "one_more_fact_flips": most_telling_gap(case.record, scorer, schema, gaps),
         "answer": (
             {"key": ranked[0][0], "label": schema.label_for_outcome(ranked[0][0])}
             if answering and ranked else None

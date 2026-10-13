@@ -230,3 +230,12 @@ def test_baked_rule_refuses_a_stub():
     thin, thick = {"E_55": "present"}, dict.fromkeys(list(schema.fields)[:14], "present")
     assert done(thin) < FLOOR
     assert cal(0.2, thin) < cal(0.95, thick)
+
+
+def test_thin_records_are_not_settled():
+    """The old sufficiency number read 96/100 on a record too thin to judge."""
+    from askfirst.ablation import most_telling_gap
+    from askfirst.softmax import SoftmaxScorer
+    schema = load_schema("ddxplus")
+    model = SoftmaxScorer.load("src/askfirst/baked/ddxplus_softmax.npz", schema)
+    assert 0.0 <= most_telling_gap({"E_55": "present"}, model, schema) <= 1.0

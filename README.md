@@ -5,9 +5,11 @@
 **Live: [askfirst.kgbnetwork.com](https://askfirst.kgbnetwork.com)** · [the deck](https://askfirst.kgbnetwork.com/deck.html)
 
 Ask a model to decide something from an incomplete record and it will decide anyway. It sounds
-exactly as confident when the one result that settles the case is absent. On cases with
-information deliberately withheld, a recent evaluation measured a frontier model's hallucination
-rate at 0.808 (arXiv 2608.09080).
+exactly as confident when the one result that settles the case is absent. Take 500 clinical
+questions, delete the correct option, and offer "insufficient information" instead: GPT-5 picks
+one of the remaining wrong answers **80.8% of the time**, at a mean confidence of 0.69
+(arXiv 2608.09080, Table IV). Abstaining was an option on the page and it took it 19.2% of the
+time.
 
 askfirst does not decide. It sits in front of the model that does, and answers a narrower
 question: *is there enough here?* When there isn't, it refuses and names what to go and find,
@@ -17,17 +19,46 @@ Two domains, one engine.
 
 ## Module A — clinical records
 
+Real output from the live app, not an illustration. Nothing told it the record was 31% complete;
+it worked that out from what it was handed.
+
 ```
-Record #4471 — 34F, chest pain 2h, HR 104, BP 138/86, no ECG, no troponin
+A real held-out patient — M, 79 — with 4 of their 11 findings in hand:
 
-  SUFFICIENCY  38 / 100     not enough to decide
+  Do you have severe Chronic Obstructive Pulmonary Disease (COPD)?
+      -> present
+  Are you experiencing shortness of breath or difficulty breathing in a significant way?
+      -> present
+  Do you have a cough that produces colored or more abundant sputum than usual?
+      -> present
+  Do you smoke cigarettes?
+      -> present
 
-  Go get:   troponin        if elevated, the answer changes with p = 0.71
-            ECG             if abnormal,  the answer changes with p = 0.64
-            d-dimer         marginal,     p = 0.11
+  COMPLETENESS    about 31% of a record, below the 35% floor
+  ANSWERING       no
+  WHY             only about 31% of a record — too little to judge the answer by, whatever the confidence says
+  ONE MORE FACT   would change the answer 3.8% of the time
 
-  Cheapest decisive test:   troponin   (~4 min, lowest unit cost of the three)
+  Go get, widest question first:
+    Do you feel pain somewhere?
+        165 possible answers, answered 81% of the time
+    Does the pain radiate to another location?
+        165 possible answers, answered 81% of the time
+    Have you traveled out of the country in the last 4 weeks?
+        12 possible answers, answered 100% of the time
+
+All 11 findings in, same patient, same model:
+
+  ANSWERING       yes — Acute COPD exacerbation / infection
+  WHY             better than 99% likely to be right, which clears the 95% asked for
+  COMPLETENESS    about 100% of a record
+
+  Scored by: softmax regression on CPU, 99.6% top-1 on complete records
+  The condition really was: Acute COPD exacerbation / infection
 ```
+
+The second domain, where questions carry a price and the ranking has to account for it, is the
+other tab on the live page.
 
 ## Module B — cancer variant classification
 
@@ -77,6 +108,28 @@ This module reads and scores sequences. It does no structure prediction, no bind
 and nothing wet-lab. It outputs no diagnosis, no therapy, and no statement that a variant is
 pathogenic.
 
+## What is measured, and where to read it
+
+Everything below is on held-out DDXPlus patients the scorer never saw, with intervals, and every
+figure has a dated write-up in [`docs/results/`](docs/results/) — including the four that did not
+work and the two headlines we killed ourselves.
+
+**Refusing pays, and how much to refuse depends on how thin the record is.** 6,000 held-out
+patients, 49 conditions, chance 2.0%:
+
+| evidence kept | answer everything | answer the confident 25% |
+|---|---|---|
+| 100% | 99.6% | 100.0% |
+| 40% | 82.6% | 98.3% |
+| 20% | 39.9% | 73.5% |
+
+On a complete record this product is nearly pointless, and the page says so.
+
+**The advice works, and the principled objective is what was wrong.** One question from a
+three-finding record, 4,000 patients: 42.9% asking nothing, 47.9% asking at random, **72.5%
+asking what the engine says**. Ranking by expected information gain — the objective the
+literature uses — scores 39.9%, worse than asking nothing at all.
+
 ## How it works
 
 1. The record is parsed into atomic fields — each symptom, each measurement, each evidence code.
@@ -91,6 +144,38 @@ pathogenic.
 Step 2 is why this needs open weights. You cannot read a closed API's answer distribution or its
 internal state, so you cannot measure what its answer actually rests on. Step 3 is the compute
 cost: one case costs as many forward passes as it has fields, which is what the GPU is for.
+
+## The page does not ask you how complete your record is
+
+It used to. Measured: the scorer's margin is honest on a complete record and **40 points
+underconfident at 40% evidence**, so a threshold chosen on full records promises 95% precision and
+delivers 48% on a tenth of one. The app now calibrates P(right) against how many findings it has
+in hand, estimates how much of the record is missing to within 0.053, and refuses outright below a
+floor. On 30,000 records of undeclared completeness it is **99.6% right on the 34% it answers —
+38 wrong, against 9,874** if it answers everything
+(`docs/results/2026-10-13-the-page-stops-asking.md`).
+
+## Records do not go missing at random
+
+So we stopped assuming they do. The same number of findings removed seven realistic ways — the
+follow-ups never happened, no history was available, the detail went and the screen stayed — and
+at a fifth of a record top-1 runs from **19.6% to 73.2% depending only on which fifth**. The
+calibrated refusal survives 33 of 35 cells and is fitted against all seven patterns; hold the
+likeliest one out of the fit and it breaks by three points, which is the measured cost of
+calibrating against the wrong kind of missingness
+(`docs/results/2026-10-13-missing-not-at-random.md`).
+
+## What it is worth, at prices we did not invent
+
+The economics here used to price a wrong answer at 100 and a handover at 5, with no argument for
+either. Published figures put a triage call at C$10–27 and the expected cost of a confident wrong
+answer at $4,220–$167,000 — **a ratio of 211:1 to 8,356:1 against our 20:1**, so every saving in
+this repo is conservative. Carried honestly, though, expected-cost minimisation says *switch the
+product off*: above about 4,000:1 the cheapest policy answers nothing and refers everything. That
+is a flaw in the objective — clinicians are finite and the queue has to go somewhere. The number
+that survives is throughput at a fixed bar: **answering everything puts 330.5 wrong answers into
+every 1,000 records; holding a 95% bar puts 1.7 there and still takes 35% of the queue**
+(`docs/results/2026-10-13-what-it-is-worth.md`).
 
 ## What this is not
 
@@ -136,38 +221,6 @@ and the comparison against it is the point rather than something to avoid:
 Those methods select from a question set, or prompt the model to ask. askfirst measures which
 *absent* field most destabilises the model's own answer distribution, and then prices the answer.
 The number we care about is that +22.3%, measured on their benchmark, against ours.
-
-## The page does not ask you how complete your record is
-
-It used to. Measured: the scorer's margin is honest on a complete record and **40 points
-underconfident at 40% evidence**, so a threshold chosen on full records promises 95% precision and
-delivers 48% on a tenth of one. The app now calibrates P(right) against how many findings it has
-in hand, estimates how much of the record is missing to within 0.053, and refuses outright below a
-floor. On 30,000 records of undeclared completeness it is **99.6% right on the 34% it answers —
-38 wrong, against 9,874** if it answers everything
-(`docs/results/2026-10-13-the-page-stops-asking.md`).
-
-## Records do not go missing at random
-
-So we stopped assuming they do. The same number of findings removed seven realistic ways — the
-follow-ups never happened, no history was available, the detail went and the screen stayed — and
-at a fifth of a record top-1 runs from **19.6% to 73.2% depending only on which fifth**. The
-calibrated refusal survives 33 of 35 cells and is fitted against all seven patterns; hold the
-likeliest one out of the fit and it breaks by three points, which is the measured cost of
-calibrating against the wrong kind of missingness
-(`docs/results/2026-10-13-missing-not-at-random.md`).
-
-## What it is worth, at prices we did not invent
-
-The economics here used to price a wrong answer at 100 and a handover at 5, with no argument for
-either. Published figures put a triage call at C$10–27 and the expected cost of a confident wrong
-answer at $4,220–$167,000 — **a ratio of 211:1 to 8,356:1 against our 20:1**, so every saving in
-this repo is conservative. Carried honestly, though, expected-cost minimisation says *switch the
-product off*: above about 4,000:1 the cheapest policy answers nothing and refers everything. That
-is a flaw in the objective — clinicians are finite and the queue has to go somewhere. The number
-that survives is throughput at a fixed bar: **answering everything puts 330.5 wrong answers into
-every 1,000 records; holding a 95% bar puts 1.7 there and still takes 35% of the queue**
-(`docs/results/2026-10-13-what-it-is-worth.md`).
 
 ## Data
 

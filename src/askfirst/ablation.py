@@ -179,9 +179,21 @@ def rank_gaps(record, scorer, schema, candidates=None):
     )
 
 
-def sufficiency(record, scorer, schema, gaps=None):
-    """0-100. High when nothing we could still learn is likely to change the answer."""
+def most_telling_gap(record, scorer, schema, gaps=None):
+    """The chance that going and getting one more fact changes the decision.
+
+    This used to be served as "sufficiency, 0-100", the complement of this number, and it was
+    misleading in the one place it mattered. On a thin record nothing flips the leading answer —
+    not because the record is adequate but because the model is unsure of everything, so no
+    single fact moves the top of a flat distribution. The page was printing "sufficiency 96/100"
+    directly above "too little to judge the answer by". Same arithmetic, honest name: how much
+    one more fact could still move things, where high means unsettled."""
     gaps = rank_gaps(record, scorer, schema) if gaps is None else gaps
     if not gaps:
-        return 100.0
-    return round(100.0 * (1.0 - max(g.flip_prob for g in gaps)), 1)
+        return 0.0
+    return round(max(g.flip_prob for g in gaps), 4)
+
+
+def sufficiency(record, scorer, schema, gaps=None):
+    """Kept for the command-line demo and the tests. Not served to anyone — see above."""
+    return round(100.0 * (1.0 - most_telling_gap(record, scorer, schema, gaps)), 1)

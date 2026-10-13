@@ -15,7 +15,7 @@ Proven working against a served endpoint, not a mock inside a test:
   to 1.0.
 - `ModelProposer` returns 10 fields on both schemas, reports invented codes, reports an empty reply.
 - `rank_gaps` runs end to end through the model — 11 gaps with non-zero information gain, plus the
-  sensitivity map and the sufficiency verdict.
+  sensitivity map and the one-more-fact number.
 - `/api/assess` serves the model path and names what answered.
 - `scripts/run_proposer_recall.py` runs the whole comparison table, confidence intervals and the
   40% bar check.

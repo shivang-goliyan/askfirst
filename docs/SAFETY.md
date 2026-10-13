@@ -42,7 +42,9 @@ Uncertainty is the output, not a footnote on it. Every assessment returns:
 - the full distribution over outcomes, not a single label;
 - entropy in bits;
 - the confidence against the threshold that decided whether to answer at all;
-- a **sufficiency** verdict — whether the record can support any answer;
+- an estimate of **how much of the record is actually here**, and a refusal below a floor;
+- **how often one more fact would change the decision** — served as that, not as a
+  "sufficiency" score, because the old name read as 96/100 on a record too thin to judge;
 - for each missing field, how many answers it admits (which is what decides the order, measured),
   its expected information gain in bits (shown, but measured to be a worse ordering than random),
   what it costs and how many minutes it takes;

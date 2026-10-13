@@ -272,7 +272,8 @@ function draw(r, cov){
          ${d.chance_right >= 0.995 ? 'better than 0.99' : d.chance_right.toFixed(3)}`
       : `confidence ${r.confidence.toFixed(3)} against a cut-off of ${r.threshold.toFixed(3)}
          at ${pct(cov)} coverage`}
-      &middot; ${r.entropy_bits} bits of uncertainty &middot; sufficiency ${r.sufficiency}/100</div>`;
+      &middot; ${r.entropy_bits} bits of uncertainty &middot; one more fact would change the
+      answer ${pct(r.one_more_fact_flips)} of the time</div>`;
 
   if (auto) $('#verdict').querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
     TARGET = +b.dataset.t; assess();
