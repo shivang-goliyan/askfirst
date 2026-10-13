@@ -166,10 +166,13 @@ cannot take it with them** — see below.
 
 | per 1,000 records | |
 |---|---|
-| never reach a person | **352** (measured, at a 95% bar, on records of undeclared completeness) |
-| answered wrongly | **1.7** (against 330.5 if everything is answered) |
-| review capacity returned | **C$3,500 – C$9,500** at C$10–27 a call |
+| never reach a person | **455** (measured, at a 95% bar, on records of undeclared completeness) |
+| answered wrongly | **0.13** (against 176 if everything is answered) |
+| review capacity returned | **C$4,546 – C$12,274** at C$10–27 a call |
 | **cost to serve** | **$0.0004** |
+
+Those figures moved on 14 October when the scorer was refitted on records with holes: 352 became
+455 and 1.7 became 0.13 (`results/2026-10-14-the-scorer-now-expects-holes.md`).
 
 The cost line is the one that is easy to miss. An assessment is 44.5 ms of CPU — 47 ms on the
 thinnest records, which are the slowest because the gate does more work before giving up — with
@@ -179,6 +182,56 @@ capacity per thousand records costs less than a cent to run per *million*.
 
 That asymmetry is the business: **gross margin is a rounding error away from 100%**, and it stays
 there whether a customer sends a thousand records a month or ten million.
+
+## Whose time, whose money — the mechanism, not the market size
+
+A business case is not a number for the size of healthcare. It is a mechanism by which money
+moves, and it has to name the person it moves from.
+
+**Whose time is saved: the triage clinician's.** Today they look at every case in the queue. At a
+95% precision bar, **455 of every 1,000 never reach them** — they are answered and closed before a
+person is involved. That is the only time saving claimed here. The patient's wait may also shorten
+on those cases, and we have not measured it, so it is not in the table.
+
+**Whose money is saved: the operator's, on two lines.**
+
+1. **Clinician-minutes.** A reviewed triage case costs them **C$10–27** today (CCOHTA Technology
+   Report 43). 455 of them is **C$4,546–12,274 returned per 1,000 records**. Nothing has to be
+   invented for that saving to land, which is the whole reason this buyer was chosen over, say, a
+   hospital EHR vendor — they already pay the cost we remove.
+2. **Liability.** Answering everything puts **176 wrong answers into every 1,000** records. The
+   gate puts **0.13** there. At $4,220–167,000 for the expected cost of a confident wrong answer
+   (Newman-Toker × CRICO), that difference is the part a general counsel cares about and it is
+   larger than the first line by two orders of magnitude.
+
+**What it costs us to deliver: $0.0004 per 1,000.** 44.5 ms of CPU, no GPU, no model call. So the
+margin is not a projection — there is no cost curve to grow into.
+
+### The same thing in the form an investor asks for
+
+| | |
+|---|---|
+| what the buyer pays | **C$500 per 1,000** assessed records |
+| what they get back | **C$4,546–12,274** of review capacity, and 176 → 0.13 wrong answers |
+| return to the buyer | **9× to 25×**, before counting the liability line at all |
+| our gross margin | **~100%** — three hundredths of a cent per thousand, flat at any volume |
+| what the wedge is | a layer *in front of* their existing model, not a replacement for it, so the integration risk that kills health-tech sales is two API calls |
+| why it is defensible | the calibration is fitted to **that operator's** missingness and ships as their own file; a competitor arriving later does not inherit it and neither does the customer if they leave |
+
+### And the four things an investor would find out in diligence, so they are here
+
+- **No customer, no pilot, no letter of intent, and no approach made to anyone named in this
+  document.** Every figure above is measured on synthetic patients.
+- **The one real queue we tried said no.** 72,004 real emergency department visits, one of four
+  pre-registered conditions met, and at a 95% target it cleared 258 people who needed a bed
+  (`results/2026-10-13-the-real-queue-said-no.md`). That narrowed the buyer to operators whose
+  engine produces a rich differential and it is the reason this document no longer claims
+  acuity-from-vitals.
+- **Expected-cost minimisation says switch the product off.** Above about 4,000:1 the cheapest
+  policy answers nothing and refers everything, which is why we sell throughput at a fixed bar
+  rather than cost minimisation, and say so (`results/2026-10-13-what-it-is-worth.md`).
+- **No clinician has read a single output**, and the regulatory posture — triage support with a
+  human takeover, not a diagnostic device — needs a real answer before a real customer.
 
 ## Pricing
 
@@ -220,7 +273,7 @@ the contract.
 ## What would have to be true, and is not yet
 
 **A reference customer.** Nobody has bought this. There is no letter of intent, no pilot and no
-conversation, and the 352-per-1,000 figure is measured on synthetic patients rather than on
+conversation, and the 455-per-1,000 figure is measured on synthetic patients rather than on
 anyone's queue. That is the single biggest gap in this document and pretending otherwise would
 be the same error the product exists to catch.
 
