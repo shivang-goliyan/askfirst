@@ -63,11 +63,15 @@ records and tested on incomplete ones.
 | 100% | 15.6 | 99.6% | 100.0% | answer 98%, saves 38% |
 | 60% | 9.0 | 96.2% | 99.9% | answer 80%, saves 46% |
 | 40% | 5.8 | **82.6%** | **98.3%** | answer 35%, saves 77% |
-| 20% | 2.7 | **39.9%** | **73.5%** | answer 2%, saves 91% |
-| 10% | 1.2 | 17.1% | 44.9% | answer 2%, saves 93% |
+| 20% | 2.7 | **39.9%** | **73.5%** | **answer nothing** (5.00 beats the grid's 5.24) |
+| 10% | 1.2 | 17.1% | 44.9% | **answer nothing** (5.00 beats the grid's 5.97) |
 
-**Refusing pays at every level of completeness, but how much to refuse changes by a factor of
-fifty.** That is the claim, it is a setting rather than a slogan, and the baked threshold is read
+**Refusing pays at every level of completeness, and how much to refuse changes across the whole
+range of the grid** — 97.5% of complete records down to answering none of the thinnest. The
+coverage grid itself runs 2.5% to 100%, a span of 40, so "fiftyfold" was never the right word for
+it; and at the two thinnest levels the cheapest policy is not a small positive coverage at all but
+zero, which the grid had no column for until a review pointed it out. That is a setting rather
+than a slogan, and the baked threshold is read
 per completeness level so the dial on the page and the server's decision are one number.
 
 Margin still beats entropy at every coverage level. On complete records this product is nearly

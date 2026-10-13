@@ -59,15 +59,44 @@ TARGETS = (0.0, 0.5, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99, 0.995, 1.01)
 
 def stream(model, pool, ways):
     """A queue of records cut short for every reason and to every degree — what a deployment
-    sees, rather than one tidy slice of it."""
+    sees, rather than one tidy slice of it.
+
+    Each row carries the patient it came from. 210,000 rows are 6,000 patients seen 35 ways, not
+    210,000 patients, and an interval that forgets this is narrower than it has any right to be."""
     rows = []
     for key in ways.values():
         for frac in KEPT:
-            for case in cut(pool, frac, key):
+            for who, case in enumerate(cut(pool, frac, key)):
                 dist = model(case["evidences"])
                 rows.append({"record": case["evidences"], "margin": max(dist.values()),
-                             "right": argmax(dist) == case["pathology"]})
+                             "who": who, "right": argmax(dist) == case["pathology"]})
     return rows
+
+
+def clustered(answered, patients, draws=400, seed=19):
+    """Bootstrap over PATIENTS, not over rows. Resample the people, take every view each
+    resampled person contributed, and recompute. Wilson over rows assumes independence that
+    repeated views of one patient do not have."""
+    import random as _random
+
+    by_who = {}
+    for row in answered:
+        by_who.setdefault(row["who"], []).append(row["right"])
+    who = list(by_who)
+    if not who:
+        return None, None
+    rng = _random.Random(seed)
+    spread = []
+    for _ in range(draws):
+        hits = seen = 0
+        for _ in range(len(who)):
+            for right in by_who[who[rng.randrange(len(who))]]:
+                seen += 1
+                hits += right
+        if seen:
+            spread.append(hits / seen)
+    spread.sort()
+    return spread[int(0.025 * len(spread))], spread[int(0.975 * len(spread)) - 1]
 
 
 def policy(rows, target):
@@ -137,7 +166,7 @@ def main(path):
     print("actually has is the other one — how much can it take off the queue at a fixed bar:\n")
 
     print(f"  {'promise':>9} {'kept':>9} {'queue it takes':>16} {'wrong per 1,000':>17} "
-          f"{'interval on the promise':>25}")
+          f"{'clustered on patients':>25}")
     held = []
     loose = sum(1 for r in rows if r["right"])
     print(f"  {'answer all':>9} {loose / n:>9.1%} {1.0:>16.1%} "
@@ -148,11 +177,12 @@ def main(path):
             continue
         right = sum(1 for r in answered if r["right"])
         prec = right / len(answered)
-        wlo, whi = wilson(right, len(answered))
+        wlo, whi = clustered(answered, len(test))
         held.append({"target": target, "precision": round(prec, 4),
                      "coverage": round(len(answered) / n, 4),
                      "wrong_per_1000": round((len(answered) - right) / n * 1000, 2),
-                     "ci": [round(wlo, 4), round(whi, 4)]})
+                     "ci": [round(wlo, 4), round(whi, 4)],
+                     "ci_kind": "bootstrap over patients"})
         print(f"  {target:>9.0%} {prec:>9.1%} {len(answered) / n:>16.1%} "
               f"{(len(answered) - right) / n * 1000:>17.1f} "
               f"{f'[{wlo:.1%}, {whi:.1%}]':>25}")

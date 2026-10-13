@@ -84,6 +84,24 @@ Per 1,000 records at that bar: **352 never reach a person**, which at C$10–C$2
 putting a number on the harm avoided. That would need the ratio above applied to synthetic
 patients, and it is the one multiplication in this document nobody should do.
 
+## The 210,000 is 6,000 people, and the intervals now say so
+
+Two reviewers made the same catch independently. "210,000 records" is 6,000 held-out patients seen
+thirty-five ways — seven missingness patterns at five levels each — and a binomial interval over
+those rows assumes an independence that repeated views of one patient do not have. The complete
+record of a given patient appears in every pattern.
+
+The intervals in the table above are therefore a **bootstrap over patients**, not over rows: the
+people are resampled, every view each resampled person contributed comes with them, and the
+precision is recomputed, 400 times. At the 95% bar that gives **[99.4%, 99.6%]** where the naive
+row-wise Wilson gave [99.49%, 99.73%] — wider, as it should be, and not wide enough to change
+anything.
+
+The point estimates still describe an equal-weight mixture of five completeness levels and seven
+patterns that we chose. A different mixture moves every number in the table, and nothing here
+argues that this mixture resembles a real intake queue. It was built to span the space, not to
+model one.
+
 ## What this does not say
 
 **The throughput table is measured on DDXPlus, which is rule-based synthetic data.** The ratio

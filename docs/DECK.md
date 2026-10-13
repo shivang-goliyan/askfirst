@@ -76,7 +76,9 @@ A confident wrong decision costs 100, a referral to a person costs 5.
 | 40% | 17.43 | 4.00 | **35%** | 77% |
 | 20% | 60.15 | 5.24 | **2%** | 91% |
 
-**Refusing pays at every level of completeness, but how much to refuse changes fifty-fold.** That
+**Refusing pays until the record is too thin to be worth scoring, and then the cheapest policy is
+to answer none of it.** The grid spans 2.5% to 100% coverage, a factor of 40, and at 20% and 10%
+evidence blanket referral (5.00) beats everything in it (5.24, 5.97). That
 is a setting, not a slogan — and the page moves it while the server obeys the same number.
 
 Then the robustness line: seven price ratios at 20% evidence give savings from 28% to 98%. Even

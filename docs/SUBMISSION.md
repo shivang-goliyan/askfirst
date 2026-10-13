@@ -49,7 +49,7 @@ ourselves and re-ran everything.
 |---|---|---|---|
 | 100% | 99.6% | 100.0% | answer 98%, saves 38% |
 | 40% | 82.6% | 98.3% | answer 35%, saves 77% |
-| 20% | 39.9% | 73.5% | answer 2%, saves 91% |
+| 20% | 39.9% | 73.5% | **answer nothing** — referral beats any coverage |
 
 Refusing pays at every level of completeness, and how much to refuse changes by a factor of fifty
 across them. On a complete record the product is nearly pointless, and the page says so.
