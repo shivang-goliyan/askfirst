@@ -9,7 +9,7 @@ number is not in `docs/results/`, it does not go on a slide.
 ## 1 — Title
 
 > **askfirst**
-> It finds the one missing fact that would change the answer, and refuses to answer until it has it.
+> It refuses to answer until the record can carry an answer, and tells you what to ask first.
 
 Live URL. Repo URL. Track 2, Health and Wellbeing.
 

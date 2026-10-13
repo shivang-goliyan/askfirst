@@ -11,7 +11,7 @@ repo; if a measurement moves, this file moves with it.
 
 ## One line
 
-Finds the one missing fact that would change the answer — and refuses to answer until it has it.
+Refuses to answer until the record can carry an answer — and tells you what to ask first.
 
 ## Short description
 

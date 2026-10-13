@@ -57,26 +57,36 @@
 <section class="on">
   <div class="tag">AMD Developer Hackathon ACT III · Track 2, Health and Wellbeing</div>
   <h1>askfirst</h1>
-  <p class="lede">It finds the one missing fact that would change the answer — and refuses
-  to answer until it has it.</p>
+  <p class="lede">It works out how much of a record is missing — without being told — and refuses
+  to answer when there is not enough there.</p>
+  <table>
+    <tr><td>30,000 held-out records, completeness undeclared</td><td class="bad">9,874 wrong</td><td class="key"><strong>45 wrong</strong></td></tr>
+    <tr><td>of the queue it takes off a person</td><td>—</td><td><strong>35%</strong></td></tr>
+    <tr><td>cost to serve, per 1,000 assessments</td><td>—</td><td><strong>$0.0004</strong></td></tr>
+  </table>
+  <p class="dim">Every number in this deck regenerates from public data with
+  <code>./scripts/verify.sh</code> in four minutes, and a test fails if any slide drifts from its
+  artifact.</p>
   <div class="src">askfirst.kgbnetwork.com · github.com/shivang-goliyan/askfirst</div>
 </section>
 
 <section>
-  <div class="tag">The failure, not described but measured</div>
-  <h2>We asked a commercial vision model to read 15 photographs of real syringes.<br>
-  We told it <span class="dim">"unknown"</span> was an acceptable answer.</h2>
-  <table>
-    <tr><td>Wrong on</td><td class="bad">9 of 15</td></tr>
-    <tr><td>Times it said unknown</td><td class="bad">0 of 15</td></tr>
-    <tr><td>Read from an <em>empty</em> syringe</td><td class="bad">1.0 mL</td></tr>
-    <tr><td>Answers given to one byte-identical file</td><td class="bad">2 different</td></tr>
-    <tr><td>Worst single error</td><td class="bad">+71%</td></tr>
-  </table>
-  <p>The problem is not that it was wrong. It is that it was <strong>certain</strong> and wrong,
-  and nothing in the output separated that case from a correct one.</p>
-  <div class="src">Our own run, logged, checksums kept. Published corroboration: MeasureBench
-  (arXiv 2510.26865) — a frontier model at 19.8% on measurement reading, 2.0% on composite gauges.</div>
+  <div class="tag">The failure, measured twice — once by someone else, once by us</div>
+  <h2>Offered a way out, a frontier model takes it one time in five.</h2>
+  <p>Take 500 clinical questions, delete the correct option, and put <em>"insufficient
+  information"</em> on the page instead. <strong>GPT-5 abstains 19.2% of the time</strong> and
+  picks one of the remaining wrong answers for the other
+  <span class="bad">80.8%</span>, at a mean confidence of 0.69.</p>
+  <div class="src">Newman-Toker is elsewhere in this deck; this is arXiv 2608.09080, Table IV,
+  on MedMCQA. We checked the table rather than the abstract.</div>
+  <p class="lede">So we deleted four fifths of a patient record and asked an open model again.
+  Its confidence fell <span class="bad">12%</span>. A classifier fitted to the same data lost
+  <span class="cool">83%</span> of its confidence on the same deletion.</p>
+  <p>It still ranks its own answers well — its most confident thirtieth is 93.3% right against
+  35.3% overall. What it cannot do is notice the batch got harder, so a cut-off set on complete
+  records to deliver 80% delivers 54.7% at two fifths. <strong>That gap is the product.</strong></p>
+  <div class="src">docs/results/rehearsal-llm-grid.json — 300 patients, 3 record sizes, 44,100
+  scored prompts, open in one click</div>
 </section>
 
 <section>

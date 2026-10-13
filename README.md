@@ -1,25 +1,28 @@
 # askfirst
 
-**Finds the one missing fact that would change the answer — and refuses to answer until it has it.**
+**Refuses to answer until the record can carry an answer — and tells you what to ask first.**
 
 **Live: [askfirst.kgbnetwork.com](https://askfirst.kgbnetwork.com)** · [the deck](https://askfirst.kgbnetwork.com/deck.html)
 
-Ask a model to decide something from an incomplete record and it will decide anyway. It sounds
-exactly as confident when the one result that settles the case is absent. Take 500 clinical
-questions, delete the correct option, and offer "insufficient information" instead: GPT-5 picks
-one of the remaining wrong answers **80.8% of the time**, at a mean confidence of 0.69
-(arXiv 2608.09080, Table IV). Abstaining was an option on the page and it took it 19.2% of the
-time.
+Take 500 clinical questions, delete the correct option, and put *"insufficient information"* on
+the page instead. **GPT-5 takes the way out 19.2% of the time** and picks one of the remaining
+wrong answers for the other 80.8%, at a mean confidence of 0.69 (arXiv 2608.09080, Table IV).
 
-askfirst does not decide. It sits in front of the model that does, and answers a narrower
-question: *is there enough here?* When there isn't, it refuses and names what to go and find,
-**widest question first** — and, where questions carry a price, what it costs to get.
+So we deleted four fifths of a patient record and asked an open model again. **Its confidence fell
+12%. A classifier fitted to the same data lost 83% of its confidence on the same deletion.** That
+gap is the product: askfirst works out how much of a record is missing *without being told*, to
+within 0.057, and refuses below a floor whatever the confidence says. On **30,000 held-out records
+of undeclared completeness it answers 35% of them at 99.6% — 45 wrong instead of 9,874** — and
+hands the rest to a person with a ranked list of what to go and get.
 
-That ordering is deliberately a property of the questions rather than of the patient, and it is
-the whole finding: every patient-specific objective we tried lost to a coin, and this one beat
-them all by 28.6 points at three findings (16 to 33 across the three record sizes). The patient-specific numbers are still on the page beside it — what the
-current answer rests on, what each answer would settle, how often one more fact would change the
-decision — they just do not decide the order.
+Then we stopped giving it fields. Feeding it **prose**, through a reader that loses 28% of the
+findings, it answered seven fewer cases in a hundred and introduced **zero wrong answers**: what
+the reader misses makes the record look thinner, and a thinner record is exactly what the gate
+refuses. The error turns into caution instead of a confident mistake, which is the only test of
+this idea that counts.
+
+Every number here regenerates from public data in four minutes with `./scripts/verify.sh`, and a
+test fails naming any document that drifts from its artifact.
 
 Two domains, one engine.
 
