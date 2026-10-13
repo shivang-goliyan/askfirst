@@ -23,8 +23,22 @@ from askfirst.civic import (  # noqa: E402
 )
 
 SCORES = Path("src/askfirst/baked/variant_scores.json")
+BAKED = Path("src/askfirst/baked/variants.json")
 LEVELS = [("E", "supporting — where ACMG caps it"), ("D", "case report"),
           ("C", "preclinical"), ("B", "clinical"), ("A", "validated")]
+
+
+def as_row(item):
+    """One evidence item, trimmed to what a reader needs to judge it."""
+    return {
+        "level": item["evidence_level"],
+        "direction": item["evidence_direction"],
+        "significance": item["significance"] or "N/A",
+        "type": item["evidence_type"],
+        "rating": item["rating"],
+        "source": item.get("citation") or item.get("source") or "",
+        "url": item.get("evidence_civic_url", ""),
+    }
 
 
 def main(path, threshold=2.0):
@@ -79,6 +93,41 @@ def main(path, threshold=2.0):
                                "eligible": len(eligible), "scoreable": len(scoreable),
                                "sweep": rows}, indent=2))
     print(f"\nwrote {out}")
+
+    # The same thing the page shows, baked, so the second domain needs no GPU and no CIViC
+    # download to demonstrate. Every group that can take the line at all is in here, which is
+    # eleven of them — small enough to ship whole and small enough that nobody should read a
+    # percentage off it.
+    cases = []
+    for (profile, disease, therapy), items in sorted(scoreable.items()):
+        llr = scores[profile]
+        calls = {"none": call_for(items)}
+        for level, _ in LEVELS:
+            line = computational_line(llr, level=level, threshold=threshold)
+            calls[level] = call_for(items + [line])
+        cases.append({
+            "profile": profile,
+            "disease": disease,
+            "therapy": therapy or "—",
+            "llr": round(llr, 4),
+            "says": computational_line(llr, threshold=threshold)["significance"],
+            "evidence": [as_row(i) for i in items],
+            "calls": calls,
+        })
+
+    meta = json.loads(SCORES.read_text())
+    BAKED.write_text(json.dumps({
+        "model": meta["model"],
+        "threshold": threshold,
+        "scored": meta["scored"],
+        "counts": {"groups": len(groups), "contested": len(fought),
+                   "eligible": len(eligible), "scoreable": len(scoreable)},
+        "levels": [{"level": lv, "blurb": blurb,
+                    "changed": r["changed"], "dominated": r["dominated"]}
+                   for (lv, blurb), r in zip(LEVELS, rows)],
+        "cases": cases,
+    }, indent=1))
+    print(f"wrote {BAKED} — {len(cases)} groups the line can speak on")
 
 
 if __name__ == "__main__":

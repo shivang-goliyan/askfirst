@@ -80,11 +80,21 @@
     <div class="prov" id="prov"></div>
   </div>
 
+  <div class="panel" id="vPanel" style="display:none">
+    <h2>The second domain &mdash; and what happens when a predictor is over-trusted</h2>
+    <div class="note" id="vNote"></div>
+    <div class="chips" id="vLevels" style="margin-top:14px"></div>
+    <div class="note" id="vSays" style="margin:2px 0 12px"></div>
+    <div id="vTable"></div>
+    <div class="prov" id="vProv"></div>
+  </div>
+
   <div class="note" style="margin:22px 0 40px">
     <a href="deck.html">The deck</a> &middot;
     <a href="https://github.com/shivang-goliyan/askfirst">Source, every measurement, and the four
     dead ends</a> &middot; not clinically validated, no clinician has reviewed any output, not
-    medical advice &middot; synthetic data (DDXPlus, CC BY 4.0)
+    medical advice &middot; synthetic patients (DDXPlus, CC BY 4.0) and curated variant
+    evidence (CIViC, CC0)
   </div>
 </div>
 <script>
@@ -287,6 +297,70 @@ function draw(r, cov){
   }
 }
 
+let VARIANTS = null, VOPEN = null;
+// linkable, so the deck and the video can point straight at a strength
+let VLEVEL = (location.hash.match(/level=([A-E])/) || [])[1] || 'E';
+
+function variantPanel(){
+  if (!VARIANTS) return;
+  $('#vPanel').style.display = '';
+  const c = VARIANTS.counts, blocked = c.contested - c.scoreable;
+  $('#vNote').innerHTML =
+    `Same question, different evidence: a CIViC group whose own evidence disagrees with itself, `
+    + `and an ESM-2 score offered as one removable item. <strong>${c.groups}</strong> groups with `
+    + `two or more items, <strong>${c.contested}</strong> of them contested, `
+    + `<strong>${c.eligible}</strong> where the variant is a plain substitution we can score, and `
+    + `<strong>${c.scoreable}</strong> where the model is surprised enough to say anything at all `
+    + `(|llr| &ge; ${VARIANTS.threshold}). <span class="warn">${blocked} of ${c.contested} `
+    + `contested groups cannot receive a computational vote at all.</span>`;
+
+  $('#vLevels').innerHTML = VARIANTS.levels.map(l =>
+    `<button class="chip${l.level===VLEVEL?' on':''}" data-k="${l.level}">${l.level} &mdash; ${l.blurb.split(' — ')[0]}</button>`).join('');
+  $('#vLevels').querySelectorAll('button').forEach(b => b.onclick = () => {
+    VLEVEL = b.dataset.k;
+    history.replaceState(null, '', '#level=' + VLEVEL);
+    variantPanel();
+  });
+
+  const lv = VARIANTS.levels.find(l => l.level === VLEVEL);
+  const n = VARIANTS.cases.length;
+  $('#vSays').innerHTML = `Granted <strong>${lv.blurb}</strong> strength: `
+    + `<strong class="${lv.changed?'bad':'good'}">${lv.changed} of ${n}</strong> calls change, and `
+    + `the predictor's own label ends up on top <strong>${lv.dominated}</strong> times.`
+    + (VLEVEL === 'E'
+        ? ' <span class="good">This is where ACMG caps computational evidence, and nothing moves.</span>'
+        : ' <span class="warn">Above the cap ACMG sets.</span>');
+
+  const rows = VARIANTS.cases.map((v,i) => {
+    const after = v.calls[VLEVEL], moved = after !== v.calls.none;
+    const open = VOPEN === i ? `<tr><td colspan="5" style="padding:0 8px 12px">
+        <table>${v.evidence.map(e => `<tr><td>${e.level}</td><td>${e.direction}</td>
+          <td>${e.significance}</td><td>${e.type}</td><td class="num">${e.rating}/5</td>
+          <td style="color:var(--dim)">${e.source}</td></tr>`).join('')}
+        <tr><td>${VLEVEL}</td><td>Supports</td><td class="acc">${v.says}</td><td>Functional</td>
+          <td class="num">3/5</td><td style="color:var(--dim)">ESM-2 masked marginal</td></tr>
+        </table></td></tr>` : '';
+    return `<tr class="row" data-i="${i}">
+      <td><strong>${v.profile}</strong>
+        <div style="color:var(--dim)">${v.disease} &middot; ${v.therapy}</div></td>
+      <td class="num">${v.llr.toFixed(2)}</td>
+      <td>${v.calls.none}</td>
+      <td class="${moved?'bad':''}">${moved ? '&rarr; ' + after : 'unchanged'}</td>
+      <td style="color:var(--dim)">${v.evidence.length} items</td></tr>${open}`;
+  }).join('');
+
+  $('#vTable').innerHTML = `<table><tr><th>contested group</th><th class="num">llr</th>
+    <th>call without the line</th><th>with it at ${VLEVEL}</th><th></th></tr>${rows}</table>
+    <div class="note">Click a row for the evidence the call rests on. Read the counts, not the
+    percentages &mdash; eleven groups is too small to carry a headline, and that is the point of
+    showing all eleven.</div>`;
+  $('#vTable').querySelectorAll('tr.row').forEach(tr => tr.onclick = () => {
+    VOPEN = VOPEN === +tr.dataset.i ? null : +tr.dataset.i; variantPanel();
+  });
+  $('#vProv').textContent = `Scored by: ${VARIANTS.model} on CPU, ${VARIANTS.scored} variants `
+    + `— a masked-marginal score, not a pathogenicity call. CIViC evidence, CC0.`;
+}
+
 const LEVEL_LABEL = {'1.0':'complete', '0.6':'60% in', '0.4':'40% in', '0.2':'20% in', '0.1':'10% in'};
 
 function levels(){
@@ -325,6 +399,10 @@ function levels(){
     domains();
   }
   picker();
+  try {
+    const res = await fetch('/api/variants');
+    if (res.ok) { VARIANTS = await res.json(); variantPanel(); }
+  } catch (e) { /* the panel stays hidden rather than showing an error for a second domain */ }
   try {
     CURVE = await (await fetch('/api/curve')).json();
     const all = curve();

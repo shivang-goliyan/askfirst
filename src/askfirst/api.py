@@ -31,6 +31,7 @@ from .schema import load_schema
 BAKE = Path(__file__).parent / "baked"
 BAKED = BAKE / "curve.json"
 CASES = BAKE / "cases.json"
+VARIANTS = BAKE / "variants.json"
 WEIGHTS = BAKE / "ddxplus_softmax.npz"
 PRIORS = BAKE / "ddxplus_priors.json"
 
@@ -160,6 +161,15 @@ def cases():
         ]
         patient["truth_label"] = schema.label_for_outcome(patient["truth"])
     return baked
+
+
+@app.get("/api/variants")
+def variants():
+    """Module B, baked. Eleven contested CIViC groups where an ESM-2 score is allowed to vote,
+    and what each call becomes at every strength the line could be granted."""
+    if not VARIANTS.exists():
+        raise HTTPException(503, "Nothing baked yet. Run scripts/run_variant_ablation.py")
+    return json.loads(VARIANTS.read_text())
 
 
 @app.get("/api/schema/{domain}")

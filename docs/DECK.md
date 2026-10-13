@@ -141,10 +141,16 @@ it is the calibrated refusal, its price, and a measured ranking rule that beats 
 
 The same engine on variant interpretation. CIViC, CC0, 4,940 evidence rows, 585 ablatable groups
 of which **182 are contested** — cases where the same knowledge base both supports and does not
-support a call. Demo case: **DNMT3A R882 in AML**, level-B evidence on both sides at ratings 3
-and 4.
+support a call.
 
-Say the limit in the same breath: 182 groups is a demo, not a headline. Module A carries the number.
+On the page, live, with a strength dial: an ESM-2 score enters as one removable evidence item. At
+**supporting**, where ACMG caps it, **0 of 11 calls change**. At **clinical** strength, **5 of 11**
+change and the prediction ends up on top every time. Show **EGFR S768I / erlotinib** — documented
+sensitivity becoming "predicted damaging".
+
+Say the limit in the same breath: eleven groups is a demo, not a headline, and **171 of 182
+contested groups cannot take a computational vote at all**. Module A carries the number.
+Link to point at: `askfirst.kgbnetwork.com/#level=B`.
 
 ## 11 — Who pays, and what it costs to run
 

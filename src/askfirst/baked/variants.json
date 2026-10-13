@@ -1,0 +1,556 @@
+{
+ "model": "facebook/esm2_t12_35M_UR50D",
+ "threshold": 2.0,
+ "scored": 534,
+ "counts": {
+  "groups": 585,
+  "contested": 182,
+  "eligible": 28,
+  "scoreable": 11
+ },
+ "levels": [
+  {
+   "level": "E",
+   "blurb": "supporting \u2014 where ACMG caps it",
+   "changed": 0,
+   "dominated": 0
+  },
+  {
+   "level": "D",
+   "blurb": "case report",
+   "changed": 2,
+   "dominated": 2
+  },
+  {
+   "level": "C",
+   "blurb": "preclinical",
+   "changed": 4,
+   "dominated": 4
+  },
+  {
+   "level": "B",
+   "blurb": "clinical",
+   "changed": 5,
+   "dominated": 5
+  },
+  {
+   "level": "A",
+   "blurb": "validated",
+   "changed": 9,
+   "dominated": 9
+  }
+ ],
+ "cases": [
+  {
+   "profile": "ALK R1275Q",
+   "disease": "Neuroblastoma",
+   "therapy": "ALK Inhibitor TAE684",
+   "llr": -5.2461,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "D",
+     "direction": "Supports",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "2",
+     "source": "George et al., 2008",
+     "url": "https://civicdb.org/links/evidence_items/39"
+    },
+    {
+     "level": "D",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "3",
+     "source": "George et al., 2008",
+     "url": "https://civicdb.org/links/evidence_items/48"
+    }
+   ],
+   "calls": {
+    "none": "Resistance",
+    "E": "Resistance",
+    "D": "Resistance",
+    "C": "Predicted damaging",
+    "B": "Predicted damaging",
+    "A": "Predicted damaging"
+   }
+  },
+  {
+   "profile": "BRAF D594G",
+   "disease": "Colorectal Cancer",
+   "therapy": "Irinotecan,Cetuximab",
+   "llr": -6.1476,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "C",
+     "direction": "Does Not Support",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "3",
+     "source": "De Roock et al., 2010",
+     "url": "https://civicdb.org/links/evidence_items/2201"
+    },
+    {
+     "level": "C",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "3",
+     "source": "Hsu et al., 2016",
+     "url": "https://civicdb.org/links/evidence_items/4472"
+    }
+   ],
+   "calls": {
+    "none": "Resistance",
+    "E": "Resistance",
+    "D": "Predicted damaging",
+    "C": "Predicted damaging",
+    "B": "Predicted damaging",
+    "A": "Predicted damaging"
+   }
+  },
+  {
+   "profile": "DICER1 D1709N",
+   "disease": "Sertoli-Leydig Cell Tumor",
+   "therapy": "\u2014",
+   "llr": -7.3548,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "B",
+     "direction": "Does Not Support",
+     "significance": "Positive",
+     "type": "Diagnostic",
+     "rating": "4",
+     "source": "Conlon et al., 2015",
+     "url": "https://civicdb.org/links/evidence_items/5534"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Predisposition",
+     "type": "Predisposing",
+     "rating": "3",
+     "source": "Heravi-Moussavi et al., 2012",
+     "url": "https://civicdb.org/links/evidence_items/5886"
+    }
+   ],
+   "calls": {
+    "none": "Predisposition",
+    "E": "Predisposition",
+    "D": "Predisposition",
+    "C": "Predisposition",
+    "B": "Predisposition",
+    "A": "Predicted damaging"
+   }
+  },
+  {
+   "profile": "DICER1 E1813Q",
+   "disease": "Sertoli-Leydig Cell Tumor",
+   "therapy": "\u2014",
+   "llr": -4.378,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "B",
+     "direction": "Does Not Support",
+     "significance": "Positive",
+     "type": "Diagnostic",
+     "rating": "4",
+     "source": "Conlon et al., 2015",
+     "url": "https://civicdb.org/links/evidence_items/5535"
+    },
+    {
+     "level": "C",
+     "direction": "Supports",
+     "significance": "Oncogenicity",
+     "type": "Oncogenic",
+     "rating": "1",
+     "source": "Heravi-Moussavi et al., 2012",
+     "url": "https://civicdb.org/links/evidence_items/5892"
+    }
+   ],
+   "calls": {
+    "none": "Oncogenicity",
+    "E": "Oncogenicity",
+    "D": "Predicted damaging",
+    "C": "Predicted damaging",
+    "B": "Predicted damaging",
+    "A": "Predicted damaging"
+   }
+  },
+  {
+   "profile": "EGFR S768I",
+   "disease": "Lung Adenocarcinoma",
+   "therapy": "Erlotinib",
+   "llr": -2.2614,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "C",
+     "direction": "Supports",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "3",
+     "source": "Hellmann et al., 2014",
+     "url": "https://civicdb.org/links/evidence_items/1394"
+    },
+    {
+     "level": "C",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "",
+     "source": "Lund-Iversen et al., 2012",
+     "url": "https://civicdb.org/links/evidence_items/4273"
+    }
+   ],
+   "calls": {
+    "none": "Sensitivity/Response",
+    "E": "Sensitivity/Response",
+    "D": "Sensitivity/Response",
+    "C": "Sensitivity/Response",
+    "B": "Predicted damaging",
+    "A": "Predicted damaging"
+   }
+  },
+  {
+   "profile": "EGFR T790M",
+   "disease": "Lung Non-small Cell Carcinoma",
+   "therapy": "Afatinib",
+   "llr": -2.5152,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "4",
+     "source": "Sun et al., 2013",
+     "url": "https://civicdb.org/links/evidence_items/1863"
+    },
+    {
+     "level": "D",
+     "direction": "Supports",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "2",
+     "source": "Li et al., 2008",
+     "url": "https://civicdb.org/links/evidence_items/2163"
+    },
+    {
+     "level": "D",
+     "direction": "Supports",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "2",
+     "source": "Cha et al., 2012",
+     "url": "https://civicdb.org/links/evidence_items/2164"
+    }
+   ],
+   "calls": {
+    "none": "Resistance",
+    "E": "Resistance",
+    "D": "Resistance",
+    "C": "Resistance",
+    "B": "Resistance",
+    "A": "Predicted damaging"
+   }
+  },
+  {
+   "profile": "EGFR T790M",
+   "disease": "Lung Non-small Cell Carcinoma",
+   "therapy": "Dacomitinib",
+   "llr": -2.5152,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "4",
+     "source": "Sequist et al., 2011",
+     "url": "https://civicdb.org/links/evidence_items/240"
+    },
+    {
+     "level": "D",
+     "direction": "Supports",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "3",
+     "source": "Engelman et al., 2007",
+     "url": "https://civicdb.org/links/evidence_items/2161"
+    }
+   ],
+   "calls": {
+    "none": "Resistance",
+    "E": "Resistance",
+    "D": "Resistance",
+    "C": "Resistance",
+    "B": "Resistance",
+    "A": "Predicted damaging"
+   }
+  },
+  {
+   "profile": "FLT3 D835V",
+   "disease": "Acute Myeloid Leukemia",
+   "therapy": "Sunitinib",
+   "llr": -4.9068,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "D",
+     "direction": "Does Not Support",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "3",
+     "source": "Yee et al., 2004",
+     "url": "https://civicdb.org/links/evidence_items/3008"
+    },
+    {
+     "level": "C",
+     "direction": "Supports",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "",
+     "source": "Fiedler et al., 2005",
+     "url": "https://civicdb.org/links/evidence_items/4022"
+    }
+   ],
+   "calls": {
+    "none": "Sensitivity/Response",
+    "E": "Sensitivity/Response",
+    "D": "Sensitivity/Response",
+    "C": "Predicted damaging",
+    "B": "Predicted damaging",
+    "A": "Predicted damaging"
+   }
+  },
+  {
+   "profile": "KRAS G13D",
+   "disease": "Colorectal Cancer",
+   "therapy": "Cetuximab",
+   "llr": -4.6266,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "D",
+     "direction": "Supports",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "4",
+     "source": "De Roock et al., 2010",
+     "url": "https://civicdb.org/links/evidence_items/145"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Sensitivity/Response",
+     "type": "Predictive",
+     "rating": "4",
+     "source": "De Roock et al., 2010",
+     "url": "https://civicdb.org/links/evidence_items/306"
+    },
+    {
+     "level": "B",
+     "direction": "Does Not Support",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "2",
+     "source": "Osumi et al., 2015",
+     "url": "https://civicdb.org/links/evidence_items/806"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "3",
+     "source": "Schirripa et al., 2015",
+     "url": "https://civicdb.org/links/evidence_items/1180"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "4",
+     "source": "Rowland et al., 2016",
+     "url": "https://civicdb.org/links/evidence_items/1181"
+    },
+    {
+     "level": "D",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "",
+     "source": "Misale et al., 2012",
+     "url": "https://civicdb.org/links/evidence_items/3878"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "3",
+     "source": "De Roock et al., 2010",
+     "url": "https://civicdb.org/links/evidence_items/3881"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Resistance",
+     "type": "Predictive",
+     "rating": "",
+     "source": "Kaczirek et al., 2015",
+     "url": "https://civicdb.org/links/evidence_items/3882"
+    }
+   ],
+   "calls": {
+    "none": "Resistance",
+    "E": "Resistance",
+    "D": "Resistance",
+    "C": "Resistance",
+    "B": "Resistance",
+    "A": "Resistance"
+   }
+  },
+  {
+   "profile": "MYOD1 L122R",
+   "disease": "Spindle Cell Rhabdomyosarcoma",
+   "therapy": "\u2014",
+   "llr": 2.7948,
+   "says": "Predicted tolerated",
+   "evidence": [
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Positive",
+     "type": "Diagnostic",
+     "rating": "4",
+     "source": "Rekhi et al., 2016",
+     "url": "https://civicdb.org/links/evidence_items/8193"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Poor Outcome",
+     "type": "Prognostic",
+     "rating": "2",
+     "source": "Rekhi et al., 2016",
+     "url": "https://civicdb.org/links/evidence_items/8194"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Poor Outcome",
+     "type": "Prognostic",
+     "rating": "3",
+     "source": "Tsai et al., 2019",
+     "url": "https://civicdb.org/links/evidence_items/8313"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Positive",
+     "type": "Diagnostic",
+     "rating": "4",
+     "source": "Agaram et al., 2014",
+     "url": "https://civicdb.org/links/evidence_items/11582"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Poor Outcome",
+     "type": "Prognostic",
+     "rating": "4",
+     "source": "Agaram et al., 2014",
+     "url": "https://civicdb.org/links/evidence_items/11583"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Positive",
+     "type": "Diagnostic",
+     "rating": "4",
+     "source": "Wang et al., 2018",
+     "url": "https://civicdb.org/links/evidence_items/11585"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Poor Outcome",
+     "type": "Prognostic",
+     "rating": "4",
+     "source": "Alaggio et al., 2016",
+     "url": "https://civicdb.org/links/evidence_items/11587"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Positive",
+     "type": "Diagnostic",
+     "rating": "4",
+     "source": "Alaggio et al., 2016",
+     "url": "https://civicdb.org/links/evidence_items/11588"
+    }
+   ],
+   "calls": {
+    "none": "Positive",
+    "E": "Positive",
+    "D": "Positive",
+    "C": "Positive",
+    "B": "Positive",
+    "A": "Positive"
+   }
+  },
+  {
+   "profile": "RET M918T",
+   "disease": "Medullary Thyroid Carcinoma",
+   "therapy": "\u2014",
+   "llr": -2.8053,
+   "says": "Predicted damaging",
+   "evidence": [
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Poor Outcome",
+     "type": "Prognostic",
+     "rating": "2",
+     "source": "Egawa et al., 1998",
+     "url": "https://civicdb.org/links/evidence_items/78"
+    },
+    {
+     "level": "C",
+     "direction": "Supports",
+     "significance": "Predisposition",
+     "type": "Predisposing",
+     "rating": "2",
+     "source": "Romei et al., 2018",
+     "url": "https://civicdb.org/links/evidence_items/12711"
+    },
+    {
+     "level": "B",
+     "direction": "Supports",
+     "significance": "Oncogenicity",
+     "type": "Oncogenic",
+     "rating": "3",
+     "source": "Elisei et al., 2008",
+     "url": "https://civicdb.org/links/evidence_items/12800"
+    }
+   ],
+   "calls": {
+    "none": "Oncogenicity",
+    "E": "Oncogenicity",
+    "D": "Oncogenicity",
+    "C": "Oncogenicity",
+    "B": "Oncogenicity",
+    "A": "Predicted damaging"
+   }
+  }
+ ]
+}

@@ -7,6 +7,10 @@ fitted softmax that ships in the image, not a hand-written sketch. Take findings
 answering. The costed hand-built case is still there on its own tab, because DDXPlus prices every
 question the same and the cheapest-first ordering needs something to chew on.
 
+Module B is on the page too, baked: all eleven contested CIViC groups the ESM-2 line can speak on,
+with the strength it is granted as a dial. `#level=B` links straight to the slide-worthy state —
+5 of 11 calls change and the prediction lands on top every time.
+
 ## What works, measured
 
 **Re-measured 13 Oct after finding the first version measured our own baseline.** A naive Bayes
