@@ -19,3 +19,6 @@ outputs/
 .DS_Store
 .idea/
 .vscode/
+
+# a filled-in review sheet holds a named person's opinion; the blank one ships, replies do not
+docs/review/filled-*

@@ -1,0 +1,253 @@
+{
+ "note": "The answer key. NOT to be shown to a reviewer before they fill the sheet in.",
+ "not_blind": [
+  17,
+  24,
+  27,
+  30
+ ],
+ "not_blind_why": "the record carries a history question naming the condition, which is genuine clinical information rather than a leak \u2014 but these cases are not blind and no write-up may describe the whole sheet as blind",
+ "target": 0.95,
+ "cases": [
+  {
+   "case": 1,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Guillain-Barr\u00e9 syndrome",
+   "it_was_right": false,
+   "findings": 1
+  },
+  {
+   "case": 2,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Acute otitis media",
+   "it_was_right": false,
+   "findings": 2
+  },
+  {
+   "case": 3,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Unstable angina",
+   "it_was_right": false,
+   "findings": 6
+  },
+  {
+   "case": 4,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Pulmonary neoplasm",
+   "it_was_right": false,
+   "findings": 9
+  },
+  {
+   "case": 5,
+   "answered": true,
+   "it_said": "Pulmonary embolism",
+   "true_condition": "Pulmonary embolism",
+   "it_was_right": true,
+   "findings": 15
+  },
+  {
+   "case": 6,
+   "answered": true,
+   "it_said": "Stable angina",
+   "true_condition": "Unstable angina",
+   "it_was_right": false,
+   "findings": 10
+  },
+  {
+   "case": 7,
+   "answered": true,
+   "it_said": "Acute pulmonary edema",
+   "true_condition": "Acute pulmonary edema",
+   "it_was_right": true,
+   "findings": 7
+  },
+  {
+   "case": 8,
+   "answered": true,
+   "it_said": "Pneumonia",
+   "true_condition": "Pneumonia",
+   "it_was_right": true,
+   "findings": 12
+  },
+  {
+   "case": 9,
+   "answered": true,
+   "it_said": "Panic attack",
+   "true_condition": "Panic attack",
+   "it_was_right": true,
+   "findings": 13
+  },
+  {
+   "case": 10,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Viral pharyngitis",
+   "it_was_right": false,
+   "findings": 3
+  },
+  {
+   "case": 11,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Whooping cough",
+   "it_was_right": false,
+   "findings": 1
+  },
+  {
+   "case": 12,
+   "answered": true,
+   "it_said": "Guillain-Barr\u00e9 syndrome",
+   "true_condition": "Myasthenia gravis",
+   "it_was_right": false,
+   "findings": 4
+  },
+  {
+   "case": 13,
+   "answered": true,
+   "it_said": "Influenza",
+   "true_condition": "Influenza",
+   "it_was_right": true,
+   "findings": 9
+  },
+  {
+   "case": 14,
+   "answered": true,
+   "it_said": "HIV (initial infection)",
+   "true_condition": "HIV (initial infection)",
+   "it_was_right": true,
+   "findings": 8
+  },
+  {
+   "case": 15,
+   "answered": true,
+   "it_said": "Acute laryngitis",
+   "true_condition": "Acute laryngitis",
+   "it_was_right": true,
+   "findings": 5
+  },
+  {
+   "case": 16,
+   "answered": true,
+   "it_said": "Viral pharyngitis",
+   "true_condition": "Viral pharyngitis",
+   "it_was_right": true,
+   "findings": 5
+  },
+  {
+   "case": 17,
+   "answered": true,
+   "it_said": "Anemia",
+   "true_condition": "Anemia",
+   "it_was_right": true,
+   "findings": 17
+  },
+  {
+   "case": 18,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Acute rhinosinusitis",
+   "it_was_right": false,
+   "findings": 16
+  },
+  {
+   "case": 19,
+   "answered": true,
+   "it_said": "Viral pharyngitis",
+   "true_condition": "Viral pharyngitis",
+   "it_was_right": true,
+   "findings": 7
+  },
+  {
+   "case": 20,
+   "answered": true,
+   "it_said": "Acute pulmonary edema",
+   "true_condition": "Acute pulmonary edema",
+   "it_was_right": true,
+   "findings": 11
+  },
+  {
+   "case": 21,
+   "answered": true,
+   "it_said": "Viral pharyngitis",
+   "true_condition": "Viral pharyngitis",
+   "it_was_right": true,
+   "findings": 15
+  },
+  {
+   "case": 22,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "HIV (initial infection)",
+   "it_was_right": false,
+   "findings": 5
+  },
+  {
+   "case": 23,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Epiglottitis",
+   "it_was_right": false,
+   "findings": 2
+  },
+  {
+   "case": 24,
+   "answered": true,
+   "it_said": "Myasthenia gravis",
+   "true_condition": "Myasthenia gravis",
+   "it_was_right": true,
+   "findings": 9
+  },
+  {
+   "case": 25,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Possible NSTEMI / STEMI",
+   "it_was_right": false,
+   "findings": 3
+  },
+  {
+   "case": 26,
+   "answered": true,
+   "it_said": "Chagas",
+   "true_condition": "Chagas",
+   "it_was_right": true,
+   "findings": 5
+  },
+  {
+   "case": 27,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Cluster headache",
+   "it_was_right": false,
+   "findings": 4
+  },
+  {
+   "case": 28,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Stable angina",
+   "it_was_right": false,
+   "findings": 18
+  },
+  {
+   "case": 29,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Anemia",
+   "it_was_right": false,
+   "findings": 3
+  },
+  {
+   "case": 30,
+   "answered": false,
+   "it_said": null,
+   "true_condition": "Pericarditis",
+   "it_was_right": false,
+   "findings": 4
+  }
+ ]
+}
