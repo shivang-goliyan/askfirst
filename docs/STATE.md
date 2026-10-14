@@ -2,8 +2,26 @@
 
 ## Resume here
 
-Everything is built except **the AMD run, the video and the demo**. 62 commits, 66 tests, 25 dated
+Everything is built except **the AMD run, the video and the demo**. 78 commits, 75 tests, 27 dated
 write-ups in `results/`, clean tree, all endpoints live.
+
+**14 Oct, evening — the product grew a way in, and the clinician review went out.**
+
+- **The landing page is now the usable one.** Paste a note, drop a photo (OCR runs in the
+  browser, so the image never leaves the device), or search 223 findings and click. `POST
+  /api/read` does prose → findings → decision in one call. The old page of curves is at
+  `/evidence.html`.
+- **`src/askfirst/reader.py` is NOT measured.** It is a lexical CPU reader, the only independent
+  notes we kept are eight, and we tuned against them. Measuring it needs ~150 notes written by
+  something unconnected to the matcher. Do not quote a number for it until then.
+- **The clinician review is live at survey.kgbnetwork.com**, one private link per reviewer, 30
+  cases with the true condition withheld and the two wrong ones unmarked. Replies land in
+  `~/askfirst-review/replies.jsonl` on the box; read them with `scripts/read_replies.py`.
+- **The real queue failed a second time, on purpose.** We fixed the feature engineering our own
+  pre-registration had blamed — AUC 0.8214 → 0.8439 — and the verdict stayed 1 of 4. That rules
+  out the excuse and is the strongest thing in the repo.
+- **The floor stays, priced rather than asserted.** Removing it buys 145 handovers per 1,000 and
+  costs 1.01 wrong answers, which is 1.1× to 117× worse (`results/2026-10-14-where-the-floor-belongs.md`).
 
 **14 Oct: the scorer was refitted on records with holes, and three published findings did not
 survive it.** `results/2026-10-14-the-scorer-now-expects-holes.md` is the one to read. Nothing
