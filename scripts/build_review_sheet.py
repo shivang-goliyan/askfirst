@@ -63,6 +63,74 @@ def english(record, schema):
     return out
 
 
+WIDGET = r"""<div id="bar">
+  <b id="count">0 of 30</b>
+  <span class="hint" id="hint">Ten is plenty. Stop whenever you like.</span>
+  <button id="copy">Copy my answers</button>
+  <button class="ghost" id="show">Show them</button>
+</div>
+<textarea id="out" readonly></textarea>
+
+<script>
+const N = 30, KEY = "askfirst-review";
+const el = id => document.getElementById(id);
+
+function load(){
+  try{
+    const was = JSON.parse(localStorage.getItem(KEY) || "{}");
+    for(const [k, v] of Object.entries(was)){
+      if(k[0] === "w"){ const i = document.querySelector(`[name="${k}"]`); if(i) i.value = v; }
+      else{ const i = document.querySelector(`[name="${k}"][value="${v}"]`); if(i) i.checked = true; }
+    }
+  }catch(e){}
+}
+function save(){
+  const out = {};
+  document.querySelectorAll('input[type=radio]:checked').forEach(i => out[i.name] = i.value);
+  document.querySelectorAll('input[type=text]').forEach(i => { if(i.value.trim()) out[i.name] = i.value.trim(); });
+  try{ localStorage.setItem(KEY, JSON.stringify(out)); }catch(e){}
+  return out;
+}
+function lines(){
+  const got = save(), rows = [];
+  for(let i = 1; i <= N; i++){
+    const a = got["a" + i], b = got["b" + i], w = got["w" + i];
+    if(!a && !b && !w) continue;
+    rows.push(`${i} ${a || "-"}/${b || "-"}` + (w ? "  — " + w : ""));
+  }
+  return rows;
+}
+function tally(){
+  const rows = lines();
+  el("count").textContent = `${rows.length} of ${N}`;
+  el("hint").textContent = rows.length === 0 ? "Ten is plenty. Stop whenever you like."
+    : rows.length < 10 ? "Keep going if you like — ten is the useful mark."
+    : "That is genuinely enough. Hit copy and send it over.";
+  document.querySelectorAll("section.case").forEach((s, k) => {
+    const got = save();
+    s.classList.toggle("done", !!(got["a" + (k + 1)] || got["b" + (k + 1)]));
+  });
+}
+document.addEventListener("input", tally);
+el("copy").onclick = async () => {
+  const text = lines().join("\n") || "(nothing filled in yet)";
+  try{
+    await navigator.clipboard.writeText(text);
+    el("copy").textContent = "Copied — paste it to him";
+    setTimeout(() => el("copy").textContent = "Copy my answers", 2600);
+  }catch(e){
+    el("out").style.display = "block"; el("out").value = text; el("out").select();
+  }
+};
+el("show").onclick = () => {
+  const box = el("out");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+  box.value = lines().join("\n") || "(nothing filled in yet)";
+};
+load(); tally();
+</script>"""
+
+
 def main(path, n=WANTED, seed=3):
     schema = load_schema("ddxplus")
     rates = json.loads((BAKE / "ddxplus_priors.json").read_text())["rates"]
@@ -132,11 +200,16 @@ def main(path, n=WANTED, seed=3):
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a{i}" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a{i}" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a{i}" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b{i}" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b{i}" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b{i}" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w{i}"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>""")
 
@@ -161,7 +234,19 @@ def main(path, n=WANTED, seed=3):
  table.q{{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}}
  table.q td{{border:1px solid #d8dee4;padding:7px 9px;vertical-align:top}}
  td.tick{{width:72px;text-align:center;white-space:nowrap}}
- td.write{{height:34px;background:#fcfcfd}}
+ td.write{{background:#fcfcfd}}
+ td.write input{{width:100%;border:0;background:none;font:inherit;font-size:14px;padding:3px 0;outline:none}}
+ td.tick label{{display:block;cursor:pointer;user-select:none;white-space:nowrap}}
+ td.tick input{{margin-right:3px;accent-color:#111}}
+ tr.done td{{background:#f3faf4}}
+ #bar{{position:sticky;bottom:0;background:#fff;border-top:2px solid #111;padding:11px 0 13px;
+      margin-top:26px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}}
+ #bar b{{font-size:15px}} #bar .hint{{color:#666;font-size:13px}}
+ #bar button{{font:inherit;font-size:14px;padding:9px 15px;border-radius:7px;border:1px solid #111;
+      background:#111;color:#fff;cursor:pointer}}
+ #bar button.ghost{{background:#fff;color:#111}}
+ #out{{width:100%;min-height:92px;font:inherit;font-size:13px;padding:9px;border:1px solid #d8dee4;
+      border-radius:7px;display:none;margin-top:9px}}
  @media print{{
    body{{padding:0;font-size:11.5px;line-height:1.38;max-width:none}}
    h1{{font-size:16px}} h2{{font-size:12px;margin:12px 0 5px}} h3{{font-size:12px;margin:0 0 5px}}
@@ -204,9 +289,11 @@ questions it says to ask next. Then two ticks:</p>
 <p><b>Two of these are cases where our thing got it wrong.</b> We are not telling you which.
 Finding them is the most useful thing that could happen to this project.</p>
 
-<p><b>How to reply — whatever is least effort.</b> Numbers and two letters is plenty:
-<code>1 y/y · 2 n/y too thin · 3 skip · 4 y/n would ask about fever first</code> — in a message,
-a voice note, or a photo of this printed out. You do not have to use this file at all.</p>
+<p><b>You can tick these in the page.</b> It remembers your answers if you close the tab, and
+the <b>Copy my answers</b> button at the bottom writes the whole reply for you — paste it straight
+into a message. Nothing is uploaded anywhere; it never leaves your phone until you paste it.</p>
+<p>If you would rather not use the page at all, a message like
+<code>1 y/y · 2 n/y too thin · 3 skip</code> or a voice note is just as good.</p>
 
 <p>The true diagnosis is deliberately not shown anywhere, so nothing nudges your answer.</p>
 </div>
@@ -229,6 +316,8 @@ a voice note, or a photo of this printed out. You do not have to use this file a
 </table>
 <p class="lede" style="margin-top:18px">Thank you — genuinely. Whatever you say gets written up
 exactly as you said it, credited however you want, including not at all.</p>
+
+{WIDGET}
 """)
 
     # Some records legitimately carry a history question that names the condition — "have you

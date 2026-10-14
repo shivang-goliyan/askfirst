@@ -18,7 +18,19 @@
  table.q{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
  table.q td{border:1px solid #d8dee4;padding:7px 9px;vertical-align:top}
  td.tick{width:72px;text-align:center;white-space:nowrap}
- td.write{height:34px;background:#fcfcfd}
+ td.write{background:#fcfcfd}
+ td.write input{width:100%;border:0;background:none;font:inherit;font-size:14px;padding:3px 0;outline:none}
+ td.tick label{display:block;cursor:pointer;user-select:none;white-space:nowrap}
+ td.tick input{margin-right:3px;accent-color:#111}
+ tr.done td{background:#f3faf4}
+ #bar{position:sticky;bottom:0;background:#fff;border-top:2px solid #111;padding:11px 0 13px;
+      margin-top:26px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+ #bar b{font-size:15px} #bar .hint{color:#666;font-size:13px}
+ #bar button{font:inherit;font-size:14px;padding:9px 15px;border-radius:7px;border:1px solid #111;
+      background:#111;color:#fff;cursor:pointer}
+ #bar button.ghost{background:#fff;color:#111}
+ #out{width:100%;min-height:92px;font:inherit;font-size:13px;padding:9px;border:1px solid #d8dee4;
+      border-radius:7px;display:none;margin-top:9px}
  @media print{
    body{padding:0;font-size:11.5px;line-height:1.38;max-width:none}
    h1{font-size:16px} h2{font-size:12px;margin:12px 0 5px} h3{font-size:12px;margin:0 0 5px}
@@ -61,9 +73,11 @@ questions it says to ask next. Then two ticks:</p>
 <p><b>Two of these are cases where our thing got it wrong.</b> We are not telling you which.
 Finding them is the most useful thing that could happen to this project.</p>
 
-<p><b>How to reply — whatever is least effort.</b> Numbers and two letters is plenty:
-<code>1 y/y · 2 n/y too thin · 3 skip · 4 y/n would ask about fever first</code> — in a message,
-a voice note, or a photo of this printed out. You do not have to use this file at all.</p>
+<p><b>You can tick these in the page.</b> It remembers your answers if you close the tab, and
+the <b>Copy my answers</b> button at the bottom writes the whole reply for you — paste it straight
+into a message. Nothing is uploaded anywhere; it never leaves your phone until you paste it.</p>
+<p>If you would rather not use the page at all, a message like
+<code>1 y/y · 2 n/y too thin · 3 skip</code> or a voice note is just as good.</p>
 
 <p>The true diagnosis is deliberately not shown anywhere, so nothing nudges your answer.</p>
 </div>
@@ -87,11 +101,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a1" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a1" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a1" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b1" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b1" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b1" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w1"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -105,11 +124,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a2" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a2" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a2" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b2" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b2" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b2" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w2"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -123,11 +147,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a3" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a3" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a3" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b3" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b3" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b3" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w3"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -141,11 +170,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a4" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a4" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a4" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b4" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b4" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b4" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w4"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -159,11 +193,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a5" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a5" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a5" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b5" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b5" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b5" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w5"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -177,11 +216,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a6" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a6" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a6" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b6" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b6" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b6" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w6"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -195,11 +239,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a7" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a7" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a7" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b7" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b7" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b7" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w7"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -213,11 +262,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a8" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a8" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a8" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b8" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b8" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b8" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w8"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -231,11 +285,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a9" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a9" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a9" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b9" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b9" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b9" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w9"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -249,11 +308,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a10" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a10" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a10" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b10" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b10" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b10" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w10"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -267,11 +331,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a11" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a11" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a11" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b11" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b11" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b11" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w11"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -285,11 +354,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a12" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a12" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a12" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b12" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b12" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b12" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w12"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -303,11 +377,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a13" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a13" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a13" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b13" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b13" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b13" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w13"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -321,11 +400,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a14" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a14" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a14" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b14" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b14" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b14" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w14"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -339,11 +423,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a15" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a15" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a15" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b15" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b15" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b15" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w15"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -357,11 +446,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a16" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a16" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a16" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b16" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b16" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b16" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w16"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -375,11 +469,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a17" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a17" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a17" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b17" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b17" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b17" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w17"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -393,11 +492,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a18" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a18" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a18" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b18" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b18" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b18" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w18"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -411,11 +515,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a19" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a19" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a19" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b19" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b19" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b19" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w19"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -429,11 +538,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a20" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a20" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a20" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b20" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b20" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b20" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w20"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -447,11 +561,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a21" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a21" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a21" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b21" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b21" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b21" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w21"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -465,11 +584,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a22" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a22" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a22" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b22" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b22" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b22" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w22"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -483,11 +607,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a23" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a23" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a23" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b23" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b23" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b23" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w23"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -501,11 +630,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a24" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a24" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a24" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b24" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b24" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b24" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w24"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -519,11 +653,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a25" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a25" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a25" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b25" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b25" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b25" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w25"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -537,11 +676,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a26" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a26" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a26" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b26" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b26" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b26" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w26"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -555,11 +699,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a27" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a27" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a27" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b27" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b27" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b27" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w27"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -573,11 +722,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a28" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a28" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a28" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b28" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b28" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b28" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w28"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -591,11 +745,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a29" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a29" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a29" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b29" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b29" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b29" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w29"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 <section class="case">
@@ -609,11 +768,16 @@ a voice note, or a photo of this printed out. You do not have to use this file a
   </div>
   <table class="q">
     <tr><td>1. Given only what was on that record, was that the right call?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
+        <td class="tick"><label><input type="radio" name="a30" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="a30" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="a30" value="?"> not sure</label></td></tr>
     <tr><td>2. Is the first question it suggests the one you would have asked?</td>
-        <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
-    <tr><td>3. If you ticked no to either — why? (a few words is plenty)</td>
-        <td colspan="3" class="write"></td></tr>
+        <td class="tick"><label><input type="radio" name="b30" value="y"> yes</label></td>
+        <td class="tick"><label><input type="radio" name="b30" value="n"> no</label></td>
+        <td class="tick"><label><input type="radio" name="b30" value="?"> not sure</label></td></tr>
+    <tr><td>3. If you said no to either — why? (a few words is plenty)</td>
+        <td colspan="3" class="write"><input type="text" name="w30"
+            placeholder="e.g. too thin to call, I would want a temperature"></td></tr>
   </table>
 </section>
 
@@ -626,3 +790,70 @@ a voice note, or a photo of this printed out. You do not have to use this file a
 </table>
 <p class="lede" style="margin-top:18px">Thank you — genuinely. Whatever you say gets written up
 exactly as you said it, credited however you want, including not at all.</p>
+
+<div id="bar">
+  <b id="count">0 of 30</b>
+  <span class="hint" id="hint">Ten is plenty. Stop whenever you like.</span>
+  <button id="copy">Copy my answers</button>
+  <button class="ghost" id="show">Show them</button>
+</div>
+<textarea id="out" readonly></textarea>
+
+<script>
+const N = 30, KEY = "askfirst-review";
+const el = id => document.getElementById(id);
+
+function load(){
+  try{
+    const was = JSON.parse(localStorage.getItem(KEY) || "{}");
+    for(const [k, v] of Object.entries(was)){
+      if(k[0] === "w"){ const i = document.querySelector(`[name="${k}"]`); if(i) i.value = v; }
+      else{ const i = document.querySelector(`[name="${k}"][value="${v}"]`); if(i) i.checked = true; }
+    }
+  }catch(e){}
+}
+function save(){
+  const out = {};
+  document.querySelectorAll('input[type=radio]:checked').forEach(i => out[i.name] = i.value);
+  document.querySelectorAll('input[type=text]').forEach(i => { if(i.value.trim()) out[i.name] = i.value.trim(); });
+  try{ localStorage.setItem(KEY, JSON.stringify(out)); }catch(e){}
+  return out;
+}
+function lines(){
+  const got = save(), rows = [];
+  for(let i = 1; i <= N; i++){
+    const a = got["a" + i], b = got["b" + i], w = got["w" + i];
+    if(!a && !b && !w) continue;
+    rows.push(`${i} ${a || "-"}/${b || "-"}` + (w ? "  — " + w : ""));
+  }
+  return rows;
+}
+function tally(){
+  const rows = lines();
+  el("count").textContent = `${rows.length} of ${N}`;
+  el("hint").textContent = rows.length === 0 ? "Ten is plenty. Stop whenever you like."
+    : rows.length < 10 ? "Keep going if you like — ten is the useful mark."
+    : "That is genuinely enough. Hit copy and send it over.";
+  document.querySelectorAll("section.case").forEach((s, k) => {
+    const got = save();
+    s.classList.toggle("done", !!(got["a" + (k + 1)] || got["b" + (k + 1)]));
+  });
+}
+document.addEventListener("input", tally);
+el("copy").onclick = async () => {
+  const text = lines().join("\n") || "(nothing filled in yet)";
+  try{
+    await navigator.clipboard.writeText(text);
+    el("copy").textContent = "Copied — paste it to him";
+    setTimeout(() => el("copy").textContent = "Copy my answers", 2600);
+  }catch(e){
+    el("out").style.display = "block"; el("out").value = text; el("out").select();
+  }
+};
+el("show").onclick = () => {
+  const box = el("out");
+  box.style.display = box.style.display === "block" ? "none" : "block";
+  box.value = lines().join("\n") || "(nothing filled in yet)";
+};
+load(); tally();
+</script>

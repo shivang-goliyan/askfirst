@@ -1,8 +1,15 @@
 # Sending this to someone, and what comes back
 
-The sheet is `sheet.pdf` (14 pages, but it is 30 tick-boxes — it reads far shorter than it looks)
-or `sheet.html` if they would rather open it in a browser on a phone. `answers.json` is the key
-and **must not be sent** until after they have replied.
+**Send `sheet.html`.** It is the one to use: the boxes are real, it remembers answers if the tab
+closes, and a **Copy my answers** button at the bottom writes the whole reply — they paste it
+straight into a message and never send a file back at all.
+
+`sheet.pdf` exists for anyone who wants paper. It is **flat, not a fillable form** — a deliberate
+choice. A fillable PDF sounds nicer and is worse here: most phone PDF apps either cannot save
+form data or silently flatten it, so the realistic outcome is someone ticking 30 boxes and losing
+them. The HTML needs no app, works offline, and hands them the reply text.
+
+`answers.json` is the key and **must not be sent** until after they have replied.
 
 ## What to send
 
