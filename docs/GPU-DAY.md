@@ -32,6 +32,52 @@ Three bugs it found, which would otherwise have been found on the clock:
    really answering — a laptop, a stub, anything. On the one product whose whole subject is not
    being confidently wrong. It now reads the served model and host off the endpoint.
 
+## The vision model, which is the job worth giving the MI300X
+
+**Added 14 October.** The plan below was written when the GPU's job was re-running embeddings and
+log-probability extraction. Both are real, and neither is something a judge can *watch*. The
+better job is reading a photograph.
+
+The product now takes a photograph of a note and pulls the text out with **tesseract.js in the
+browser** — classic optical character recognition, matching letter shapes. It handles printed
+text and handles handwriting badly, and it understands nothing about the page: a lab report's
+table is just more letters to it. That is the weakest input path in the product and it is exactly
+what a vision-language model is for.
+
+**The model: `Qwen/Qwen2.5-VL-7B-Instruct`.** Licence verified on the model page as **apache-2.0**,
+which the repo requires. It is a document model before it is a chat model — DocVQA 95.7,
+OCRBench 864 — and reading a triage note is a document task rather than a reasoning task, which
+is why the 7B is the right size and not a compromise. It fits one MI300X with room to spare, so
+the credits stretch across the whole day instead of one load.
+
+Bigger was considered and rejected on purpose. The 72B sibling and Qwen3-VL's larger variants
+would eat the allocation for marginal gain on an OCR-shaped task, and every extra gigabyte is
+another chance for the ROCm path to fail on a day we cannot repeat.
+
+**Two known ROCm hazards, found before the day rather than during it:**
+
+- The vision encoder asks for an attention backend ROCm did not support, which produced *wrong
+  output rather than an error* on an MI308 under vLLM 0.9.2. A later vLLM commit added the
+  FlashAttention path for the vision tower; use a recent vLLM and check an image whose answer you
+  already know before trusting anything.
+- vLLM 0.11.0 on ROCm 7.0 produces incorrect output for this model family when `--enforce-eager`
+  is set. Do not set it.
+
+Both are the same failure shape and it is the dangerous one: **plausible text from a broken
+kernel.** So the first thing the day does with the vision model is feed it an image whose text is
+known exactly and diff the output. If that fails, stop — the browser OCR already works and the
+product does not go dark.
+
+**What gets measured, so the day produces a number and not a screenshot:** the same 100 held-out
+records rendered as notes, read back by the vision model from *images* of those notes, against
+the lexical reader's recall and precision on the same images. That is a head-to-head on identical
+inputs, and it is the first measurement in this project where the AMD hardware is doing something
+the CPU genuinely cannot.
+
+**And the honest caveat for the write-up:** images rendered from text are not photographs of
+handwriting. A real test needs photographs of real notes, which we do not have and cannot make
+without a clinician's notes to photograph.
+
 ## Order of work, and why this order
 
 1. **Serve the model.** `scripts/serve_vllm.sh`. Then `curl $URL/v1/models` and confirm the name.
