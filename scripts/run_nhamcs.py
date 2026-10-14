@@ -134,8 +134,12 @@ def main(root="data/nhamcs-raw"):
         if y not in years:
             raise SystemExit(f"No {y} in {root}. scripts/fetch_data.sh says where to get it.")
 
+    # 300 rather than 60. The pre-registration said in advance that binning away resolution was
+    # the likeliest reason the escalation side would fail, and it was: the first run kept 60
+    # reason codes and five bands per vital. The bands are finer now and every reason code also
+    # contributes its three-digit group, so a rare complaint no longer collapses into "other".
     vocab = reason_vocabulary([years[y][0] for y in FIT_YEARS],
-                              [years[y][1] for y in FIT_YEARS])
+                              [years[y][1] for y in FIT_YEARS], keep=300)
     print(f"reason-for-visit vocabulary: {len(vocab)} codes, counted on {', '.join(FIT_YEARS)} "
           f"only\n")
 

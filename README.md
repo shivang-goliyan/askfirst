@@ -146,11 +146,11 @@ work and the two headlines we killed ourselves.
 **Refusing pays, and how much to refuse depends on how thin the record is.** 6,000 held-out
 patients, 49 conditions, chance 2.0%:
 
-| evidence kept | answer everything | answer the confident 25% |
+| evidence kept | answer everything | answer the confident quarter |
 |---|---|---|
-| 100% | 99.6% | 100.0% |
-| 40% | 82.6% | 98.3% |
-| 20% | 39.9% | 73.5% |
+| 100% | 99.6% | 1,500 of 1,500 |
+| 40% | 94.0% | 1,500 of 1,500 |
+| 20% | 73.5% | 99.9% |
 
 On a complete record this product is nearly pointless, and the page says so.
 
@@ -427,16 +427,23 @@ a shift we did not choose: fully-charted visits fall from 43.3% to 39.1% across 
 | the gate refuses sparse charts at ≥2× the rate | **not met** (1.24×) |
 | sparse charts are genuinely harder | met (85.7% vs 86.6%) |
 
-And the number that matters more than the four: at a 95% target, of the **11,052 visits the gate
-cleared to go home, 258 needed a bed** — 2.3% of the cleared visits, 5.5% of every escalation in
+And the number that matters more than the four: at a 95% target, of the **12,899 visits the gate
+cleared to go home, 303 needed a bed** — 2.4% of the cleared visits, 6.4% of every escalation in
 the test years. **On this task, on this data, it is not deployable.**
 
-**Why, which is the useful part.** The failure is not the gate, it is the task — and we measured
-that rather than guessing. AUC for escalation from the triage form alone is **0.8214**, a working
-scorer. But the ceiling *any* rule can reach on this data is 94.0% precision at 1.0% recall, 79.4%
-at 8.4%, 71.3% at 15.1%. **A 95% bar at 10% coverage does not exist here for any rule.** Our gate
-sits on that frontier at its conservative end. We set a bar above what the data could supply, and
-we should have measured the frontier before writing the bar, not after.
+**Then we fixed the obvious excuse, and it is still 1 of 4.** The pre-registration had named the
+likely cause in advance — we binned away resolution. So the bands went from five to eight-to-twelve
+per vital, the reason codes from 60 to 300 plus their hierarchical groups, and eighteen
+chronic-condition flags, patient residence and injury status went in: 15 fields became 40, 237
+features became 1,688. **The scorer improved on every measure** — AUC 0.8214 → **0.8439**,
+escalations flagged 11 → 59 — and the verdict did not budge.
+
+**So it is the task, not the features, and that is now measured rather than asserted.** AUC 0.8439
+is a working scorer, but the ceiling *any* rule can reach on this data is 88.0% precision at 0.9%
+recall and 84.6% at 8.9%. **A 95% bar at 10% coverage does not exist here for any rule.** A binary
+outcome at a 14.7% base rate does not produce extreme posteriors however good the features are,
+and a precision gate needs extreme posteriors or it has nothing to select on. We set a bar above
+what the data could supply, and we should have measured the frontier before writing the bar.
 
 **What it changes about the product.** The gate needs a scorer that can be *certain*, and that
 needs a task with room in it. DDXPlus has 49 conditions and 223 findings, so a confident correct

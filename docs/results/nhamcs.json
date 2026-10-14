@@ -12,31 +12,31 @@
  "test_visits": 32232,
  "fit_sites": 439,
  "test_sites": 374,
- "reason_vocabulary": 60,
- "features": 237,
- "answer_everything": 0.8685,
+ "reason_vocabulary": 300,
+ "features": 1688,
+ "answer_everything": 0.8746,
  "always_discharge": 0.8534,
- "accepted": 11063,
- "coverage": 0.3432,
+ "accepted": 12958,
+ "coverage": 0.402,
  "escalation_side": {
-  "flagged": 11,
-  "precision": 1.0,
-  "coverage": 0.0023,
+  "flagged": 59,
+  "precision": 0.8983,
+  "coverage": 0.0112,
   "ci": [
-   1.0,
-   1.0
+   0.8246,
+   0.9683
   ],
   "escalations": 4726
  },
  "discharge_side": {
-  "answered": 11052,
-  "precision": 0.9767,
+  "answered": 12899,
+  "precision": 0.9765,
   "ci": [
-   0.9726,
-   0.9799
+   0.9731,
+   0.98
   ]
  },
- "auc": 0.8214,
+ "auc": 0.8439,
  "data_ceiling": [
   {
    "flagged": 10,
@@ -45,107 +45,107 @@
   },
   {
    "flagged": 25,
-   "precision": 1.0,
-   "recall": 0.0053
+   "precision": 0.96,
+   "recall": 0.0051
   },
   {
    "flagged": 50,
-   "precision": 0.94,
-   "recall": 0.0099
+   "precision": 0.88,
+   "recall": 0.0093
   },
   {
    "flagged": 100,
-   "precision": 0.93,
-   "recall": 0.0197
+   "precision": 0.87,
+   "recall": 0.0184
   },
   {
    "flagged": 250,
-   "precision": 0.844,
-   "recall": 0.0446
+   "precision": 0.868,
+   "recall": 0.0459
   },
   {
    "flagged": 500,
-   "precision": 0.794,
-   "recall": 0.084
+   "precision": 0.846,
+   "recall": 0.0895
   },
   {
    "flagged": 1000,
-   "precision": 0.713,
-   "recall": 0.1509
+   "precision": 0.784,
+   "recall": 0.1659
   },
   {
    "flagged": 2000,
-   "precision": 0.6195,
-   "recall": 0.2622
+   "precision": 0.669,
+   "recall": 0.2831
   },
   {
    "flagged": 4000,
-   "precision": 0.5112,
-   "recall": 0.4327
+   "precision": 0.557,
+   "recall": 0.4714
   },
   {
    "flagged": 8000,
-   "precision": 0.3822,
-   "recall": 0.6471
+   "precision": 0.4096,
+   "recall": 0.6934
   }
  ],
- "cleared_to_go_home": 11052,
- "missed_escalations": 258,
- "missed_share_of_cleared": 0.0233,
- "missed_share_of_all_escalations": 0.0546,
+ "cleared_to_go_home": 12899,
+ "missed_escalations": 303,
+ "missed_share_of_cleared": 0.0235,
+ "missed_share_of_all_escalations": 0.0641,
  "ordering": {
   "everything": {
    "calibration": {
-    "precision": 0.9767,
-    "n": 11063,
+    "precision": 0.9762,
+    "n": 12958,
     "ci": [
-     0.9729,
-     0.9801
+     0.9726,
+     0.9791
     ]
    },
    "raw margin": {
-    "precision": 0.977,
-    "n": 11063,
+    "precision": 0.9761,
+    "n": 12958,
     "ci": [
-     0.973,
-     0.9804
+     0.9724,
+     0.9792
     ]
    },
-   "ordering_gain": -0.0003
+   "ordering_gain": 0.0001
   },
   "sparse charts": {
    "calibration": {
-    "precision": 0.9825,
-    "n": 285,
+    "precision": 0.9747,
+    "n": 475,
     "ci": [
-     0.9686,
-     0.9963
+     0.9542,
+     0.9903
     ]
    },
    "raw margin": {
-    "precision": 0.9789,
-    "n": 285,
+    "precision": 0.9747,
+    "n": 475,
     "ci": [
-     0.9599,
-     0.9931
+     0.9595,
+     0.9869
     ]
    },
-   "ordering_gain": 0.0036
+   "ordering_gain": 0.0
   }
  },
  "strata": {
   "3 or fewer of six vitals": {
    "visits": 1547,
-   "refused": 0.8158,
-   "answer_everything_precision": 0.8565
+   "refused": 0.693,
+   "answer_everything_precision": 0.8707
   },
   "all six charted": {
    "visits": 26455,
-   "refused": 0.6583,
-   "answer_everything_precision": 0.8662
+   "refused": 0.6006,
+   "answer_everything_precision": 0.8723
   }
  },
- "ridge_error_against_observed": 0.0374,
+ "ridge_error_against_observed": 0.1003,
  "preregistered": {
   "1. promise holds under real shift": false,
   "2. calibration buys >=1 point of ordering on sparse charts": false,

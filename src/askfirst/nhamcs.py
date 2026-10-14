@@ -31,47 +31,91 @@ NOTHING = (-9, -8)
 # What is on the form at triage, and nothing from the visit itself — no labs, no imaging, no
 # length of stay, nothing disposition-adjacent. Bands are the conventional clinical ones; what
 # matters for this measurement is that they are fixed in advance and the same across all years.
+# Finer than the first pass, which is the point. The first version put each vital into one of
+# five buckets and kept the 60 commonest reason codes, and the pre-registration said in advance
+# that binning away resolution was the likeliest reason the escalation side would fail. It did.
+# These are still clinical cut-points rather than deciles, so they mean something to a reader,
+# and they are fixed across all four years so nothing shifts between fit and test.
 BANDS = {
-    "AGE": ((0, "under 1"), (4, "1-4"), (14, "5-14"), (24, "15-24"), (44, "25-44"),
-            (64, "45-64"), (74, "65-74"), (200, "75 and over")),
+    "AGE": ((0, "under 1"), (4, "1-4"), (14, "5-14"), (24, "15-24"), (34, "25-34"),
+            (44, "35-44"), (54, "45-54"), (64, "55-64"), (74, "65-74"), (84, "75-84"),
+            (200, "85 and over")),
     # an implied decimal between the third and fourth digits: 0986 is 98.6F
-    "TEMPF": ((969, "under 97"), (990, "97.0-99.0"), (1004, "99.1-100.4"),
-              (1022, "100.5-102.2"), (2000, "over 102.2")),
-    "PULSE": ((49, "under 50"), (59, "50-59"), (100, "60-100"), (120, "101-120"),
-              (150, "121-150"), (400, "over 150")),
-    "RESPR": ((11, "under 12"), (20, "12-20"), (24, "21-24"), (30, "25-30"), (200, "over 30")),
-    "BPSYS": ((89, "under 90"), (119, "90-119"), (139, "120-139"), (179, "140-179"),
-              (400, "180 and over")),
-    "BPDIAS": ((59, "under 60"), (79, "60-79"), (89, "80-89"), (109, "90-109"),
-               (300, "110 and over")),
-    "POPCT": ((89, "under 90"), (93, "90-93"), (95, "94-95"), (100, "96 and over")),
-    "PAINSCALE": ((0, "none"), (3, "1-3 mild"), (6, "4-6 moderate"), (9, "7-9 severe"),
-                  (10, "10 worst")),
+    "TEMPF": ((959, "under 96"), (969, "96-97"), (979, "97-98"), (989, "98-99"),
+              (1000, "99-100"), (1010, "100-101"), (1022, "101-102.2"), (1040, "102.3-104"),
+              (2000, "over 104")),
+    "PULSE": ((39, "under 40"), (49, "40-49"), (59, "50-59"), (69, "60-69"), (79, "70-79"),
+              (89, "80-89"), (99, "90-99"), (109, "100-109"), (119, "110-119"),
+              (139, "120-139"), (159, "140-159"), (400, "160 and over")),
+    "RESPR": ((9, "under 10"), (11, "10-11"), (15, "12-15"), (19, "16-19"), (23, "20-23"),
+              (27, "24-27"), (31, "28-31"), (39, "32-39"), (200, "40 and over")),
+    "BPSYS": ((79, "under 80"), (89, "80-89"), (99, "90-99"), (109, "100-109"),
+              (119, "110-119"), (129, "120-129"), (139, "130-139"), (159, "140-159"),
+              (179, "160-179"), (199, "180-199"), (400, "200 and over")),
+    "BPDIAS": ((49, "under 50"), (59, "50-59"), (69, "60-69"), (79, "70-79"), (89, "80-89"),
+               (99, "90-99"), (109, "100-109"), (300, "110 and over")),
+    "POPCT": ((84, "under 85"), (87, "85-87"), (89, "88-89"), (91, "90-91"), (93, "92-93"),
+              (95, "94-95"), (97, "96-97"), (100, "98 and over")),
+    "PAINSCALE": ((0, "none"), (2, "1-2"), (4, "3-4"), (6, "5-6"), (8, "7-8"), (10, "9-10")),
+    "TOTCHRON": ((0, "no chronic conditions"), (1, "one"), (2, "two"), (3, "three"),
+                 (5, "four or five"), (20, "six or more")),
 }
 
 CODED = {
     "SEX": {1: "female", 2: "male"},
     "ARREMS": {1: "by ambulance", 2: "not by ambulance"},
+    "AMBTRANSFER": {1: "transferred from another facility", 2: "not a transfer"},
     "SEEN72": {1: "seen here in the last 72 hours", 2: "not seen here in the last 72 hours"},
+    "RESIDNCE": {1: "lives in a private residence", 2: "lives in a nursing home",
+                 3: "homeless", 4: "other residence"},
+    "INJURY": {1: "injury, poisoning or adverse effect", 2: "not injury related"},
     # 0 is "no triage reported" and 7 is "a unit that does not triage" — both are an absence of
     # a triage level rather than a level, so neither becomes a value
     "IMMEDR": {1: "immediate", 2: "emergent", 3: "urgent", 4: "semi-urgent", 5: "nonurgent"},
 }
 
+# Chronic conditions as they sit on the chart at triage. Each is a one-character flag.
+CHRONIC = {
+    "CANCER": "cancer", "CEBVD": "cerebrovascular disease", "CKD": "chronic kidney disease",
+    "COPD": "COPD", "CHF": "congestive heart failure", "CAD": "coronary artery disease",
+    "DEPRN": "depression", "DIABTYP2": "type 2 diabetes", "ESRD": "end-stage renal disease",
+    "HTN": "hypertension", "HYPLIPID": "hyperlipidaemia", "OBESITY": "obesity",
+    "OSA": "obstructive sleep apnoea", "OSTPRSIS": "osteoporosis", "ASTHMA": "asthma",
+    "ALZHD": "dementia or Alzheimer's", "SUBSTAB": "substance abuse",
+    "ETOHAB": "alcohol misuse",
+}
+
+# Deliberately NOT features, and the reasons are different.
+#
+# LOV and WAITTIME are length of visit and time to a provider. Both are measured AFTER triage
+# and LOV is almost a readout of the outcome — a visit that ends in admission is a long one. A
+# model given either would look excellent and predict nothing.
+#
+# PAYTYPER is the insurance type, and race and ethnicity are the only imputed fields in the file.
+# All are known at triage and all are left out on purpose: a model that learns to escalate by
+# how a patient pays is not a triage model, and this project has no way to audit that it has not.
+WITHHELD = ("LOV", "WAITTIME", "PAYTYPER", "RACERETH", "RACEUN", "ETHUN", "ETHNICITY")
+
 REASONS = ("RFV1", "RFV2", "RFV3")
+GROUPS = tuple(f"{r}_GROUP" for r in REASONS)
 
 # Escalated: a bed was needed somewhere. Admitted here, admitted to observation and then
 # hospitalised, transferred out, or died in the department.
 ESCALATION = ("ADMITHOS", "OBSHOS", "TRANOTH", "DIEDED")
 
-TRIAGE = tuple(BANDS) + tuple(CODED) + REASONS
+TRIAGE = tuple(BANDS) + tuple(CODED) + tuple(CHRONIC) + REASONS + GROUPS
 
 # What every visit should have on it. RFV2 and RFV3 are deliberately not in here: a patient with
 # one complaint has one reason for visiting, so their absence is a fact about the patient rather
 # than about the charting, and counting them would make "completeness" partly a measure of how
 # many things were wrong with somebody. They stay as features; they just do not count toward how
 # complete a record is.
-CORE = tuple(BANDS) + tuple(CODED) + ("RFV1",)
+# AMBTRANSFER is only asked when the patient arrived by ambulance, so its absence is a fact
+# about the patient rather than about the charting — it is a feature but not part of the
+# denominator. Leaving it in collapsed "fully charted" from 39.1% to 2.4% and changed what
+# completeness meant without changing its name, which is worse than either value.
+CONDITIONAL = ("AMBTRANSFER",)
+CORE = tuple(BANDS) + tuple(n for n in CODED if n not in CONDITIONAL) + ("RFV1",)
 
 
 def band(name, value):
@@ -101,9 +145,11 @@ def read_year(archive, layout, reasons=None):
     else becomes "other". It has to be decided on the fit years and passed in, or the test years
     would be contributing to the vocabulary they are then scored against."""
     where = {f["name"]: (f["start"], f["end"]) for f in layout["fields"]}
-    for need in TRIAGE + ESCALATION + ("HOSPCODE",):
+    for need in ESCALATION + ("HOSPCODE",) + REASONS + tuple(BANDS) + tuple(CODED):
         if need not in where:
             raise SystemExit(f"{layout['year']} has no {need} in its layout")
+    for name in WITHHELD:
+        where.pop(name, None)       # cannot be read by accident if it is not in the map
 
     out = []
     with zipfile.ZipFile(archive) as zf:
@@ -124,6 +170,10 @@ def read_year(archive, layout, reasons=None):
                     value = pull(line, where[name])
                     if value in codes:
                         found[name] = codes[value]
+                for name, label in CHRONIC.items():
+                    if name in where and pull(line, where[name]) == 1:
+                        found[name] = True
+
                 for name in REASONS:
                     value = pull(line, where[name])
                     if value is None:
@@ -131,7 +181,13 @@ def read_year(archive, layout, reasons=None):
                     # -9 is already gone; the blank code is a run of 9s
                     if value >= 99990:
                         continue
-                    found[name] = str(value) if reasons is None or value in reasons else "other"
+                    # the code itself when it is common enough to be worth its own feature, and
+                    # the three-digit group either way — RFV codes are hierarchical, so the group
+                    # keeps a rare complaint from collapsing into an uninformative "other"
+                    exact = str(value) if reasons is None or value in reasons else "other"
+                    found[name] = exact
+                    group = f"g{value // 100:03d}"
+                    found[f"{name}_GROUP"] = group
 
                 escalated = any((pull(line, where[f]) or 0) == 1 for f in ESCALATION)
                 # HOSPCODE is re-assigned each year, so hospital 12 in 2018 is not hospital 12
@@ -209,19 +265,21 @@ def schema_for(records):
         values[name] = [label for _, label in BANDS[name]]
     for name, codes in CODED.items():
         values[name] = list(codes.values())
-    for name in REASONS:
+    for name in REASONS + GROUPS:
         values[name] = []
+    for name in CHRONIC:
+        values[name] = ["present", "absent"]
     for record in records:
         for name, value in record["evidences"].items():
             seen[name] = seen.get(name, 0) + 1
-            if name in REASONS and value not in values[name]:
+            if name in REASONS + GROUPS and value not in values[name]:
                 values[name].append(value)
 
     n = max(1, len(records))
     fields = {}
     for name in TRIAGE:
         fields[name] = Field(
-            name=name, kind="categorical", values=sorted(values[name]), cost=0.0, delay=0.0,
+            name=name, kind="binary" if name in CHRONIC else "categorical", values=sorted(values[name]), cost=0.0, delay=0.0,
             priors={}, question=QUESTIONS.get(name, name),
             asked_rate=seen.get(name, 0) / n,
             section="fields" if name in CORE else "antecedents",

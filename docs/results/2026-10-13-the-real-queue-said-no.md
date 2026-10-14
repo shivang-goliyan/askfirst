@@ -144,3 +144,62 @@ on a real queue clears 258 people who needed a bed.
 
 Every number in this repo before today was DDXPlus. The first time it met a real queue it did not
 transfer, and the reason is informational rather than fixable by tuning.
+
+---
+
+## We fixed the feature engineering, and it is still 1 of 4 — 14 October
+
+The pre-registration named, in advance, what it thought would go wrong: *"Bands were chosen for
+comparability across years and they throw away resolution exactly where the escalation signal
+lives."* So that excuse got tested rather than left standing.
+
+**What changed.** Five bands per vital became eight to twelve on clinical cut-points. Sixty
+reason-for-visit codes became three hundred, and every code now also contributes its three-digit
+group, so a rare complaint no longer collapses into "other". Eighteen chronic-condition flags were
+added — cancer, heart failure, coronary artery disease, kidney disease, COPD, dementia and the
+rest — along with patient residence (a nursing-home arrival is not a private-residence arrival),
+whether it was an injury, the total count of chronic conditions, and whether the ambulance was an
+inter-facility transfer. 15 fields became 40, and 237 features became 1,688.
+
+**What it bought.**
+
+| | first run | with the detail restored |
+|---|---|---|
+| AUC for escalation | 0.8214 | **0.8439** |
+| answering everything | 86.8% | 87.5% |
+| escalations flagged | 11, at 100% | **59, at 89.8%** [82.5%, 96.8%] |
+| share of escalations caught | 0.2% | **1.1%** |
+| the queue it takes | 34.3% | 40.2% |
+
+The scorer got better and the ceiling moved with it — at 500 flagged the best any rule can do went
+from 79.4% precision to **84.6%**, at 8.9% recall.
+
+**And the verdict did not move. One of four, again.** Escalation precision is 89.8% with a lower
+bound of 82.5% against a bar of 95%/93%, at 1.1% coverage against a bar of 10%. Ordering still
+buys +0.01 points. The gate still refuses thin charts only 1.15× as often as full ones, not twice.
+And because coverage rose, **the number of people cleared to go home who needed a bed went up:
+258 → 303**, which is 6.4% of every escalation in the test years.
+
+**So it is not the features. It is the task**, and that is now measured rather than asserted. A
+binary outcome at a 14.7% base rate does not produce extreme posteriors no matter how good the
+features are, and a precision gate needs extreme posteriors or it has nothing to select on. The
+first write-up said this and could have been accused of rationalising a failure. It cannot now:
+we made the obvious fix, the scorer improved by every measure, and the gate's promise still could
+not be met.
+
+Two smaller things worth recording because they are the kind of error that hides:
+
+**Three fields were withheld on purpose and the reasons differ.** Length of visit and
+time-to-provider are measured *after* triage and length of visit is close to a readout of the
+outcome — a visit ending in admission is a long one — so a model given either would look superb
+and predict nothing. Insurance type and the imputed race and ethnicity fields are known at triage
+and are left out anyway: a model that learns to escalate by how a patient pays is not a triage
+model, and this project has no way to audit that it has not.
+
+**Adding fields silently changed what "complete" meant.** `AMBTRANSFER` is only asked when the
+patient came by ambulance, so its absence is a fact about the patient rather than about the
+charting. Counting it in the denominator dropped "fully charted" from 39.1% to 2.4% and moved the
+completeness estimator's error from 0.037 to 0.128 — the same word measuring a different thing
+under the same name. It is excluded from the denominator and kept as a feature, which puts fully
+charted at 12.4%; still lower than the first run, because eighteen chronic flags are genuinely
+often all absent.
