@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>askfirst — 30 outputs, for review</title>
+<title>Is this being sensible? — 30 cases</title>
 <style>
  body{font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
       max-width:860px;margin:0 auto;padding:28px 18px 80px;color:#111}
@@ -19,23 +19,53 @@
  table.q td{border:1px solid #d8dee4;padding:7px 9px;vertical-align:top}
  td.tick{width:72px;text-align:center;white-space:nowrap}
  td.write{height:34px;background:#fcfcfd}
- @media print{body{padding:0} .case{border-top:1px solid #999}}
+ @media print{
+   body{padding:0;font-size:11.5px;line-height:1.38;max-width:none}
+   h1{font-size:16px} h2{font-size:12px;margin:12px 0 5px} h3{font-size:12px;margin:0 0 5px}
+   h4{font-size:9px;margin:0 0 2px}
+   .lede{font-size:11px} .ask{padding:9px 11px;margin:9px 0 13px;font-size:11px}
+   .ask p,.ask ul,.ask ol{margin:4px 0}
+   .case{border-top:1px solid #999;padding:8px 0 2px}
+   .cols{gap:14px} li{margin-bottom:1px}
+   table.q{margin-top:6px;font-size:11px} table.q td{padding:3px 6px}
+   td.write{height:22px} td.tick{width:54px}
+ }
 </style>
-<h1>askfirst — thirty outputs, for review</h1>
-<p class="lede">This is a research prototype. It is not a medical device, nothing in it has been
-approved for any use, and no part of this review will be presented as clinical validation.</p>
+<h1>Is this thing being sensible? — 30 cases, about 20 minutes</h1>
+<p class="lede">This is a student project. It is not a medical device, nothing in it is approved
+for anything, and nobody will ever be treated on the strength of it.</p>
 
 <div class="ask">
-<b>What we are asking, and what we are not.</b>
-<p>We are <i>not</i> asking whether it got the diagnosis right — the true condition is deliberately
-not shown anywhere on this sheet, so that nothing anchors your judgement.</p>
-<p>We are asking two things about each case:</p>
+<b>You are marking us, not the other way round.</b>
+<p>There are no right answers on this sheet and nothing here is a test of you. We built something
+that decides when it should <i>shut up and ask a human</i> instead of guessing — and we have no
+idea whether its decisions look sensible to someone who has actually seen patients. That is the
+only thing we are asking.</p>
+
+<p><b>For each case you get:</b> what was written on the record, what our thing decided, and the
+questions it says to ask next. Then two ticks:</p>
 <ol>
-  <li><b>Was handing it over, or answering it, the right call</b> given only what was written down?</li>
-  <li><b>Is the next question it suggests the one you would have asked?</b></li>
+  <li><b>Given only what was written down, was that a reasonable call?</b> (It either answered, or
+      refused and passed it to a person.)</li>
+  <li><b>Is the first question it suggests the one you would have asked?</b></li>
 </ol>
-<p>Twenty minutes is plenty. Skipping a case you are unsure about is more useful to us than a
-guess. <b>Some of these are cases where it was wrong</b> — finding them is the point.</p>
+
+<p><b>Things that will help us most:</b></p>
+<ul>
+  <li><b>Ticking "no"</b> — a no with three words after it is worth more to us than twenty yeses.</li>
+  <li><b>Skipping</b> anything you are unsure about. A guess is worse than a gap.</li>
+  <li><b>Stopping early.</b> Ten cases is genuinely useful. Five is useful. Do not do thirty out
+      of politeness.</li>
+</ul>
+
+<p><b>Two of these are cases where our thing got it wrong.</b> We are not telling you which.
+Finding them is the most useful thing that could happen to this project.</p>
+
+<p><b>How to reply — whatever is least effort.</b> Numbers and two letters is plenty:
+<code>1 y/y · 2 n/y too thin · 3 skip · 4 y/n would ask about fever first</code> — in a message,
+a voice note, or a photo of this printed out. You do not have to use this file at all.</p>
+
+<p>The true diagnosis is deliberately not shown anywhere, so nothing nudges your answer.</p>
 </div>
 
 <h2>Who filled this in</h2>
@@ -587,10 +617,12 @@ guess. <b>Some of these are cases where it was wrong</b> — finding them is the
   </table>
 </section>
 
-<h2>Last question</h2>
+<h2>Two last ones, and then you are done</h2>
 <table class="q">
- <tr><td>If a service you worked on used this to decide which cases reached you,
+ <tr><td>If a service you worked at used this to decide which cases reached you,
          would you want it switched on?</td>
      <td class="tick">yes ☐</td><td class="tick">no ☐</td><td class="tick">unsure ☐</td></tr>
- <tr><td>Anything else worth saying</td><td class="write" colspan="3"></td></tr>
+ <tr><td>What is the most obviously stupid thing about it?</td><td class="write" colspan="3"></td></tr>
 </table>
+<p class="lede" style="margin-top:18px">Thank you — genuinely. Whatever you say gets written up
+exactly as you said it, credited however you want, including not at all.</p>

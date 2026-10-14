@@ -1,0 +1,66 @@
+# Sending this to someone, and what comes back
+
+The sheet is `sheet.pdf` (14 pages, but it is 30 tick-boxes — it reads far shorter than it looks)
+or `sheet.html` if they would rather open it in a browser on a phone. `answers.json` is the key
+and **must not be sent** until after they have replied.
+
+## What to send
+
+Attach `sheet.pdf`. Then, in your own words, something like:
+
+> Hey — I built a thing for a hackathon and I need someone who's actually seen patients to tell
+> me if it's being stupid.
+>
+> It's not a diagnosis thing. It decides when it should **shut up and pass a case to a human**
+> instead of guessing. The whole project is that one decision. I can measure whether it's
+> *accurate*, but I can't measure whether its decisions look *sensible*, and that's the bit you'd
+> see immediately.
+>
+> 30 cases, two ticks each. For each one: given only what was written down, was it reasonable to
+> answer / to pass it on? And is the next question it suggests the one you'd have asked?
+>
+> Reply however is least effort — `1 y/y, 2 n/y too thin, 3 skip` in a message is perfect. A voice
+> note is perfect. **Do 10 and stop**, seriously, 10 is useful.
+>
+> Two of the 30 are cases where it got it wrong and I'm not telling you which. Finding them is
+> the single most useful thing that could happen to this.
+>
+> No pressure and no rush — if you're busy just say so.
+
+Three things that matter in how you ask:
+
+- **He is marking us.** Not the other way round. The sheet says so at the top.
+- **Make stopping easy.** "Do 10 and stop" gets you 10 answers; "please do all 30" often gets 0.
+- **Do not tell him which cases are the wrong ones**, and do not send `answers.json` first.
+
+## What we need back
+
+The minimum that is still useful is **one line per case**:
+
+```
+1 y/y
+2 n/y  — too thin to call, I'd want a temperature
+3 skip
+4 y/n  — I'd ask about fever before travel
+```
+
+- first letter = was answering / passing it on reasonable
+- second letter = is the suggested next question the one you'd ask
+- anything after a dash is the gold, especially on a `n`
+
+A photo of the printed sheet, a voice note, or a WhatsApp message all work. There is no form to
+fill in and nothing to install.
+
+Also worth getting, and it is the last question on the sheet: **would he want it switched on** if
+a service he worked at used it to decide which cases reached him, and **what is the most obviously
+stupid thing about it.**
+
+## What happens to it afterwards
+
+- It gets written up **exactly as he said it**, including anything unflattering.
+- He is credited however he wants — by name, by role, or not at all.
+- It will be described precisely: *"one final-year medical student reviewed 30 outputs"*. Never
+  "clinically reviewed", never "validated", never "approved by a doctor". Overclaiming this would
+  undo the only thing this project has going for it.
+- Four of the 30 cases are **not blind** — the record carries a history question that names the
+  condition. That is real clinical information rather than a leak, but the write-up will say it.
