@@ -45,22 +45,26 @@ deliberately, because the first version of this result used a weak baseline and 
 to be a statement about our classifier rather than about medicine. We killed that headline
 ourselves and re-ran everything.
 
-| evidence kept | answer everything | answer the confident 25% | cheapest policy |
-|---|---|---|---|
-| 100% | 99.6% | 100.0% | answer 98%, saves 38% |
-| 40% | 82.6% | 98.3% | answer 35%, saves 77% |
-| 20% | 39.9% | 73.5% | **answer nothing** — referral beats any coverage |
+| evidence kept | answer everything | answer the confident quarter |
+|---|---|---|
+| 100% | 99.6% | 1,500 of 1,500 |
+| 40% | 94.0% | 1,500 of 1,500 |
+| 20% | 73.5% | 99.9% |
 
 Refusing pays at every level of completeness, and how much to refuse changes by a factor of fifty
 across them. On a complete record the product is nearly pointless, and the page says so.
 
 **And it does not ask you how complete your record is.** It used to, which is absurd — that is the
-problem, not an input to it. The scorer's confidence turns out to be honest on a complete record
-and 40 points underconfident at 40% evidence, so a cut-off chosen on full records promises 95%
-precision and delivers 48% on a tenth of one. It now calibrates against how many findings it has
-in hand, estimates how much of the record is missing to a mean absolute error of 0.057, and refuses outright below a
-floor. On 30,000 records of undeclared completeness: **99.6% right, 45 wrong, on the 35% of cases
-it chooses to answer** — against 67.1% and 9,874 wrong if it answers everything.
+problem, not an input to it. It calibrates against how many findings it has in hand, estimates how
+much of the record is missing to a mean absolute error of 0.057, and refuses outright below a
+floor. On 30,000 records of undeclared completeness: **99.96% right, 5 wrong, on the 45.8% of
+cases it chooses to answer** — against 81.8% and 5,460 wrong if it answers everything.
+
+The original motivation was that the confidence was **40 points underconfident at 40% evidence**.
+Refitting the scorer on records with holes cut that to **8.2 points**, so most of it was a bug in
+how we trained rather than a property of confidence under missingness, and we say so. What
+survives is the part that motivates the gate: one raw threshold still does not transfer — a
+cut-off chosen on 60%-complete records promises 95% and delivers **44.9%** on a tenth of one.
 
 **And it was tested against records that do not go missing at random**, which is what every
 version of this did before. Remove the same number of findings seven realistic ways — the
@@ -80,14 +84,23 @@ against an 11.1% error rate on dangerous presentations (Newman-Toker, *BMJ Qual 
 $422,000 average paid claim (CRICO). That makes a wrong answer worth 211 to 8,356 handovers, not
 the 20 we had assumed. Carried honestly the objective breaks — above about 4,000:1 the cheapest
 policy is to answer nothing — which is why the product sells throughput at a fixed quality bar
-instead: **answering everything puts 330.5 wrong answers into every 1,000 records; holding a 95%
-bar puts 1.7 there and still takes 35% of the queue off a person's desk.**
+instead: **answering everything puts 176 wrong answers into every 1,000 records; holding a 95%
+bar puts 0.13 there and still takes 45.5% of the queue off a person's desk.**
 
-**What we got wrong, with dates on it.** Four ranking objectives were tried and three lost to a
-coin — including expected information gain, the objective the literature uses, which measured worse
-than asking nothing at all (41.3% against 42.7%). Then three bugs turned up in that measurement,
-every one of them in our favour, and fixing them made the objective we beat *worse*. All of it is
-in `docs/results/`, dated, in the order it happened.
+**What we got wrong, with dates on it.** We published that expected information gain — the
+objective the literature uses — measured *worse than asking nothing at all*, 41.3% against 42.7%.
+**That is retracted.** It was an artifact of a scorer that had never seen a thin record, so every
+entropy computed from its posterior was wrong on exactly the sparse cases where advice matters.
+Refit the scorer and it reaches 85.5% against 77.8%. Our ranking still wins, 88.8%, but by three
+points rather than thirty and against a baseline that works.
+
+That is one of five retractions this week. The conformal comparison was **rigged in our favour**
+and a reviewer caught it — we refitted the baselines on six missingness patterns and scored
+ourselves with a calibrator that had seen all seven. "Holds in all 22 cells" was never in the
+artifact. "The floor is what keeps the promise" did not survive the experiment that tried to
+delete it. And a cost-to-serve figure sat in four files that the measurement had never produced.
+All dated, in `docs/results/`, in the order it happened, with the wrong number next to the right
+one.
 
 **It does not need a form.** The engine scores structured findings; the world produces prose. An
 open model reads one into the other — 72% of findings recovered from a nurse's note at 87%
@@ -96,6 +109,33 @@ of the record it answers 34% of cases rather than 41% at the same bar and introd
 answers**. What the reader misses makes the record look thinner, and a thinner record is exactly
 what the gate refuses. The error becomes caution instead of a confident mistake. That is the
 product's claim surviving a degraded input path rather than a clean one.
+
+**And then we took it to a real queue, and it failed.** Everything above is DDXPlus — synthetic
+patients, with evidence hidden the seven ways *we* chose. So we ran it on **72,004 real emergency
+department visits** (CDC NHAMCS, 2018–2022), fitted on 2018–19 and measured on 2021–22 across 374
+sites sharing none with the fit years. **Four conditions were pre-registered and committed before
+it ran. One was met.**
+
+At a 95% target it cleared 12,899 visits to go home and **303 of them needed a bed** — 6.4% of
+every escalation in the test years. On that task, on that data, it is not deployable, and we
+published it as a loss with the pass marks still visible.
+
+Then we fixed the obvious excuse. The pre-registration had blamed our own feature engineering, so
+the vital-sign bands went from five to twelve, the reason codes from 60 to 300, and eighteen
+chronic-condition flags went in: 15 fields became 40. **The scorer improved on every measure** —
+AUC 0.8214 → 0.8439 — **and the verdict did not move.** So it is the task and not the features: a
+binary outcome at a 14.7% base rate never produces the extreme posteriors a precision gate needs,
+and the ceiling *any* rule can reach there is 84.6% precision at 8.9% recall.
+
+That result narrowed who this is for, and the narrowing is in `docs/BUSINESS.md`: an operator
+whose engine produces a **rich differential over many conditions**, not acuity prediction from
+vitals. It is a measurement now rather than a preference.
+
+**The one thing compute cannot buy, in progress.** No clinician has read a single output of this
+system — the largest untested assumption in the project. Thirty outputs are laid out for review at
+a neutral URL, the true condition deliberately absent so nothing anchors the reviewer, with the
+two cases the gate got wrong included and unmarked. Whatever comes back will be described exactly:
+*"one final-year medical student reviewed 30 outputs"*, never "clinically validated".
 
 **And it is checkable.** `./scripts/verify.sh` rebuilds every baked artifact from the public data
 in four minutes, diffs each against what is committed, and fails naming any document that quotes a
@@ -130,10 +170,16 @@ client was rehearsed against a fake server before any hour was spent:
 **Do not submit with this section as a placeholder.** It needs the measured numbers, not a
 description of an intention. What goes here, from `docs/GPU-DAY.md`:
 
+- **the vision model reading a photograph** — `Qwen/Qwen2.5-VL-7B-Instruct`, licence verified
+  apache-2.0, measured head-to-head against the CPU reader on identical images. The product takes
+  a photo of a note today and pulls the text out with browser OCR, which handles printed text and
+  handles handwriting badly; this is the job that genuinely needs the hardware and the one a judge
+  can watch happen. Two ROCm hazards are written down in `GPU-DAY.md` before the day rather than
+  during it, both of which produce *plausible text from a broken kernel*, so the first act of the
+  day is an image whose text is known exactly.
 - which open model was served on MI300X with vLLM on ROCm, and its served name
 - proposer recall at k=10 against the 40% bar — the go/no-go
-- model confidence against the softmax margin on the completeness grid
-- ESM-2 650M on ROCm against the 34M CPU floor: does the 21% wrong-sign figure move
+- ESM-2 650M on ROCm against the 35M CPU floor: does the 21.9% wrong-sign figure move
 - one `rocprofv3` trace, for a measured kernel number rather than a described one
 
 Every response the app returns carries `scored_by`, naming what answered, and
