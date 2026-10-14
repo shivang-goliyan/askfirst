@@ -4,309 +4,308 @@
 <title>Is this being sensible?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* Tokens lifted from kgbnetwork.com's own stylesheets rather than invented. */
   :root{
-    --bg-0:#0a0c07; --bg-1:#0f120b; --bg-2:#14160f; --bg-3:#1c1f16;
-    --ink:#f3f1e8; --body:#c9c6ba; --muted:#8e8a7c; --faint:#5f5c52;
-    --rule:#2a2c22; --accent:#9cc08f; --accent-hi:#b8e0a8; --accent-deep:#2f4a2c;
-    --accent-wash:rgba(156,192,143,.08); --accent-glow:rgba(156,192,143,.28);
-    --display:Fraunces,Georgia,serif;
-    --text:"Hanken Grotesk",system-ui,-apple-system,sans-serif;
-    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-    --radius:14px; --ease:cubic-bezier(.22,1,.36,1);
+    --bg:#fff; --paper:#f4f4f1; --ink:#141416; --sec:#4f4f57; --ter:#8a8a92;
+    --line:#e7e7e3; --line2:#d8d8d2; --accent:#1f43d6; --blue:#3b5bf0;
+    --ok:#1c7a44; --okbg:#e7f5ec; --live:#e0392f;
+    --foot:#0c0c0f; --f-ink:#f6f6f7; --f-sec:#a6a6ad; --f-ter:#67676f; --f-line:#ffffff1a;
+    --card:#fff; --cardln:#e7e7e3; --soft:#fcfcfb; --ph:#ecece6;
+    --cardsh:0 30px 70px -40px #1414194d, 0 2px 6px #1414190a;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;
+    --body:"Public Sans",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",monospace;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg-0);color:var(--body);font-family:var(--text);
-            font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
-  /* film grain, ~4%, and a light-from-above vignette */
-  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.04;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
-  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
-    background:radial-gradient(120% 70% at 50% -10%,rgba(243,241,232,.05),transparent 60%)}
-  .wrap{position:relative;z-index:3;max-width:720px;margin:0 auto;padding:30px 20px 140px}
-  .eyebrow{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;
-           letter-spacing:.12em;color:var(--faint)}
-  h1{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,1.3rem+2.4vw,2.9rem);
-     line-height:1.08;letter-spacing:-.015em;color:var(--ink);margin:.35em 0 .5em}
-  h1 em{font-style:italic;color:var(--accent);font-variation-settings:"SOFT" 60,"WONK" 1}
-  h2{font-family:var(--display);font-weight:600;font-size:1.35rem;color:var(--ink);margin:0 0 .5em}
-  p{max-width:64ch;margin:0 0 1em}
-  .lede{font-size:1.1rem;color:var(--body)}
-  .fine{font-size:.88rem;color:var(--muted)}
-  a{color:var(--accent)}
-  .card{background:var(--bg-1);border:1px solid var(--rule);border-radius:var(--radius);
-        padding:22px;margin:22px 0}
-  .card.raised{background:var(--bg-2)}
-  ul,ol{padding-left:20px;margin:0 0 1em} li{margin-bottom:.3em}
-  .rule{height:1px;background:var(--rule);margin:30px 0;border:0}
-  /* the record */
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+       font-size:16px;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:34px 20px 120px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ter)}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(1.85rem,1.2rem+2.3vw,2.7rem);
+     line-height:1.06;letter-spacing:-.025em;margin:.3em 0 .55em}
+  h2{font-family:var(--display);font-weight:700;font-size:1.22rem;letter-spacing:-.018em;
+     margin:0 0 .5em}
+  h3{font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:-.015em;margin:0}
+  p{max-width:62ch;margin:0 0 .9em;color:var(--sec)}
+  .lede{font-size:1.1rem;color:var(--ink);max-width:56ch}
+  .fine{font-size:.86rem;color:var(--ter)}
+  strong{color:var(--ink)}
+  .card{background:var(--card);border:1px solid var(--cardln);border-radius:12px;padding:20px;
+        margin:18px 0;box-shadow:var(--cardsh)}
+  .flat{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px;margin:18px 0;box-shadow:none}
+  ul,ol{padding-left:20px;margin:0 0 .9em} li{margin-bottom:.28em;color:var(--sec)}
+  .tag{color:var(--accent);letter-spacing:.04em;font-size:11px;font-weight:600;
+       font-family:var(--mono)}
+  .lbl{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+       color:var(--ter);font-weight:600;margin-bottom:9px}
+  input[type=text],textarea{width:100%;background:var(--bg);border:1px solid var(--line2);
+       border-radius:8px;color:var(--ink);font:inherit;font-size:.96rem;padding:11px;outline:none}
+  input[type=text]:focus,textarea:focus{border-color:var(--accent)}
+  button{font:inherit;font-weight:600;font-size:.94rem;padding:11px 18px;border-radius:999px;
+         cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:#fff}
+  button.ghost{background:transparent;color:var(--ink);border-color:var(--line2)}
+  button:disabled{opacity:.42;cursor:default}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+
+  /* one case */
+  .case{background:var(--card);border:1px solid var(--cardln);border-radius:12px;padding:18px 20px;
+        margin:14px 0;box-shadow:var(--cardsh);scroll-margin-top:16px}
+  .case.done{border-color:#cfe0cf;background:linear-gradient(0deg,var(--okbg) 0%,#fff 46%)}
+  .chead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:720px){.cols{grid-template-columns:1fr;gap:14px}}
   .facts{list-style:none;padding:0;margin:0}
-  .facts li{padding:7px 0 7px 16px;border-left:2px solid var(--accent-deep);margin-bottom:6px;
-            color:var(--ink);font-size:.97rem}
-  .verdict{background:var(--bg-3);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;margin:14px 0}
-  .verdict .what{font-family:var(--display);font-size:1.12rem;color:var(--ink)}
-  .asks{list-style:none;padding:0;margin:8px 0 0;counter-reset:a}
-  .asks li{counter-increment:a;position:relative;padding:5px 0 5px 26px;font-size:.95rem}
-  .asks li::before{content:counter(a);position:absolute;left:0;top:5px;font-family:var(--mono);
-                   font-size:.72rem;color:var(--faint)}
-  /* choices */
-  .q{margin:20px 0 0}
-  .q .ask{color:var(--ink);font-size:1rem;margin-bottom:9px}
-  .opts{display:flex;gap:9px;flex-wrap:wrap}
-  .opt{flex:1;min-width:92px;text-align:center;padding:12px 10px;border:1px solid var(--rule);
-       border-radius:11px;background:var(--bg-2);color:var(--body);cursor:pointer;
-       font-size:.95rem;transition:all .18s var(--ease);user-select:none}
-  .opt:active{transform:scale(.98)}
-  .opt.on{border-color:var(--accent);color:var(--accent-hi);background:var(--accent-wash);
-          box-shadow:0 0 0 1px var(--accent),0 0 18px -6px var(--accent-glow)}
-  textarea,input[type=text]{width:100%;background:var(--bg-2);border:1px solid var(--rule);
-       border-radius:11px;color:var(--ink);font:inherit;font-size:.97rem;padding:12px;
-       margin-top:11px;resize:vertical;outline:none}
-  textarea:focus,input:focus{border-color:var(--accent)}
-  /* progress + nav */
-  .bar{position:fixed;left:0;right:0;bottom:0;z-index:4;background:rgba(10,12,7,.94);
-       backdrop-filter:blur(10px);border-top:1px solid var(--rule);padding:13px 20px 16px}
-  .bar .in{max-width:720px;margin:0 auto;display:flex;gap:12px;align-items:center}
-  .track{flex:1;height:3px;background:var(--bg-3);border-radius:2px;overflow:hidden}
-  .track i{display:block;height:100%;background:var(--accent);transition:width .3s var(--ease)}
-  .bar .n{font-family:var(--mono);font-size:.72rem;color:var(--faint);white-space:nowrap}
-  button{font:inherit;font-size:.95rem;padding:11px 17px;border-radius:11px;cursor:pointer;
-         border:1px solid var(--accent);background:var(--accent);color:#0a0c07;font-weight:600}
-  button.ghost{background:transparent;color:var(--body);border-color:var(--rule)}
-  button:disabled{opacity:.4;cursor:default}
-  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-  .saved{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;
-         color:var(--accent);opacity:0;transition:opacity .3s}
+  .facts li{padding:5px 0 5px 13px;border-left:2px solid var(--ph);color:var(--ink);
+            font-size:.93rem;margin-bottom:4px}
+  .did{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:11px 13px;
+       font-size:.95rem;color:var(--ink)}
+  .did b{font-family:var(--display);font-weight:700}
+  .asks{list-style:none;padding:0;margin:7px 0 0;counter-reset:a}
+  .asks li{counter-increment:a;position:relative;padding:4px 0 4px 24px;font-size:.92rem}
+  .asks li::before{content:counter(a);position:absolute;left:0;top:4px;font-family:var(--mono);
+                   font-size:11px;color:var(--ter)}
+  .q{margin-top:14px}
+  .q .ask{color:var(--ink);font-size:.95rem;margin-bottom:7px}
+  .opts{display:flex;gap:7px;flex-wrap:wrap}
+  .opt{padding:8px 15px;border:1px solid var(--line2);border-radius:999px;background:var(--bg);
+       color:var(--sec);cursor:pointer;font-size:.9rem;font-weight:500;user-select:none;
+       transition:all .15s ease}
+  .opt:hover{border-color:var(--ter)}
+  .opt.on{border-color:var(--accent);background:var(--accent);color:#fff}
+  .opt.on.no{border-color:var(--live);background:var(--live)}
+  .why{margin-top:10px}
+
+  /* sticky progress */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:#fffffff2;
+       backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:11px 20px 14px}
+  .bar .in{max-width:900px;margin:0 auto;display:flex;gap:13px;align-items:center}
+  .track{flex:1;height:3px;background:var(--ph);border-radius:999px;overflow:hidden}
+  .track i{display:block;height:100%;background:var(--accent);transition:width .3s ease}
+  .bar .n{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--ter);
+          white-space:nowrap}
+  .saved{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+         color:var(--ok);opacity:0;transition:opacity .3s}
   .saved.on{opacity:1}
   .hide{display:none}
+  .foot{background:var(--foot);color:var(--f-sec);border-radius:12px;padding:20px;margin-top:28px}
+  .foot h2{color:var(--f-ink)} .foot p{color:var(--f-sec)} .foot .fine{color:var(--f-ter)}
 </style>
 
 <div class="wrap">
+  <div class="eyebrow">A favour · about 10 minutes · nothing to install</div>
+  <h1>Is this thing being sensible?</h1>
+  <p class="lede">I built something that decides when it should <strong>stop and pass a case to a
+  human</strong> instead of guessing. I can measure whether it is accurate. I cannot measure
+  whether its decisions look sensible to someone who has actually seen patients.</p>
 
-  <!-- ask -->
-  <section id="intro">
-    <div class="eyebrow">A favour · about 10 minutes</div>
-    <h1>Is this thing being <em>sensible?</em></h1>
-    <p class="lede">I built something that decides when it should <strong>shut up and pass a case
-    to a human</strong> instead of guessing. I can measure whether it is accurate. I cannot
-    measure whether its decisions look sensible to someone who has actually seen patients.</p>
+  <div class="card">
+    <h2>You are marking me, not the other way round</h2>
+    <p>No right answers, and nothing here is a test of you. Each case shows what was written on
+    the record, what my thing decided, and the questions it says to ask next. Then two taps.</p>
+    <ul>
+      <li><strong>Tapping “no” helps most.</strong> A no with three words after it beats twenty yeses.</li>
+      <li><strong>Skip anything you are unsure about.</strong> A guess is worse than a gap.</li>
+      <li><strong>Stop whenever.</strong> Ten cases is genuinely useful. Five is useful. Please do
+      not do thirty out of politeness.</li>
+    </ul>
+    <p class="fine">Two of the thirty are cases where it got it wrong, and I am not saying which.
+    Finding one is the most useful thing that could happen to this.<br>
+    It is a student project — not a medical device, not approved for anything, and nobody will be
+    treated on the strength of it.</p>
+  </div>
 
-    <div class="card">
-      <h2>You are marking me, not the other way round</h2>
-      <p>There are no right answers here and nothing is a test of you. For each case you will see
-      what was written on the record, what my thing decided, and the questions it says to ask
-      next. Then two taps.</p>
-      <p class="fine">It is a student project. Not a medical device, not approved for anything,
-      and nobody will ever be treated on the strength of it.</p>
-    </div>
-
-    <div class="card raised">
-      <h2>What helps most</h2>
-      <ul>
-        <li><strong>Tapping “no.”</strong> A no with three words after it is worth more than
-        twenty yeses.</li>
-        <li><strong>Skipping</strong> anything you are unsure about. A guess is worse than a gap.</li>
-        <li><strong>Stopping early.</strong> Ten cases is genuinely useful. Five is useful.
-        Please do not do thirty out of politeness.</li>
-      </ul>
-      <p class="fine">Two of the thirty are cases where it got it wrong, and I am not telling you
-      which. Finding one is the most useful thing that could happen to this project.</p>
-    </div>
-
-    <label class="eyebrow" for="role">Where are you up to? (optional)</label>
+  <div class="flat">
+    <div class="lbl">Where are you up to? (optional)</div>
     <input type="text" id="role" placeholder="e.g. final-year MBBS, intern, nursing student">
-    <p class="fine" style="margin-top:9px">So I can describe you accurately in the write-up —
-    “one final-year medical student reviewed 30 outputs”, never “clinically validated”. Credited
-    however you like, including not at all.</p>
+    <p class="fine" style="margin:9px 0 0">So I describe you accurately — “one final-year medical
+    student reviewed 30 outputs”, never “clinically validated”. Credited however you like,
+    including not at all.</p>
+  </div>
 
-    <div class="row"><button id="begin">Start</button></div>
-  </section>
+  <div id="cases"></div>
 
-  <!-- cases -->
-  <section id="quiz" class="hide">
-    <div class="eyebrow" id="tag">Case 1 of 30</div>
-    <h2 id="nfind" style="margin-top:.4em">—</h2>
-
-    <div class="card">
-      <div class="eyebrow">What was on the record</div>
-      <ul class="facts" id="facts"></ul>
-    </div>
-
-    <div class="verdict">
-      <div class="eyebrow">What it did</div>
-      <div class="what" id="did">—</div>
-    </div>
-
-    <div class="card">
-      <div class="eyebrow">What it says to ask next</div>
-      <ol class="asks" id="asks"></ol>
-    </div>
-
+  <div class="card" id="last">
+    <h2>Two last ones, then you are free</h2>
     <div class="q">
-      <div class="ask">Given only what was written down, was that a reasonable call?</div>
-      <div class="opts" id="o-call">
-        <div class="opt" data-v="y">Yes</div>
-        <div class="opt" data-v="n">No</div>
-        <div class="opt" data-v="?">Not sure</div>
-      </div>
-    </div>
-
-    <div class="q">
-      <div class="ask">Is the first question it suggests the one you would have asked?</div>
-      <div class="opts" id="o-next">
-        <div class="opt" data-v="y">Yes</div>
-        <div class="opt" data-v="n">No</div>
-        <div class="opt" data-v="?">Not sure</div>
-      </div>
-    </div>
-
-    <textarea id="why" rows="2" placeholder="If you said no to either — why? A few words is plenty."></textarea>
-    <div class="row">
-      <button class="ghost" id="back">Back</button>
-      <button id="next">Next case</button>
-      <button class="ghost" id="stop">I'm done</button>
-      <span class="saved" id="saved">saved</span>
-    </div>
-  </section>
-
-  <!-- end -->
-  <section id="end" class="hide">
-    <div class="eyebrow">Last two, then you are free</div>
-    <h1>Thank you — <em>genuinely.</em></h1>
-    <div class="card">
-      <div class="ask" style="color:var(--ink);margin-bottom:9px">If a service you worked at used
-      this to decide which cases reached you, would you want it switched on?</div>
+      <div class="ask">If a service you worked at used this to decide which cases reached you,
+      would you want it switched on?</div>
       <div class="opts" id="o-switch">
         <div class="opt" data-v="yes">Yes</div>
         <div class="opt" data-v="no">No</div>
         <div class="opt" data-v="unsure">Not sure</div>
       </div>
-      <textarea id="stupid" rows="3" placeholder="What is the most obviously stupid thing about it?"></textarea>
     </div>
-    <div class="row"><button id="finish">Send it</button></div>
-    <p class="fine" id="thanks" style="margin-top:20px"></p>
-  </section>
+    <div class="why"><textarea id="stupid" rows="3"
+      placeholder="What is the most obviously stupid thing about it?"></textarea></div>
+    <div class="row"><button id="finish">Send it</button>
+      <span class="fine" id="thanks"></span></div>
+  </div>
 
+  <div class="foot">
+    <h2>What happens to what you said</h2>
+    <p>Written up exactly as you said it, including anything unflattering. Credited however you
+    want, or not at all. Described precisely — one reviewer is one reviewer.</p>
+    <p class="fine">Four of the thirty cases are not fully blind: the record itself carries a
+    history question naming the condition. That is real clinical information rather than a leak,
+    and the write-up will say so.</p>
+  </div>
 </div>
 
 <div class="bar hide" id="bar"><div class="in">
   <span class="n" id="count">0 / 30</span>
   <div class="track"><i id="fill" style="width:0%"></i></div>
   <span class="n" id="hint">ten is plenty</span>
+  <span class="saved" id="saved">saved</span>
 </div></div>
 
 <script>
 const $ = id => document.getElementById(id);
 const token = new URLSearchParams(location.search).get("r") || "";
 const KEY = "askfirst-review-" + (token || "anon");
-let cases = [], at = 0, answers = {}, role = "", switchOn = "", stupid = "";
+let cases = [], answers = {}, role = "", switchOn = "", stupid = "";
 
 try{
   const was = JSON.parse(localStorage.getItem(KEY) || "{}");
-  answers = was.answers || {}; role = was.role || ""; at = was.at || 0;
+  answers = was.answers || {}; role = was.role || "";
+  switchOn = was.switchOn || ""; stupid = was.stupid || "";
 }catch(e){}
 
-function keep(){
-  try{ localStorage.setItem(KEY, JSON.stringify({answers, role, at})); }catch(e){}
-}
+const keep = () => { try{
+  localStorage.setItem(KEY, JSON.stringify({answers, role, switchOn, stupid}));
+}catch(e){} };
+
 let pending = null;
 function send(done){
   clearTimeout(pending);
   pending = setTimeout(async () => {
     try{
-      await fetch("/api/review/submit", {method:"POST", headers:{"content-type":"application/json"},
+      await fetch("/api/review/submit", {method:"POST",
+        headers:{"content-type":"application/json"},
         body: JSON.stringify({who: token, role, answers, switch_on: switchOn,
                               stupidest: stupid, done: !!done})});
       $("saved").classList.add("on");
-      setTimeout(() => $("saved").classList.remove("on"), 1400);
+      setTimeout(() => $("saved").classList.remove("on"), 1300);
     }catch(e){}
-  }, done ? 0 : 700);
+  }, done ? 0 : 800);
 }
 
-(async () => {
-  try{
-    const d = await (await fetch("/api/review/cases")).json();
-    cases = d.cases || [];
-  }catch(e){
-    $("intro").insertAdjacentHTML("beforeend",
-      "<p class='fine' style='color:#f8a'>Could not load the cases — " + e.message + "</p>");
-    return;
-  }
-  $("role").value = role;
-})();
+function li(text){ const e = document.createElement("li"); e.textContent = text; return e; }
 
-$("begin").onclick = () => {
-  role = $("role").value.trim();
-  $("intro").classList.add("hide"); $("quiz").classList.remove("hide");
-  $("bar").classList.remove("hide");
-  draw();
-};
+function build(){
+  const box = $("cases");
+  box.innerHTML = "";
+  cases.forEach((c, i) => {
+    const a = answers[String(c.case)] || {};
+    const sec = document.createElement("section");
+    sec.className = "case" + ((a.call || a.next) ? " done" : "");
+    sec.id = "c" + c.case;
+    sec.innerHTML = `
+      <div class="chead">
+        <h3>Case ${i + 1}</h3>
+        <span class="eyebrow">${c.n === 1 ? "1 finding" : c.n + " findings"} recorded</span>
+      </div>
+      <div class="cols">
+        <div><div class="lbl">What was on the record</div><ul class="facts"></ul></div>
+        <div>
+          <div class="lbl">What it did</div>
+          <div class="did"></div>
+          <div class="lbl" style="margin-top:13px">What it says to ask next</div>
+          <ol class="asks"></ol>
+        </div>
+      </div>
+      <div class="q">
+        <div class="ask">Given only that, was it reasonable to ${c.answered
+          ? "answer" : "pass this to a person"}?</div>
+        <div class="opts" data-f="call">
+          <div class="opt" data-v="y">Yes</div>
+          <div class="opt no" data-v="n">No</div>
+          <div class="opt" data-v="?">Not sure</div>
+        </div>
+      </div>
+      <div class="q">
+        <div class="ask">Is the first question it suggests the one you would have asked?</div>
+        <div class="opts" data-f="next">
+          <div class="opt" data-v="y">Yes</div>
+          <div class="opt no" data-v="n">No</div>
+          <div class="opt" data-v="?">Not sure</div>
+        </div>
+      </div>
+      <div class="why"><textarea rows="2" data-f="why"
+        placeholder="If you said no to either — why? A few words is plenty."></textarea></div>`;
 
-function pick(box, value){
-  [...box.children].forEach(c => c.classList.toggle("on", c.dataset.v === value));
-}
-function current(){ return answers[String(cases[at].case)] || {}; }
+    const facts = sec.querySelector(".facts");
+    (c.findings.length ? c.findings : ["nothing recorded"]).forEach(f => facts.appendChild(li(f)));
+    const did = sec.querySelector(".did");
+    if(c.answered){ did.innerHTML = "It answered: <b></b>"; did.querySelector("b").textContent = c.said; }
+    else did.textContent = "It refused to answer and passed this to a person.";
+    const asks = sec.querySelector(".asks");
+    c.ask.forEach(q => asks.appendChild(li(q)));
 
-function draw(){
-  const c = cases[at], a = current();
-  $("tag").textContent = `Case ${at + 1} of ${cases.length}`;
-  $("nfind").textContent = c.n === 1 ? "1 finding recorded" : `${c.n} findings recorded`;
-  $("facts").innerHTML = c.findings.length
-    ? c.findings.map(f => `<li></li>`).join("") : "<li><em>nothing recorded</em></li>";
-  [...$("facts").children].forEach((li, i) => { if(c.findings[i]) li.textContent = c.findings[i]; });
-  $("did").textContent = c.answered
-    ? `It answered: ${c.said}`
-    : "It refused to answer and passed this to a person";
-  $("asks").innerHTML = c.ask.map(() => "<li></li>").join("");
-  [...$("asks").children].forEach((li, i) => li.textContent = c.ask[i]);
-  pick($("o-call"), a.call); pick($("o-next"), a.next);
-  $("why").value = a.why || "";
-  $("back").disabled = at === 0;
-  $("next").textContent = at === cases.length - 1 ? "Last one — finish" : "Next case";
+    sec.querySelectorAll(".opts").forEach(g => {
+      const field = g.dataset.f;
+      [...g.children].forEach(o => o.classList.toggle("on", o.dataset.v === a[field]));
+      g.onclick = e => {
+        const o = e.target.closest(".opt"); if(!o) return;
+        [...g.children].forEach(x => x.classList.toggle("on", x === o));
+        note(c.case, field, o.dataset.v); sec.classList.add("done");
+      };
+    });
+    const why = sec.querySelector("textarea");
+    why.value = a.why || "";
+    why.oninput = e => note(c.case, "why", e.target.value.trim());
+    box.appendChild(sec);
+  });
   tally();
-  window.scrollTo({top: 0, behavior: "instant"});
+}
+
+function note(id, field, value){
+  const k = String(id);
+  answers[k] = Object.assign({}, answers[k], {[field]: value});
+  if(!value) delete answers[k][field];
+  keep(); send(false); tally();
 }
 function tally(){
   const n = Object.values(answers).filter(a => a.call || a.next || a.why).length;
-  $("count").textContent = `${n} / ${cases.length}`;
-  $("fill").style.width = (n / cases.length * 100) + "%";
-  $("hint").textContent = n === 0 ? "ten is plenty" : n < 10 ? "ten is the useful mark"
-    : "that is genuinely enough";
+  $("count").textContent = `${n} / ${cases.length || 30}`;
+  $("fill").style.width = (n / (cases.length || 30) * 100) + "%";
+  $("hint").textContent = n === 0 ? "ten is plenty"
+    : n < 10 ? "ten is the useful mark" : "that is genuinely enough";
 }
-function note(field, value){
-  const k = String(cases[at].case);
-  answers[k] = Object.assign({}, answers[k], {[field]: value});
-  keep(); send(false); tally();
-}
-$("o-call").onclick = e => { const o = e.target.closest(".opt"); if(!o) return;
-  pick($("o-call"), o.dataset.v); note("call", o.dataset.v); };
-$("o-next").onclick = e => { const o = e.target.closest(".opt"); if(!o) return;
-  pick($("o-next"), o.dataset.v); note("next", o.dataset.v); };
-$("why").oninput = e => note("why", e.target.value.trim());
 
-$("next").onclick = () => {
-  if(at < cases.length - 1){ at++; keep(); draw(); } else done();
+$("role").oninput = e => { role = e.target.value.trim(); keep(); send(false); };
+$("o-switch").onclick = e => {
+  const o = e.target.closest(".opt"); if(!o) return;
+  [...$("o-switch").children].forEach(x => x.classList.toggle("on", x === o));
+  switchOn = o.dataset.v; keep(); send(false);
 };
-$("back").onclick = () => { if(at > 0){ at--; keep(); draw(); } };
-$("stop").onclick = done;
-function done(){
-  $("quiz").classList.add("hide"); $("bar").classList.add("hide");
-  $("end").classList.remove("hide");
-  window.scrollTo({top: 0, behavior: "instant"});
-}
-$("o-switch").onclick = e => { const o = e.target.closest(".opt"); if(!o) return;
-  pick($("o-switch"), o.dataset.v); switchOn = o.dataset.v; };
-$("stupid").oninput = e => stupid = e.target.value;
-$("finish").onclick = async () => {
+$("stupid").oninput = e => { stupid = e.target.value; keep(); send(false); };
+$("finish").onclick = () => {
   $("finish").disabled = true; $("finish").textContent = "Sending…";
   send(true);
   const n = Object.values(answers).filter(a => a.call || a.next || a.why).length;
   setTimeout(() => {
     $("finish").textContent = "Sent — thank you";
     $("thanks").textContent = `${n} ${n === 1 ? "case" : "cases"} came through. `
-      + "Whatever you said gets written up exactly as you said it, including anything "
-      + "unflattering. You can close this now.";
+      + "You can close this now.";
   }, 700);
 };
+
+(async () => {
+  try{
+    const d = await (await fetch("/api/review/cases")).json();
+    cases = d.cases || [];
+  }catch(e){
+    $("cases").innerHTML = "<div class='card'><p>Could not load the cases — "
+      + e.message + "</p></div>";
+    return;
+  }
+  $("role").value = role;
+  [...$("o-switch").children].forEach(x => x.classList.toggle("on", x.dataset.v === switchOn));
+  $("stupid").value = stupid;
+  $("bar").classList.remove("hide");
+  build();
+})();
 </script>
