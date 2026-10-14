@@ -10,6 +10,7 @@ Which scorer answers a live request depends on what is configured, and the respo
 one did, every time. Nobody should have to guess whether a number came off a GPU."""
 
 import json
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -37,6 +38,9 @@ NOTES = BAKE / "notes.json"
 WEIGHTS = BAKE / "ddxplus_softmax.npz"
 PRIORS = BAKE / "ddxplus_priors.json"
 CALIBRATOR = BAKE / "calibrator.json"
+REVIEW_CASES = BAKE / "review-cases.json"
+# written to a mounted directory so a redeploy cannot destroy somebody's answers
+REPLIES = Path(os.environ.get("ASKFIRST_REVIEW_DIR", "/data")) / "replies.jsonl"
 COMPLETENESS = BAKE / "completeness.npz"
 
 
@@ -550,6 +554,60 @@ def read_note(note: Note):
         },
         "decision": verdict,
     }
+
+
+class Reply(BaseModel):
+    """One reviewer's answers. No name is asked for and none is needed: the link they were sent
+    carries a short token, so three people answering the same thirty cases stay separable
+    without anybody identifying themselves."""
+
+    who: str = ""            # the token from the invite link, not a person's name
+    role: str = ""           # "final-year medical student", freely typed, optional
+    answers: dict = {}       # {"1": {"call": "y", "next": "n", "why": "..."}}
+    switch_on: str = ""      # would you want it switched on
+    stupidest: str = ""      # what is the most obviously stupid thing about it
+    done: bool = False       # true when they pressed finish rather than drifted off
+
+
+@app.get("/api/review/cases")
+def review_cases():
+    """The thirty cases, without the answer key. The true condition is deliberately not in this
+    payload — it lives in docs/review/answers.json and is never served."""
+    if not REVIEW_CASES.exists():
+        raise HTTPException(503, "No review cases baked. Run scripts/build_review_sheet.py")
+    return json.loads(REVIEW_CASES.read_text())
+
+
+@app.post("/api/review/submit")
+def review_submit(reply: Reply):
+    """Append one reviewer's answers. Called on every change, so somebody who answers four cases
+    and closes the tab still leaves four answers behind rather than nothing.
+
+    No IP address, no user agent, no name unless they typed one into `role`. An unrecognised
+    token is still recorded rather than rejected — we know which links we handed out, and
+    throwing away a real reply because a token got mangled in a chat app would be worse than
+    sorting it out afterwards."""
+    if len(json.dumps(reply.answers)) > 60000:
+        raise HTTPException(422, "That is more than thirty cases' worth of answers.")
+    row = {
+        "at": __import__("datetime").datetime.now(
+            __import__("datetime").timezone.utc).isoformat(timespec="seconds"),
+        "who": (reply.who or "no-token")[:64],
+        "role": (reply.role or "")[:200],
+        "answered": len(reply.answers),
+        "answers": reply.answers,
+        "switch_on": reply.switch_on[:40],
+        "stupidest": reply.stupidest[:2000],
+        "done": bool(reply.done),
+    }
+    try:
+        REPLIES.parent.mkdir(parents=True, exist_ok=True)
+        with REPLIES.open("a") as fh:
+            fh.write(json.dumps(row) + "\n")
+    except OSError as e:
+        # never lose the reply to a storage problem without saying so
+        raise HTTPException(503, f"Could not save that: {e}") from e
+    return {"saved": True, "answered": row["answered"]}
 
 
 def odds(chance):

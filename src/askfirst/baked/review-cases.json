@@ -1,0 +1,617 @@
+{
+ "note": "The same thirty cases the print sheet uses, for the hosted survey. No true condition in here \u2014 that is in docs/review/answers.json and is never served.",
+ "target": 0.95,
+ "cases": [
+  {
+   "case": 1,
+   "findings": [
+    "Do you feel weakness in both arms and/or both legs \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Have you noticed weakness in your facial muscles and/or eyes?",
+    "Do you have numbness, loss of sensation or tingling in the feet?",
+    "Do you currently, or did you ever, have numbness, loss of sensitivity or tingling anywhere on your body?"
+   ],
+   "n": 1
+  },
+  {
+   "case": 2,
+   "findings": [
+    "How fast did the pain appear \u2014 1",
+    "Have you traveled out of the country in the last 4 weeks"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Are you currently being treated or have you recently been treated with an oral antibiotic for an ear infection?",
+    "Have you been in contact with a person with similar symptoms in the past 2 weeks?",
+    "Are you more irritable or has your mood been very unstable recently?"
+   ],
+   "n": 2
+  },
+  {
+   "case": 3,
+   "findings": [
+    "Do you find that your symptoms have worsened over the last 2 weeks and that progressively less effort is required to cause the symptoms \u2014 present",
+    "Do you exercise regularly, 4 times per week or more \u2014 present",
+    "Do you have close family members who had a cardiovascular disease problem before the age of 50 \u2014 present",
+    "Do you have high cholesterol or do you take medications to treat high cholesterol \u2014 present",
+    "Do you have symptoms that are increased with physical exertion but alleviated with rest \u2014 present",
+    "Have you ever had a heart attack or do you have angina (chest pain) \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Do you have chest pain even at rest?",
+    "Are you feeling nauseous or do you feel like vomiting?",
+    "Have you had significantly increased sweating?"
+   ],
+   "n": 6
+  },
+  {
+   "case": 4,
+   "findings": [
+    "Have you traveled out of the country in the last 4 weeks",
+    "Characterize your pain \u2014 sensitive, a knife stroke, exhausting",
+    "How precisely is the pain located \u2014 6",
+    "Does the pain radiate to another location",
+    "How intense is the pain \u2014 3",
+    "Do you feel pain somewhere \u2014 posterior chest wall(R)",
+    "How fast did the pain appear \u2014 3",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Are you a former smoker?",
+    "Do you have family members who have had lung cancer?",
+    "Have you had an involuntary weight loss over the last 3 months?"
+   ],
+   "n": 9
+  },
+  {
+   "case": 5,
+   "findings": [
+    "How precisely is the pain located \u2014 3",
+    "Characterize your pain \u2014 sensitive, a knife stroke, sharp",
+    "Do you have swelling in one or more areas of your body \u2014 present",
+    "Where is the swelling located \u2014 posterior aspect of the ankle(R), posterior aspect of the ankle(L), calf(R)",
+    "Did you lose consciousness \u2014 present",
+    "How intense is the pain \u2014 1",
+    "How fast did the pain appear \u2014 7",
+    "Have you been unable to move or get up for more than 3 consecutive days within the last 4 weeks \u2014 present",
+    "Have you traveled out of the country in the last 4 weeks \u2014 North America",
+    "Do you have pain that is increased when you breathe in deeply \u2014 present",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Do you feel pain somewhere \u2014 side of the chest(R), side of the chest(L), scapula(R), scapula(L), breast(R)",
+    "Have you had surgery within the last month \u2014 present",
+    "Have you ever had deep vein thrombosis (DVT) \u2014 present",
+    "Does the pain radiate to another location \u2014 side of the chest(R), side of the chest(L), scapula(L), posterior chest wall(R), posterior chest wall(L)"
+   ],
+   "answered": true,
+   "said": "Pulmonary embolism",
+   "ask": [
+    "Do you have an active cancer?",
+    "Do you currently take hormones?",
+    "Have you been coughing up blood?"
+   ],
+   "n": 15
+  },
+  {
+   "case": 6,
+   "findings": [
+    "Have you traveled out of the country in the last 4 weeks",
+    "How precisely is the pain located \u2014 5",
+    "Does the pain radiate to another location \u2014 biceps(R), thyroid cartilage, thoracic spine, under the jaw, shoulder(R)",
+    "How intense is the pain \u2014 7",
+    "Do you feel pain somewhere \u2014 lower chest, biceps(R), side of the chest(L), upper chest, breast(R)",
+    "How fast did the pain appear \u2014 3",
+    "Characterize your pain \u2014 tedious, heavy, exhausting",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present",
+    "Do you smoke cigarettes \u2014 present"
+   ],
+   "answered": true,
+   "said": "Stable angina",
+   "ask": [
+    "Do you constantly feel fatigued or do you have non-restful sleep?",
+    "Have you ever had a heart attack or do you have angina (chest pain)?",
+    "Do you have high cholesterol or do you take medications to treat high cholesterol?"
+   ],
+   "n": 10
+  },
+  {
+   "case": 7,
+   "findings": [
+    "Do you have swelling in one or more areas of your body \u2014 present",
+    "Do you feel pain somewhere \u2014 lower chest, ankle(R), ankle(L), breast(L), posterior chest wall(L)",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Have you noticed any new fatigue, generalized and vague discomfort, diffuse (widespread) muscle aches or a change in your general well-being related to your consultation today \u2014 present",
+    "How precisely is the pain located \u2014 3",
+    "Do you have symptoms that are increased with physical exertion but alleviated with rest \u2014 present",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present"
+   ],
+   "answered": true,
+   "said": "Acute pulmonary edema",
+   "ask": [
+    "Have you ever had fluid in your lungs?",
+    "Do you have bouts of choking or shortness of breath that wake you up at night?",
+    "Do you currently undergo dialysis?"
+   ],
+   "n": 7
+  },
+  {
+   "case": 8,
+   "findings": [
+    "Do you have a cough \u2014 present",
+    "Do you have nasal congestion or a clear runny nose \u2014 present",
+    "Where is the affected region located \u2014 commissure(R), posterior chest wall(L), shoulder(L)",
+    "How intense is the pain \u2014 3",
+    "What color is the rash \u2014 pink",
+    "Is the lesion (or are the lesions) larger than 1cm",
+    "Do you have a cough that produces colored or more abundant sputum than usual \u2014 present",
+    "How severe is the itching \u2014 0",
+    "Characterize your pain \u2014 sharp",
+    "Do you have a fever (either felt or measured with a thermometer) \u2014 present",
+    "Do you have any lesions, redness or problems on your skin that you believe are related to the condition you are consulting for \u2014 present",
+    "Have you had chills or shivers \u2014 present"
+   ],
+   "answered": true,
+   "said": "Pneumonia",
+   "ask": [
+    "Do you have a chronic obstructive pulmonary disease (COPD)?",
+    "Have you ever had pneumonia?",
+    "Are your symptoms more prominent at night?"
+   ],
+   "n": 12
+  },
+  {
+   "case": 9,
+   "findings": [
+    "Have you traveled out of the country in the last 4 weeks",
+    "Does the pain radiate to another location",
+    "How fast did the pain appear \u2014 9",
+    "How precisely is the pain located \u2014 7",
+    "Do you feel pain somewhere \u2014 lower chest, side of the chest(R), flank(L), hypochondrium(R), hypochondrium(L)",
+    "How intense is the pain \u2014 2",
+    "Characterize your pain \u2014 sharp",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present",
+    "Do you drink alcohol excessively or do you have an addiction to alcohol \u2014 present",
+    "Are you feeling nauseous or do you feel like vomiting \u2014 present",
+    "Do you feel lightheaded and dizzy or do you feel like you are about to faint \u2014 present",
+    "Do you feel your heart is beating fast (racing), irregularly (missing a beat) or do you feel palpitations \u2014 present"
+   ],
+   "answered": true,
+   "said": "Panic attack",
+   "ask": [
+    "Do you suffer from chronic anxiety?",
+    "Do you feel like you are dying or were you afraid that you were about do die?",
+    "Have you recently had numbness, loss of sensation or tingling, in both arms and legs and around your mouth?"
+   ],
+   "n": 13
+  },
+  {
+   "case": 10,
+   "findings": [
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "How intense is the pain \u2014 6",
+    "How precisely is the pain located \u2014 7"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Are you currently being treated or have you recently been treated with an oral antibiotic for an ear infection?",
+    "Are you more irritable or has your mood been very unstable recently?",
+    "Have you been in contact with a person with similar symptoms in the past 2 weeks?"
+   ],
+   "n": 3
+  },
+  {
+   "case": 11,
+   "findings": [
+    "Do you wheeze while inhaling or is your breathing noisy after coughing spells \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Did you vomit after coughing?",
+    "Have you been in contact with someone who has had pertussis (whoooping cough)?",
+    "Do you suddenly have difficulty or an inability to open your mouth or have jaw pain when opening it?"
+   ],
+   "n": 1
+  },
+  {
+   "case": 12,
+   "findings": [
+    "Have you traveled out of the country in the last 4 weeks",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present",
+    "Do you feel weakness in both arms and/or both legs \u2014 present",
+    "Did you previously, or do you currently, have any weakness/paralysis in one or more of your limbs or in your face \u2014 present"
+   ],
+   "answered": true,
+   "said": "Guillain-Barr\u00e9 syndrome",
+   "ask": [
+    "Have you noticed weakness in your facial muscles and/or eyes?",
+    "Do you have numbness, loss of sensation or tingling in the feet?",
+    "Do you currently, or did you ever, have numbness, loss of sensitivity or tingling anywhere on your body?"
+   ],
+   "n": 4
+  },
+  {
+   "case": 13,
+   "findings": [
+    "Have you had chills or shivers \u2014 present",
+    "Have you recently had a loss of appetite or do you get full more quickly then usually \u2014 present",
+    "Are you immunosuppressed \u2014 present",
+    "Do you have diffuse (widespread) muscle pain \u2014 present",
+    "Have you had significantly increased sweating \u2014 present",
+    "Do you have any lesions, redness or problems on your skin that you believe are related to the condition you are consulting for \u2014 present",
+    "How intense is the pain caused by the rash \u2014 4",
+    "Do you have nasal congestion or a clear runny nose \u2014 present",
+    "Where is the affected region located \u2014 side of the neck(L)"
+   ],
+   "answered": true,
+   "said": "Influenza",
+   "ask": [
+    "Do you feel so tired that you are unable to do your usual activities or are you stuck in your bed all day long?",
+    "Do you have a sore throat?"
+   ],
+   "n": 9
+  },
+  {
+   "case": 14,
+   "findings": [
+    "How fast did the pain appear \u2014 3",
+    "Is the rash swollen \u2014 1",
+    "Do your lesions peel off",
+    "How precisely is the pain located \u2014 7",
+    "Do you have any lesions, redness or problems on your skin that you believe are related to the condition you are consulting for \u2014 present",
+    "Does the pain radiate to another location",
+    "Where is the affected region located \u2014 lower gum, upper gum, labia majora(R), labia majora(L), internal cheek(R)",
+    "Is the lesion (or are the lesions) larger than 1cm \u2014 Y"
+   ],
+   "answered": true,
+   "said": "HIV (initial infection)",
+   "ask": [
+    "Are you currently using intravenous drugs?",
+    "Have you had sexual intercourse with an HIV-positive partner in the past 12 months?",
+    "Have you ever had a sexually transmitted infection?"
+   ],
+   "n": 8
+  },
+  {
+   "case": 15,
+   "findings": [
+    "Have you noticed that the tone of your voice has become deeper, softer or hoarse \u2014 present",
+    "Have you had a cold in the last 2 weeks \u2014 present",
+    "Do you live with 4 or more people \u2014 present",
+    "Do you smoke cigarettes \u2014 present",
+    "Do you have a cough \u2014 present"
+   ],
+   "answered": true,
+   "said": "Acute laryngitis",
+   "ask": [
+    "Do you attend or work in a daycare?",
+    "Do you have a fever (either felt or measured with a thermometer)?",
+    "Do you have pain somewhere, related to your reason for consulting?"
+   ],
+   "n": 5
+  },
+  {
+   "case": 16,
+   "findings": [
+    "How fast did the pain appear \u2014 4",
+    "Do you have nasal congestion or a clear runny nose \u2014 present",
+    "Characterize your pain \u2014 burning",
+    "Do you feel pain somewhere \u2014 tonsil(R), tonsil(L), thyroid cartilage, palace, pharynx",
+    "Do you have a cough \u2014 present"
+   ],
+   "answered": true,
+   "said": "Viral pharyngitis",
+   "ask": [
+    "Have you been in contact with a person with similar symptoms in the past 2 weeks?",
+    "Are you immunosuppressed?",
+    "Have you been coughing up blood?"
+   ],
+   "n": 5
+  },
+  {
+   "case": 17,
+   "findings": [
+    "How fast did the pain appear \u2014 3",
+    "Have you traveled out of the country in the last 4 weeks",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Do you feel so tired that you are unable to do your usual activities or are you stuck in your bed all day long \u2014 present",
+    "Do you have any family members who have been diagnosed with anemia \u2014 present",
+    "Are you taking any new oral anticoagulants ((NOACs) \u2014 present",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present",
+    "Have you recently had stools that were black (like coal) \u2014 present",
+    "Do you feel slightly dizzy or lightheaded \u2014 present",
+    "How precisely is the pain located \u2014 4",
+    "Characterize your pain \u2014 tugging, exhausting",
+    "Do you have a poor diet \u2014 present",
+    "Have you noticed light red blood or blood clots in your stool \u2014 present",
+    "Does the pain radiate to another location",
+    "Do you constantly feel fatigued or do you have non-restful sleep \u2014 present",
+    "How intense is the pain \u2014 1",
+    "Do you feel pain somewhere \u2014 top of the head, temple(L)"
+   ],
+   "answered": true,
+   "said": "Anemia",
+   "ask": [
+    "Have you ever had a diagnosis of anemia?",
+    "Do you have chronic kidney failure?",
+    "Is your BMI less than 18.5, or are you underweight?"
+   ],
+   "n": 17
+  },
+  {
+   "case": 18,
+   "findings": [
+    "How fast did the pain appear \u2014 4",
+    "Characterize your pain \u2014 sharp",
+    "How intense is the pain \u2014 4",
+    "Are your vaccinations up to date \u2014 present",
+    "How precisely is the pain located \u2014 2",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Have you had a cold in the last 2 weeks \u2014 present",
+    "Have you lost your sense of smell \u2014 present",
+    "Do you smoke cigarettes \u2014 present",
+    "Do you have polyps in your nose \u2014 present",
+    "Have you ever been diagnosed with gastroesophageal reflux \u2014 present",
+    "Do you feel pain somewhere \u2014 mouth, forehead, cheek(R), cheek(L), eye(R)",
+    "Do you have asthma or have you ever had to use a bronchodilator in the past \u2014 present",
+    "Have you traveled out of the country in the last 4 weeks",
+    "Do you have a cough \u2014 present",
+    "Does the pain radiate to another location \u2014 back of head, forehead, nose, temple(R), temple(L)"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Do you have a fever (either felt or measured with a thermometer)?"
+   ],
+   "n": 16
+  },
+  {
+   "case": 19,
+   "findings": [
+    "Have you traveled out of the country in the last 4 weeks",
+    "How fast did the pain appear \u2014 2",
+    "Do you feel pain somewhere \u2014 tonsil(R), tonsil(L), thyroid cartilage, palace, pharynx",
+    "Does the pain radiate to another location",
+    "How intense is the pain \u2014 3",
+    "How precisely is the pain located \u2014 6",
+    "Characterize your pain \u2014 burning"
+   ],
+   "answered": true,
+   "said": "Viral pharyngitis",
+   "ask": [
+    "Have you been in contact with a person with similar symptoms in the past 2 weeks?",
+    "Are you immunosuppressed?",
+    "Have you been coughing up blood?"
+   ],
+   "n": 7
+  },
+  {
+   "case": 20,
+   "findings": [
+    "Have you traveled out of the country in the last 4 weeks",
+    "Do you feel pain somewhere \u2014 side of the chest(R), upper chest, posterior chest wall(L)",
+    "How precisely is the pain located \u2014 5",
+    "How intense is the pain \u2014 4",
+    "How fast did the pain appear \u2014 2",
+    "Does the pain radiate to another location \u2014 biceps(L), jaw, scapula(R), triceps(R), shoulder(L)",
+    "Characterize your pain \u2014 heavy",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present",
+    "Have you had significantly increased sweating \u2014 present",
+    "Where is the swelling located \u2014 ankle(L), calf(L), tibia(R)"
+   ],
+   "answered": true,
+   "said": "Acute pulmonary edema",
+   "ask": [
+    "Have you ever had fluid in your lungs?",
+    "Do you have bouts of choking or shortness of breath that wake you up at night?",
+    "Do you currently undergo dialysis?"
+   ],
+   "n": 11
+  },
+  {
+   "case": 21,
+   "findings": [
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "Do you feel pain somewhere \u2014 tonsil(R), tonsil(L), thyroid cartilage, palace, pharynx",
+    "How intense is the pain \u2014 9",
+    "Do you have a fever (either felt or measured with a thermometer) \u2014 present",
+    "Do you attend or work in a daycare \u2014 present",
+    "Do you live with 4 or more people \u2014 present",
+    "How precisely is the pain located \u2014 9",
+    "Do you have nasal congestion or a clear runny nose \u2014 present",
+    "Have you been in contact with a person with similar symptoms in the past 2 weeks \u2014 present",
+    "Have you traveled out of the country in the last 4 weeks",
+    "Have you been coughing up blood \u2014 present",
+    "How fast did the pain appear \u2014 4",
+    "Do you smoke cigarettes \u2014 present",
+    "Characterize your pain \u2014 sensitive, burning",
+    "Does the pain radiate to another location"
+   ],
+   "answered": true,
+   "said": "Viral pharyngitis",
+   "ask": [
+    "Are you immunosuppressed?"
+   ],
+   "n": 15
+  },
+  {
+   "case": 22,
+   "findings": [
+    "How fast did the pain appear \u2014 1",
+    "Have you had unprotected sex with more than one partner in the last 6 months \u2014 present",
+    "Do you have a sore throat \u2014 present",
+    "Characterize your pain \u2014 exhausting",
+    "Have you ever had a sexually transmitted infection \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Have you had sexual intercourse with an HIV-positive partner in the past 12 months?",
+    "Are you currently using intravenous drugs?",
+    "Do you have swollen or painful lymph nodes?"
+   ],
+   "n": 5
+  },
+  {
+   "case": 23,
+   "findings": [
+    "How intense is the pain \u2014 5",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Have you noticed weakness in your facial muscles and/or eyes?",
+    "Have you ever had a diagnosis of anemia?",
+    "Do you suddenly have difficulty or an inability to open your mouth or have jaw pain when opening it?"
+   ],
+   "n": 2
+  },
+  {
+   "case": 24,
+   "findings": [
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present",
+    "Do you have a hard time opening/raising one or both eyelids \u2014 present",
+    "Do you have pain or weakness in your jaw \u2014 present",
+    "Do you have difficulty swallowing, or have a feeling of discomfort/blockage when swallowing \u2014 present",
+    "Did you previously, or do you currently, have any weakness/paralysis in one or more of your limbs or in your face \u2014 present",
+    "Are there any members of your family who have been diagnosed myasthenia gravis \u2014 present",
+    "Have you traveled out of the country in the last 4 weeks",
+    "Do you have difficulty articulating words/speaking \u2014 present",
+    "Do you have the perception of seeing two images of a single object seen overlapping or adjacent to each other (double vision) \u2014 present"
+   ],
+   "answered": true,
+   "said": "Myasthenia gravis",
+   "ask": [
+    "Do your symptoms of muscle weakness increase with fatigue and/or stress?",
+    "Do you feel weakness in both arms and/or both legs?"
+   ],
+   "n": 9
+  },
+  {
+   "case": 25,
+   "findings": [
+    "Do you have diabetes \u2014 present",
+    "Have you traveled out of the country in the last 4 weeks",
+    "Do you have close family members who had a cardiovascular disease problem before the age of 50 \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Do you find that your symptoms have worsened over the last 2 weeks and that progressively less effort is required to cause the symptoms?",
+    "Do you have chest pain even at rest?",
+    "Do you have a problem with poor circulation?"
+   ],
+   "n": 3
+  },
+  {
+   "case": 26,
+   "findings": [
+    "Do you have swollen or painful lymph nodes \u2014 present",
+    "Have you noticed any new fatigue, generalized and vague discomfort, diffuse (widespread) muscle aches or a change in your general well-being related to your consultation today \u2014 present",
+    "Are you feeling nauseous or do you feel like vomiting \u2014 present",
+    "Where is the swelling located",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present"
+   ],
+   "answered": true,
+   "said": "Chagas",
+   "ask": [
+    "Have you been unintentionally losing weight or have you lost your appetite?",
+    "Have you had diarrhea or an increase in stool frequency?",
+    "Do you have a fever (either felt or measured with a thermometer)?"
+   ],
+   "n": 5
+  },
+  {
+   "case": 27,
+   "findings": [
+    "Have any of your family members been diagnosed with cluster headaches \u2014 present",
+    "Do you drink alcohol excessively or do you have an addiction to alcohol \u2014 present",
+    "Do you have nasal congestion or a clear runny nose \u2014 present",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Do you take medication that dilates your blood vessels?",
+    "Do you feel that your eyes produce excessive tears?"
+   ],
+   "n": 4
+  },
+  {
+   "case": 28,
+   "findings": [
+    "Do you drink alcohol excessively or do you have an addiction to alcohol \u2014 present",
+    "Do you exercise regularly, 4 times per week or more \u2014 present",
+    "Do you have high blood pressure or do you take medications to treat high blood pressure \u2014 present",
+    "Have you traveled out of the country in the last 4 weeks",
+    "Do you have high cholesterol or do you take medications to treat high cholesterol \u2014 present",
+    "Do you have diabetes \u2014 present",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present",
+    "How precisely is the pain located \u2014 6",
+    "How intense is the pain \u2014 7",
+    "Do you have close family members who had a cardiovascular disease problem before the age of 50 \u2014 present",
+    "Does the pain radiate to another location \u2014 biceps(R), biceps(L), thyroid cartilage, thoracic spine, shoulder(L)",
+    "Do you have symptoms that are increased with physical exertion but alleviated with rest \u2014 present",
+    "Are you significantly overweight compared to people of the same height as you \u2014 present",
+    "Do you constantly feel fatigued or do you have non-restful sleep \u2014 present",
+    "Do you feel pain somewhere \u2014 lower chest, side of the chest(R), side of the chest(L), breast(R), epigastric",
+    "Characterize your pain \u2014 tedious, heavy, exhausting",
+    "How fast did the pain appear \u2014 7",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Do you smoke cigarettes?",
+    "Have you ever had a heart attack or do you have angina (chest pain)?"
+   ],
+   "n": 18
+  },
+  {
+   "case": 29,
+   "findings": [
+    "Do you have chronic kidney failure \u2014 present",
+    "Do you constantly feel fatigued or do you have non-restful sleep \u2014 present",
+    "Have you noticed light red blood or blood clots in your stool \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Have you ever had a diagnosis of anemia?",
+    "Do you have any family members who have been diagnosed with anemia?",
+    "Do you have a poor diet?"
+   ],
+   "n": 3
+  },
+  {
+   "case": 30,
+   "findings": [
+    "Have you ever had a pericarditis \u2014 present",
+    "Do you have pain that is increased when you breathe in deeply \u2014 present",
+    "Are you experiencing shortness of breath or difficulty breathing in a significant way \u2014 present",
+    "Do you have pain somewhere, related to your reason for consulting \u2014 present"
+   ],
+   "answered": false,
+   "said": null,
+   "ask": [
+    "Have you recently had a viral infection?",
+    "Are your symptoms worse when lying down and alleviated while sitting up?",
+    "Do you feel your heart is beating fast (racing), irregularly (missing a beat) or do you feel palpitations?"
+   ],
+   "n": 4
+  }
+ ]
+}

@@ -39,6 +39,7 @@ from askfirst.softmax import SoftmaxScorer  # noqa: E402
 
 BAKE = Path("src/askfirst/baked")
 OUT = Path("docs/review/sheet.html")
+CASES = Path("src/askfirst/baked/review-cases.json")
 KEYS = Path("docs/review/answers.json")
 TARGET = 0.95
 WANTED = 30
@@ -342,7 +343,15 @@ exactly as you said it, credited however you want, including not at all.</p>
             for i, c in enumerate(picked, start=1)
         ],
     }, indent=1))
-    print(f"wrote {OUT} and {KEYS}")
+    CASES.write_text(json.dumps({
+        "note": "The same thirty cases the print sheet uses, for the hosted survey. No true "
+                "condition in here — that is in docs/review/answers.json and is never served.",
+        "target": TARGET,
+        "cases": [{"case": i, "findings": c["findings"], "answered": c["answered"],
+                   "said": c["said"], "ask": c["ask"], "n": c["n"]}
+                  for i, c in enumerate(picked, start=1)],
+    }, indent=1))
+    print(f"wrote {OUT}, {KEYS} and {CASES}")
     print("open the sheet in a browser and print to PDF, or just send the file")
 
 

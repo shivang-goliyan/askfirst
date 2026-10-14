@@ -22,3 +22,7 @@ outputs/
 
 # a filled-in review sheet holds a named person's opinion; the blank one ships, replies do not
 docs/review/filled-*
+
+# the only file linking a real person to an opinion they gave us
+docs/review/invites.txt
+docs/review/replies*.jsonl
