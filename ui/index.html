@@ -185,10 +185,10 @@
     .evidence-heading{display:flex;align-items:center;justify-content:space-between;gap:28px}
     .evidence h2{font-size:25px}
     .evidence-heading p{font-size:14px;margin-top:8px}
-    .measurement-band{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin-top:32px}
+    .measurement-band{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:32px}
     .measurement{min-width:0;padding-top:22px;border-top:1px solid var(--line2)}
     .measure-value{
-      display:flex;flex-direction:column;justify-content:flex-start;gap:6px;min-height:116px;
+      display:flex;flex-direction:column;justify-content:flex-start;gap:6px;
       max-width:none;font-family:var(--display);font-size:48px;font-weight:800;
       line-height:1.06;letter-spacing:-.025em;font-variant-numeric:tabular-nums;color:var(--ink);
     }
@@ -202,6 +202,22 @@
     .measure-sample{font-size:12px;line-height:1.7;margin-top:14px}
     .measure-link{display:inline-flex;align-items:center;min-height:44px;font-size:14px}
     .validation-note{max-width:none;font-size:12px;line-height:1.7;margin-top:26px;padding-top:18px;border-top:1px solid var(--line2)}
+    .value{margin:12px 0 0;padding:26px 0 0;border-top:1px solid var(--line2)}
+    .value h2{font-size:25px}
+    .value-lede{font-size:14px;margin-top:8px}
+    .value-band{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px;margin-top:30px}
+    .value-item{min-width:0;padding-top:20px;border-top:1px solid var(--line2)}
+    .value-figure{max-width:none;font-family:var(--display);font-size:34px;font-weight:800;
+      line-height:1.08;letter-spacing:-.025em;font-variant-numeric:tabular-nums;color:var(--ink);margin:0}
+    .value-figure.wide{font-size:25px}
+    .value-figure .unit{display:block;font-family:var(--body);font-size:14px;font-weight:500;
+      line-height:1.5;letter-spacing:0;margin-top:8px;color:var(--sec)}
+    .value-note{font-size:12.5px;line-height:1.7;margin-top:12px;color:var(--ter);max-width:34ch}
+    .value-terms{display:flex;flex-wrap:wrap;gap:16px 26px;margin-top:28px;padding-top:18px;
+      border-top:1px solid var(--line2);max-width:none}
+    .value-terms>div{min-width:210px;flex:1;font-size:13.5px;line-height:1.65;color:var(--sec)}
+    .value-terms b{display:block;margin-bottom:5px;font-family:var(--mono);font-size:11px;
+      letter-spacing:.04em;text-transform:uppercase;color:var(--ter);font-weight:600}
     footer{background:var(--foot);color:var(--f-ink);padding:26px 0}
     .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
     footer .brand{color:var(--f-ink)}
@@ -216,10 +232,12 @@
       .record{margin-top:16px}
       .hero-copy{font-size:16px}
       .measurement-band{grid-template-columns:1fr;gap:24px}
+      .value-band{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
       .measure-value{min-height:0}
       .measure-change{font-size:48px}
     }
     @media(max-width:540px){
+      .value-band{grid-template-columns:1fr}
       .shell{width:calc(100% - 32px)}
       .nav{margin-top:16px;padding-left:18px;gap:12px}
       .nav-links{gap:12px}
@@ -408,6 +426,36 @@
         </div>
       </section>
 
+      <section class="value" aria-labelledby="value-title">
+        <h2 id="value-title">What a thousand records gives back.</h2>
+        <p class="value-lede">The buyer is an operator whose cost line is clinician-minutes. This is the arithmetic on their side of it.</p>
+
+        <div class="value-band">
+          <div class="value-item">
+            <p class="value-figure">455<span class="unit">never reach a person</span></p>
+            <p class="value-note">answered and closed at a 95% bar, before a clinician is involved</p>
+          </div>
+          <div class="value-item">
+            <p class="value-figure wide">C$4,546&ndash;12,274<span class="unit">of review capacity returned</span></p>
+            <p class="value-note">at C$10&ndash;27 for a reviewed triage call, CCOHTA Technology Report 43</p>
+          </div>
+          <div class="value-item">
+            <p class="value-figure wide">176 &rarr; 0.13<span class="unit">wrong answers</span></p>
+            <p class="value-note">against answering everything &mdash; the line a general counsel reads</p>
+          </div>
+          <div class="value-item">
+            <p class="value-figure">$0.0004<span class="unit">to run the thousand</span></p>
+            <p class="value-note">44.5&nbsp;ms of CPU each, no GPU, 142&nbsp;MB resident</p>
+          </div>
+        </div>
+
+        <div class="value-terms">
+          <div><b>Return to the buyer</b>9&times; to 25&times; on C$500 per 1,000 assessed records, before counting the liability line at all.</div>
+          <div><b>Integration</b>Two API calls. It sits in front of the model they already run rather than replacing it.</div>
+          <div><b>Why it stays bought</b>The calibration is fitted to that operator&rsquo;s own missingness and ships as their file. It does not travel.</div>
+        </div>
+      </section>
+
       <section class="evidence" aria-labelledby="evidence-title">
         <div class="evidence-heading">
           <div>
@@ -437,17 +485,9 @@
             <p class="measure-sample">4,000 held-out patients</p>
           </article>
 
-          <article class="measurement" aria-label="Published transfer result">
-            <p class="measure-value measure-conditions">
-              <span>4 <span class="measure-unit">conditions pre-registered,</span></span>
-              <span>1 <span class="measure-unit">met</span></span>
-            </p>
-            <p class="measure-context">on 72,004 real emergency department visits, the rule did not transfer</p>
-            <a class="measure-link" href="/evidence.html">we published it as a loss</a>
-          </article>
         </div>
 
-        <p class="validation-note">Nothing here is clinically validated, and no clinician has reviewed any output.</p>
+        <p class="validation-note"><strong>And the one real queue we tried said no.</strong> Four conditions were pre-registered before the run, on 72,004 real emergency department visits; one was met, and we published it as a loss &mdash; <a href="/evidence.html">it is in the measurements</a>. Nothing here is clinically validated, and no clinician has reviewed any output.</p>
       </section>
     </main>
   </div>
