@@ -1,376 +1,1070 @@
 <!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f4f1">
 <title>askfirst — deck</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
   :root{
-    --bg:#0c0d10; --ink:#eceef2; --dim:#878d99; --line:#23262d;
-    --hot:#ff9f45; --cool:#5fb0ff; --bad:#e35d6a; --good:#5fd49a;
+    --bg:#fff; --paper:#f4f4f1; --ink:#141416; --sec:#4f4f57; --ter:#8a8a92;
+    --line:#e7e7e3; --line2:#d8d8d2; --accent:#1f43d6; --blue:#3b5bf0;
+    --ok:#1c7a44; --okbg:#e7f5ec; --live:#e0392f;
+    --foot:#0c0c0f; --f-ink:#f6f6f7; --f-sec:#a6a6ad; --f-ter:#67676f; --f-line:#ffffff1a;
+    --card:#fff; --cardln:#e7e7e3; --soft:#fcfcfb; --ph:#ecece6;
+    --cardsh:0 30px 70px -40px #1414194d, 0 2px 6px #1414190a;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;
+    --body:"Public Sans",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",monospace;
+    --ease:cubic-bezier(.16,1,.3,1);
+    --header-space:108px;
+    --footer-space:66px;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);
-    font:16px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
-  .deck{height:100vh;overflow:hidden}
-  section{display:none;height:100vh;padding:5vh 7vw;flex-direction:column;justify-content:center}
-  section.on{display:flex}
-  h1{font-size:clamp(34px,6.5vw,86px);line-height:1.02;margin:0 0 18px;letter-spacing:-.025em}
-  h2{font-size:clamp(22px,3.4vw,44px);line-height:1.1;margin:0 0 22px;letter-spacing:-.02em}
-  p{max-width:62ch;margin:0 0 14px}
-  .lede{font-size:clamp(17px,2.1vw,27px);color:var(--ink);max-width:48ch}
-  .dim{color:var(--dim)}
+  html,body{margin:0;height:100%;background:var(--paper);color:var(--ink)}
+  body{font:16px/1.6 var(--body);overflow:hidden}
+  button,a{-webkit-tap-highlight-color:transparent}
+  button{font:inherit;cursor:pointer}
+  a{color:var(--accent);text-underline-offset:4px}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:5px}
+  ::selection{background:var(--accent);color:var(--bg)}
+  .skip-link{
+    position:fixed;top:12px;left:12px;z-index:20;padding:10px 18px;
+    border-radius:999px;background:var(--accent);color:var(--bg);
+    transform:translateY(-160%);
+  }
+  .skip-link:focus{transform:translateY(0)}
+  .site-header{position:fixed;z-index:10;top:24px;left:24px;right:24px}
+  .site-nav{
+    display:flex;align-items:center;gap:22px;max-width:900px;min-height:62px;
+    margin:auto;padding:8px 10px 8px 24px;background:var(--card);
+    border:1px solid var(--cardln);border-radius:999px;
+    box-shadow:0 16px 30px -24px #1414194d;
+  }
+  .brand{
+    margin-right:auto;color:var(--ink);font:800 28px/1.06 var(--display);
+    letter-spacing:-.025em;text-decoration:none;white-space:nowrap;
+  }
+  .brand span{color:var(--accent)}
+  .site-link{
+    display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+    color:var(--sec);font-size:13px;text-decoration:none;white-space:nowrap;
+  }
+  .site-link[aria-current="page"]{color:var(--accent)}
+  .site-link.primary{
+    min-width:72px;padding:10px 20px;border-radius:999px;
+    background:var(--accent);color:var(--bg);font-weight:600;
+  }
+  .bar{position:fixed;z-index:15;top:0;left:0;height:3px;background:var(--accent)}
+  .deck{
+    position:fixed;inset:var(--header-space) 0 var(--footer-space);
+    overflow:hidden;
+  }
+  section{
+    display:none;height:100%;overflow-y:auto;overflow-x:hidden;
+    overscroll-behavior:contain;scrollbar-gutter:stable;
+    padding:24px clamp(24px,5vw,80px) 38px;
+  }
+  section.on{display:block}
+  section:focus{outline:none}
+  .slide-inner{
+    display:flex;flex-direction:column;justify-content:center;
+    min-height:100%;max-width:1280px;margin:0 auto;
+  }
+  .tag,.eyebrow{
+    font:500 11px/1.65 var(--mono);letter-spacing:.04em;
+    text-transform:uppercase;color:var(--sec);
+  }
+  .tag{display:flex;align-items:baseline;gap:10px;margin:0 0 16px}
+  .tag:before{
+    content:"";flex:none;width:6px;height:6px;border-radius:50%;
+    background:var(--accent);align-self:flex-start;margin-top:6px;
+  }
+  h1,h2,h3,.huge,.figure,.metric-value{
+    font-family:var(--display);font-weight:800;line-height:1.06;
+    letter-spacing:-.025em;font-variant-numeric:tabular-nums;
+    color:var(--ink);text-wrap:balance;
+  }
+  h1{font-size:clamp(64px,8vw,112px);margin:0 0 22px}
+  h2{font-size:clamp(30px,3.5vw,50px);max-width:31ch;margin:0 0 26px}
+  h3{font-size:clamp(22px,2.2vw,30px);margin:0 0 14px}
+  p{max-width:62ch;margin:0 0 16px;color:var(--sec)}
+  strong{font-weight:600;color:var(--ink)}
+  .lede{font-size:clamp(18px,1.65vw,24px);line-height:1.45;max-width:48ch}
+  .dim{color:var(--sec)}
   .small{font-size:14px}
-  .tag{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:26px}
-  .huge{font-size:clamp(50px,13vw,170px);line-height:.92;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-  .hot{color:var(--hot)} .cool{color:var(--cool)} .bad{color:var(--bad)} .good{color:var(--good)}
-  table{border-collapse:collapse;font-variant-numeric:tabular-nums;margin:10px 0 16px}
-  th,td{padding:9px 20px 9px 0;text-align:left;border-bottom:1px solid var(--line);font-size:clamp(14px,1.7vw,21px)}
-  th{color:var(--dim);font-weight:500;font-size:13px;letter-spacing:.07em;text-transform:uppercase}
-  tr.key td{color:var(--hot);font-weight:600}
-  ul{margin:0 0 14px;padding-left:1.1em;max-width:62ch} li{margin-bottom:9px}
-  .cols{display:flex;gap:5vw;flex-wrap:wrap;align-items:flex-start}
-  .steps{counter-reset:s;list-style:none;padding:0;max-width:66ch}
-  .steps li{counter-increment:s;position:relative;padding-left:46px;margin-bottom:13px}
-  .steps li:before{content:counter(s);position:absolute;left:0;top:-1px;width:30px;height:30px;
-    border:1px solid var(--line);border-radius:50%;text-align:center;line-height:29px;
-    font-size:14px;color:var(--dim)}
-  .steps li.mark:before{border-color:var(--hot);color:var(--hot)}
-  code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:#15171c;
-    border:1px solid var(--line);border-radius:4px;padding:2px 6px}
-  pre{background:#15171c;border:1px solid var(--line);border-left:2px solid var(--cool);
-    border-radius:5px;padding:14px 16px;overflow:auto;font-size:13px;max-width:70ch}
-  blockquote{margin:18px 0;padding-left:20px;border-left:2px solid var(--hot);
-    font-size:clamp(18px,2.5vw,32px);line-height:1.25;max-width:40ch}
-  .src{margin-top:auto;padding-top:22px;color:var(--dim);font-size:13px}
-  nav{position:fixed;bottom:14px;right:18px;color:var(--dim);font-size:12px;
-    font-variant-numeric:tabular-nums;letter-spacing:.06em}
-  .bar{position:fixed;top:0;left:0;height:2px;background:var(--hot);transition:width .18s}
+  .hot,.cool{color:var(--accent)}
+  .good{color:var(--ok)}
+  .bad{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:5px}
+  .split{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.43fr);gap:28px;align-items:start}
+  .split.wide-aside{grid-template-columns:minmax(0,1fr) minmax(280px,.65fr)}
+  .split>*{min-width:0}
+  .copy>p:last-child{margin-bottom:0}
+  .panel,.metric-card,.table-wrap,.note-card{
+    background:var(--card);border:1px solid var(--cardln);
+    border-radius:12px;box-shadow:var(--cardsh);
+  }
+  .panel{padding:clamp(20px,2.5vw,34px)}
+  .panel>p:last-child{margin-bottom:0}
+  .metric-card{padding:clamp(22px,2.5vw,36px);overflow:hidden}
+  .metric-card .eyebrow{display:block;margin-bottom:18px}
+  .huge{display:block;font-size:clamp(72px,8vw,120px);color:var(--accent);margin:0 0 12px}
+  .huge.compact{font-size:clamp(54px,5.7vw,84px)}
+  .huge.money{font-size:clamp(48px,5.3vw,78px);white-space:nowrap}
+  .figure{display:block;font-size:clamp(40px,4.5vw,66px);color:var(--accent)}
+  .metric-card p{font-size:15px;margin-bottom:0}
+  .metric-card .metric-caption{font-size:19px;color:var(--ink);margin-bottom:10px}
+  .metric-rule{height:1px;background:var(--line);margin:24px 0}
+  .metric-pair{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .metric-value{font-size:clamp(28px,3vw,42px);display:block;margin:6px 0;color:var(--accent)}
+  .metric-word{font-size:clamp(32px,3.7vw,52px);margin:0 0 20px}
+  .quote-card{background:var(--card)}
+  .quote-card blockquote{border:0;padding:0;margin:0;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .table-wrap{margin:6px 0 22px;overflow:hidden}
+  th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{
+    font:500 11px/1.6 var(--mono);letter-spacing:.04em;text-transform:uppercase;
+    color:var(--sec);background:var(--soft);
+  }
+  td{font-size:15px;line-height:1.5;color:var(--sec)}
+  td:first-child{color:var(--ink)}
+  tr:last-child td{border-bottom:0}
+  td.num{
+    font:700 clamp(19px,1.8vw,25px)/1.25 var(--display);
+    letter-spacing:-.025em;font-variant-numeric:tabular-nums;white-space:nowrap;
+    color:var(--ink);
+  }
+  td.num strong{font-weight:800}
+  tr.key{background:var(--paper)}
+  tr.key td.num{color:var(--accent)}
+  tr.key td:first-child{box-shadow:inset 3px 0 var(--accent)}
+  td.num.good{color:var(--ok)}
+  .table-note{font-size:14px;margin-top:-6px}
+  .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+  .summary-grid .panel{padding:22px}
+  .summary-grid p{font-size:14px;margin:10px 0 0}
+  .comparison{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin:10px 0}
+  .comparison .before{
+    font:700 34px/1.06 var(--display);letter-spacing:-.025em;
+    font-variant-numeric:tabular-nums;color:var(--sec);
+  }
+  .comparison .arrow{color:var(--accent);font-size:28px}
+  .comparison .huge{margin:0}
+  ul{margin:0 0 16px;padding-left:1.2em;max-width:62ch;color:var(--sec)}
+  li{margin-bottom:14px}
+  .steps{
+    counter-reset:s;list-style:none;padding:0;margin:0;
+    max-width:none;display:grid;gap:12px;
+  }
+  .steps li{
+    counter-increment:s;position:relative;margin:0;padding:18px 22px 18px 70px;
+    border:1px solid var(--cardln);border-radius:12px;background:var(--card);
+    color:var(--sec);
+  }
+  .steps li:before{
+    content:counter(s);position:absolute;left:20px;top:18px;width:30px;height:30px;
+    border:1px solid var(--line2);border-radius:50%;text-align:center;
+    font:500 12px/28px var(--mono);color:var(--sec);
+  }
+  .steps li.mark:before{border-color:var(--accent);color:var(--accent)}
+  .steps li:last-child{background:var(--paper);border-color:var(--line2)}
+  .audit-list{
+    list-style:none;padding:0;max-width:none;display:grid;
+    grid-template-columns:1fr 1fr;gap:16px;margin:0;
+  }
+  .audit-list li{padding:24px;margin:0}
+  .audit-list li>strong:first-child{display:block;margin-bottom:10px;font-size:18px}
+  .prior-list{list-style:none;padding:0;max-width:none}
+  .prior-list li{padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+  .prior-list li:last-child{border:0;margin-bottom:0;padding-bottom:0}
+  .safety-table td:first-child{width:25%;font-weight:600}
+  code{
+    font:500 12px/1.5 var(--mono);letter-spacing:.04em;color:var(--ink);
+    background:var(--paper);border:1px solid var(--line2);border-radius:8px;
+    padding:3px 6px;overflow-wrap:anywhere;
+  }
+  pre{
+    font:12px/1.6 var(--mono);background:var(--soft);border:1px solid var(--line);
+    border-radius:8px;padding:16px;white-space:pre-wrap;overflow-wrap:anywhere;
+  }
+  blockquote{
+    margin:22px 0;padding-left:20px;border-left:3px solid var(--accent);
+    font:700 clamp(22px,2.4vw,34px)/1.15 var(--display);
+    letter-spacing:-.025em;color:var(--ink);max-width:40ch;
+  }
+  .src{
+    margin-top:22px;padding-top:16px;border-top:1px solid var(--line2);
+    color:var(--sec);font:12px/1.6 var(--body);max-width:none;
+    overflow-wrap:anywhere;
+  }
+  .source-inline{
+    margin:0 0 22px;padding-top:0;border-top:0;font-size:12px;
+  }
+  .statement{
+    margin:20px 0;padding:20px 24px;border-left:3px solid var(--accent);
+    background:var(--card);border-radius:0 12px 12px 0;
+  }
+  .statement p:last-child{margin-bottom:0}
+  .deck-footer{
+    position:fixed;z-index:10;bottom:0;left:0;right:0;height:var(--footer-space);
+    padding:10px 24px;background:var(--foot);color:var(--f-ink);
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+  }
+  .footer-hint{font-size:12px;color:var(--f-sec);margin:0;max-width:none}
+  .slide-controls{display:flex;align-items:center;gap:16px;margin-left:auto}
+  #nav{
+    min-width:68px;text-align:center;color:var(--f-sec);
+    font:500 12px/1.5 var(--mono);letter-spacing:.04em;font-variant-numeric:tabular-nums;
+  }
+  .control{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    min-height:44px;min-width:44px;border:1px solid var(--f-line);
+    border-radius:999px;padding:8px 18px;background:transparent;color:var(--f-ink);
+    font-size:13px;font-weight:500;
+  }
+  .control.next{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+  .control:disabled{color:var(--f-sec);background:transparent;cursor:default}
+  .control:focus-visible{outline-color:var(--f-ink)}
+  .button-arrow{display:inline-block}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+  @media (min-width:1600px){
+    body{font-size:19px}
+    td{font-size:18px}
+    .slide-inner{max-width:1440px}
+    .metric-card p{font-size:18px}
+    .src,.source-inline{font-size:14px}
+  }
+  @media (max-width:1000px){
+    .split,.split.wide-aside{grid-template-columns:minmax(0,1fr) minmax(220px,.46fr);gap:20px}
+    h2{font-size:clamp(30px,4vw,42px)}
+    .metric-card{padding:22px}
+    .huge{font-size:76px}
+    .huge.money{font-size:46px}
+    th,td{padding:12px}
+    .metric-pair{grid-template-columns:1fr}
+    .metric-pair>*+*{padding-top:16px;border-top:1px solid var(--line)}
+  }
+  @media (max-width:760px){
+    :root{--header-space:92px;--footer-space:66px}
+    .site-header{top:16px;left:16px;right:16px}
+    .site-nav{gap:14px;padding-left:18px}
+    .brand{font-size:25px}
+    .site-link{font-size:12px}
+    .site-link.primary{min-width:64px;padding-inline:16px}
+    section{padding:20px 22px 30px}
+    .slide-inner{justify-content:flex-start}
+    .split,.split.wide-aside{grid-template-columns:1fr}
+    .split>.metric-card{grid-row:1}
+    h1{font-size:76px;margin-bottom:18px}
+    h2{font-size:34px;max-width:30ch;margin-bottom:22px}
+    .tag{font-size:11px;margin-bottom:14px}
+    .metric-card{padding:24px}
+    .huge{font-size:86px}
+    .huge.compact{font-size:66px}
+    .huge.money{font-size:clamp(48px,10vw,72px)}
+    .metric-card .eyebrow{margin-bottom:10px}
+    .metric-rule{margin:18px 0}
+    .metric-pair{grid-template-columns:1fr 1fr;gap:18px}
+    .metric-pair>*+*{padding-top:0;border-top:0}
+    .metric-card p{max-width:62ch}
+    .audit-list{grid-template-columns:1fr}
+    .footer-hint{font-size:11px;max-width:18ch;line-height:1.4}
+    .deck-footer{padding-inline:16px;gap:12px}
+    .slide-controls{gap:10px}
+    .control{padding:8px 14px}
+    .control .button-label{display:none}
+    #nav{min-width:62px}
+  }
+  @media (max-width:600px){
+    body{font-size:15px;line-height:1.6}
+    .site-header{left:12px;right:12px}
+    .site-nav{gap:12px;min-height:60px;padding:7px 8px 7px 15px}
+    .brand{font-size:24px}
+    .site-link{font-size:11px}
+    .site-link.primary{min-width:58px;padding:10px 12px}
+    section{padding-inline:18px}
+    h2{font-size:32px}
+    .summary-grid{grid-template-columns:1fr;gap:12px;margin:20px 0}
+    .summary-grid .figure{font-size:46px}
+    .table-wrap{margin-bottom:20px}
+    table,tbody,tr,td{display:block;width:100%}
+    thead{
+      position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+      overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+    }
+    tr{padding:14px 18px;border-bottom:1px solid var(--line)}
+    tr:last-child{border-bottom:0}
+    td,td.num{
+      display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+      padding:7px 0;border:0;text-align:right;white-space:normal;
+    }
+    td:first-child{
+      display:block;padding:2px 0 10px;text-align:left;font-size:16px;font-weight:600;
+    }
+    td[data-label]:before{
+      content:attr(data-label);flex:1;text-align:left;
+      font:500 11px/1.5 var(--mono);letter-spacing:.04em;text-transform:uppercase;
+      color:var(--sec);
+    }
+    td.num{font-size:24px}
+    tr.key{box-shadow:inset 3px 0 var(--accent)}
+    tr.key td:first-child{box-shadow:none}
+    .safety-table td:first-child{width:100%;font-size:18px}
+    .safety-table td:last-child{display:block;text-align:left;padding-bottom:2px}
+    .steps li{padding:18px 18px 18px 62px}
+    .steps li:before{left:16px}
+    .audit-list li{padding:22px}
+    .src{margin-top:20px}
+    .source-inline{margin-top:0}
+    .panel{padding:22px}
+    .metric-word{font-size:36px}
+    .statement{padding:18px 20px}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .site-link,.control{
+      transition:transform .28s var(--ease),background-color .28s var(--ease),color .28s var(--ease);
+    }
+    .button-arrow{transition:transform .28s var(--ease)}
+    .bar{transition:width .3s var(--ease)}
+    .motion-ready .reveal{
+      opacity:0;transform:translateY(14px);
+      transition:transform .6s cubic-bezier(.4,0,.2,1),opacity .6s;
+    }
+    .motion-ready .reveal.revealed{opacity:1;transform:translateY(0)}
+    @media (hover:hover){
+      .site-link:hover,.control:not(:disabled):hover{transform:translateY(-2px)}
+      .next:not(:disabled):hover .button-arrow{transform:translateX(4px)}
+      .previous:not(:disabled):hover .button-arrow{transform:translateX(-4px)}
+      .site-link:not(.primary):hover{color:var(--accent)}
+    }
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation:none!important;transition:none!important;scroll-behavior:auto!important;
+    }
+    .reveal{opacity:1!important;transform:none!important}
+  }
   @media print{
-    html,body,.deck{height:auto;overflow:visible}
-    section{display:flex!important;height:100vh;page-break-after:always;padding:7vh 7vw}
-    nav,.bar{display:none}
+    html,body{height:auto;overflow:visible;background:var(--bg)}
+    .deck{position:static;height:auto;overflow:visible}
+    section,section.on{
+      display:block!important;height:auto;min-height:100vh;overflow:visible;
+      padding:36px;break-after:page;page-break-after:always;
+    }
+    section:last-child{break-after:auto;page-break-after:auto}
+    .slide-inner{min-height:0;display:block}
+    .site-header,.deck-footer,.bar,.skip-link{display:none}
+    .split,.split.wide-aside{display:block}
+    .metric-card{margin:20px 0;break-inside:avoid}
+    .panel,.metric-card,.table-wrap,.note-card{box-shadow:none}
+    .reveal{opacity:1!important;transform:none!important}
+    .audit-list{display:block}
+    .audit-list li{margin-bottom:14px;break-inside:avoid}
+    table{display:table}
+    tbody{display:table-row-group}
+    thead{
+      position:static;display:table-header-group;width:auto;height:auto;
+      margin:0;overflow:visible;clip:auto;white-space:normal;
+    }
+    tr{display:table-row}
+    td,td.num,td:first-child{display:table-cell;width:auto;padding:10px;text-align:left}
+    td[data-label]:before{display:none}
+    .safety-table td:first-child{width:25%}
+    .safety-table td:last-child{display:table-cell}
   }
 </style>
+</head>
+<body>
+<a class="skip-link" href="#deck">Skip to slides</a>
 
-<div class="bar" id="bar"></div>
-<div class="deck" id="deck">
+<header class="site-header">
+  <nav class="site-nav" aria-label="Main navigation">
+    <a class="brand" href="index.html" aria-label="askfirst home">askfirst<span>.</span></a>
+    <a class="site-link" href="measurements.html">Measurements</a>
+    <a class="site-link" href="deck.html" aria-current="page">The deck</a>
+    <a class="site-link primary" href="index.html">Try it</a>
+  </nav>
+</header>
 
-<section class="on">
-  <div class="tag">AMD Developer Hackathon ACT III · Track 2, Health and Wellbeing</div>
-  <h1>askfirst</h1>
-  <p class="lede">It works out how much of a record is missing — without being told — and refuses
-  to answer when there is not enough there.</p>
-  <table>
-    <tr><td>30,000 held-out records, completeness undeclared</td><td class="bad">5,460 wrong</td><td class="key"><strong>5 wrong</strong></td></tr>
-    <tr><td>of the queue it takes off a person</td><td>—</td><td><strong>45.5%</strong></td></tr>
-    <tr><td>cost to serve, per 1,000 assessments</td><td>—</td><td><strong>$0.0004</strong></td></tr>
-  </table>
-  <p class="dim">Every number in this deck regenerates from public data with
-  <code>./scripts/verify.sh</code> in four minutes, and a test fails if any slide drifts from its
-  artifact.</p>
-  <div class="src">askfirst.kgbnetwork.com · github.com/shivang-goliyan/askfirst</div>
+<div class="bar" id="bar" aria-hidden="true"></div>
+
+<main class="deck" id="deck" tabindex="-1" aria-label="askfirst pitch deck">
+<section class="on" aria-labelledby="slide-title-1" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">AMD Developer Hackathon ACT III · Track 2, Health and Wellbeing</div>
+    <div class="split wide-aside">
+      <div class="copy">
+        <h1 id="slide-title-1">askfirst<span class="hot">.</span></h1>
+        <p class="lede">It works out how much of a record is missing — without being told — and refuses
+        to answer when there is not enough there.</p>
+        <div class="summary-grid">
+          <div class="panel">
+            <span class="figure">45.5%</span>
+            <p>of the queue it takes off a person</p>
+          </div>
+          <div class="panel">
+            <span class="figure">$0.0004</span>
+            <p>cost to serve, per 1,000 assessments</p>
+          </div>
+        </div>
+        <p class="dim">Every number in this deck regenerates from public data with
+        <code>./scripts/verify.sh</code> in four minutes, and a test fails if any slide drifts from its
+        artifact.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">30,000 held-out records<br>completeness undeclared</span>
+        <div class="comparison">
+          <span class="before">5,460 wrong</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </div>
+        <span class="huge">5</span>
+        <p class="metric-caption"><strong>wrong</strong></p>
+      </aside>
+    </div>
+    <div class="src">askfirst.kgbnetwork.com · github.com/shivang-goliyan/askfirst</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">The failure, measured twice — once by someone else, once by us</div>
-  <h2>Offered a way out, a frontier model takes it one time in five.</h2>
-  <p>Take 500 clinical questions, delete the correct option, and put <em>"insufficient
-  information"</em> on the page instead. <strong>GPT-5 abstains 19.2% of the time</strong> and
-  picks one of the remaining wrong answers for the other
-  <span class="bad">80.8%</span>, at a mean confidence of 0.69.</p>
-  <div class="src">Newman-Toker is elsewhere in this deck; this is arXiv 2608.09080, Table IV,
-  on MedMCQA. We checked the table rather than the abstract.</div>
-  <p class="lede">So we deleted four fifths of a patient record and asked an open model again.
-  Its confidence fell <span class="bad">12%</span>. A classifier fitted to the same data lost
-  <span class="cool">83%</span> of its confidence on the same deletion.</p>
-  <p>It still ranks its own answers well — its most confident thirtieth is 93.3% right against
-  35.3% overall. What it cannot do is notice the batch got harder, so a cut-off set on complete
-  records to deliver 80% delivers 54.7% at two fifths. <strong>That gap is the product.</strong></p>
-  <div class="src">docs/results/rehearsal-llm-grid.json — 300 patients, 3 record sizes, 44,100
-  scored prompts, open in one click</div>
+<section aria-labelledby="slide-title-2" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">The failure, measured twice — once by someone else, once by us</div>
+    <h2 id="slide-title-2">Offered a way out, a frontier model takes it one time in five.</h2>
+    <div class="split">
+      <div class="copy">
+        <p>Take 500 clinical questions, delete the correct option, and put <em>"insufficient
+        information"</em> on the page instead. <strong>GPT-5 abstains 19.2% of the time</strong> and
+        picks one of the remaining wrong answers for the other
+        <span class="bad">80.8%</span>, at a mean confidence of 0.69.</p>
+        <div class="src source-inline">Newman-Toker is elsewhere in this deck; this is arXiv 2608.09080, Table IV,
+        on MedMCQA. We checked the table rather than the abstract.</div>
+        <p class="lede">So we deleted four fifths of a patient record and asked an open model again.
+        Its confidence fell <span class="bad">12%</span>. A classifier fitted to the same data lost
+        <span class="cool">83%</span> of its confidence on the same deletion.</p>
+        <p>It still ranks its own answers well — its most confident thirtieth is 93.3% right against
+        35.3% overall. What it cannot do is notice the batch got harder, so a cut-off set on complete
+        records to deliver 80% delivers 54.7% at two fifths. <strong>That gap is the product.</strong></p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">Offered a way out</span>
+        <span class="huge compact">19.2%</span>
+        <p class="metric-caption">abstains</p>
+        <div class="metric-rule"></div>
+        <span class="metric-value">80.8%</span>
+        <p>picks one of the remaining wrong answers</p>
+      </aside>
+    </div>
+    <div class="src">docs/results/rehearsal-llm-grid.json — 300 patients, 3 record sizes, 44,100
+    scored prompts, open in one click</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">What it is</div>
-  <h2>Not a diagnosis tool. A gate in front of the model that decides.</h2>
-  <p class="lede">It answers a narrower and far more answerable question: <strong>is there enough
-  here?</strong></p>
-  <ol class="steps">
-    <li>Record split into atomic fields.</li>
-    <li class="mark">Open model scores it — the full <strong>distribution</strong> is kept, not a sampled answer.</li>
-    <li>Each present field removed in turn → what the answer rests on.</li>
-    <li class="mark">Each absent field ranked by how much it <strong>could</strong> tell you, then by cost and minutes.</li>
-    <li class="mark">Too little record, or not confident enough for the bar you set →
-    <strong>refuse</strong>, return the ranked gaps, hand over. The ablation above is what the
-    page shows you about the answer; it is not what makes the call.</li>
-  </ol>
+<section aria-labelledby="slide-title-3" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">What it is</div>
+    <h2 id="slide-title-3">Not a diagnosis tool. A gate in front of the model that decides.</h2>
+    <div class="split">
+      <ol class="steps">
+        <li>Record split into atomic fields.</li>
+        <li class="mark">Open model scores it — the full <strong>distribution</strong> is kept, not a sampled answer.</li>
+        <li>Each present field removed in turn → what the answer rests on.</li>
+        <li class="mark">Each absent field ranked by how much it <strong>could</strong> tell you, then by cost and minutes.</li>
+        <li class="mark">Too little record, or not confident enough for the bar you set →
+        <strong>refuse</strong>, return the ranked gaps, hand over. The ablation above is what the
+        page shows you about the answer; it is not what makes the call.</li>
+      </ol>
+      <aside class="metric-card quote-card">
+        <span class="eyebrow">The question</span>
+        <h3 class="metric-word">Is there enough here<span class="hot">?</span></h3>
+        <p class="lede">It answers a narrower and far more answerable question: <strong>is there enough
+        here?</strong></p>
+      </aside>
+    </div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">The measurement · 6,000 held-out patients · 49 conditions · 2% chance</div>
-  <h2>The scorer is 99.6% right on a complete record.<br>Then take the record away.</h2>
-  <table>
-    <tr><th>evidence present</th><th>findings</th><th>answer everything</th><th>answer the top 25%</th></tr>
-    <tr><td>all of it</td><td>15.6</td><td class="good">99.6%</td><td>100.0%</td></tr>
-    <tr><td>60%</td><td>9.0</td><td>96.2%</td><td>99.9%</td></tr>
-    <tr class="key"><td>40%</td><td>5.8</td><td>82.6%</td><td>98.3%</td></tr>
-    <tr class="key"><td>20%</td><td>2.7</td><td class="bad">39.9%</td><td>73.5%</td></tr>
-    <tr><td>10%</td><td>1.2</td><td class="bad">17.1%</td><td>44.9%</td></tr>
-  </table>
-  <p class="lede">A model this good is <span class="bad">39.9%</span> right on three findings.
-  Refusing the least confident takes it to <span class="hot">73.5%</span>.</p>
-  <div class="src">Trained on complete records, tested on incomplete ones · Wilson 95% intervals in
-  docs/results/abstention.json · margin beats entropy at every coverage level</div>
+<section aria-labelledby="slide-title-4" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">The measurement · 6,000 held-out patients · 49 conditions · 2% chance</div>
+    <h2 id="slide-title-4">The scorer is 99.6% right on a complete record.<br>Then take the record away.</h2>
+    <div class="split">
+      <div class="copy">
+        <div class="table-wrap">
+          <table aria-label="Accuracy as evidence is removed">
+            <thead>
+              <tr><th scope="col">evidence present</th><th scope="col">findings</th><th scope="col">answer everything</th><th scope="col">answer the top 25%</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>all of it</td><td class="num" data-label="findings">15.6</td><td class="num good" data-label="answer everything">99.6%</td><td class="num" data-label="answer the top 25%">100.0%</td></tr>
+              <tr><td>60%</td><td class="num" data-label="findings">9.0</td><td class="num" data-label="answer everything">96.2%</td><td class="num" data-label="answer the top 25%">99.9%</td></tr>
+              <tr class="key"><td>40%</td><td class="num" data-label="findings">5.8</td><td class="num" data-label="answer everything">82.6%</td><td class="num" data-label="answer the top 25%">98.3%</td></tr>
+              <tr class="key"><td>20%</td><td class="num" data-label="findings">2.7</td><td class="num" data-label="answer everything">39.9%</td><td class="num" data-label="answer the top 25%">73.5%</td></tr>
+              <tr><td>10%</td><td class="num" data-label="findings">1.2</td><td class="num" data-label="answer everything">17.1%</td><td class="num" data-label="answer the top 25%">44.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lede">A model this good is <span class="bad">39.9%</span> right on three findings.
+        Refusing the least confident takes it to <span class="hot">73.5%</span>.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">Three findings · answer everything</span>
+        <span class="huge compact">39.9%</span>
+        <p class="metric-caption">right</p>
+        <div class="metric-rule"></div>
+        <span class="eyebrow">Refusing the least confident</span>
+        <span class="figure">73.5%</span>
+      </aside>
+    </div>
+    <div class="src">Trained on complete records, tested on incomplete ones · Wilson 95% intervals in
+    docs/results/abstention.json · margin beats entropy at every coverage level</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">What refusing is worth · wrong answer 100, referral 5</div>
-  <h2>Refusing pays &mdash; until the record is so thin the cheapest thing is to answer none of it.</h2>
-  <table>
-    <tr><th>evidence present</th><th>always answer</th><th>cheapest</th><th>which is</th><th>saving</th></tr>
-    <tr><td>all of it</td><td>0.42</td><td>0.26</td><td>answer 98%</td><td>38%</td></tr>
-    <tr><td>60%</td><td>3.80</td><td>2.05</td><td>answer 80%</td><td>46%</td></tr>
-    <tr class="key"><td>40%</td><td>17.43</td><td>4.00</td><td>answer 35%</td><td>77%</td></tr>
-    <tr class="key"><td>20%</td><td>60.15</td><td><strong>5.00</strong></td><td><strong>answer none of it</strong></td><td>92%</td></tr>
-  </table>
-  <p><strong>That is a setting, not a slogan.</strong> Answer 98% of complete records, 35% at two
-  fifths, and none at all once the record is thin enough that referring everyone is cheaper than
-  any coverage the grid contains. <span class="dim">Our grid had no zero column until a review
-  pointed out that 5.24 is not the cheapest number when blanket referral costs 5.00.</span></p>
-  <p class="dim">Seven price ratios at 20% evidence: 28% to 98% cheaper. Even when a referral costs
-  half a wrong answer it is 28% cheaper. The direction does not depend on flattering prices.</p>
+<section aria-labelledby="slide-title-5" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">What refusing is worth · wrong answer 100, referral 5</div>
+    <h2 id="slide-title-5">Refusing pays &mdash; until the record is so thin the cheapest thing is to answer none of it.</h2>
+    <div class="split">
+      <div class="copy">
+        <div class="table-wrap">
+          <table aria-label="Cost of answering and refusing">
+            <thead>
+              <tr><th scope="col">evidence present</th><th scope="col">always answer</th><th scope="col">cheapest</th><th scope="col">which is</th><th scope="col">saving</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>all of it</td><td class="num" data-label="always answer">0.42</td><td class="num" data-label="cheapest">0.26</td><td data-label="which is">answer 98%</td><td class="num" data-label="saving">38%</td></tr>
+              <tr><td>60%</td><td class="num" data-label="always answer">3.80</td><td class="num" data-label="cheapest">2.05</td><td data-label="which is">answer 80%</td><td class="num" data-label="saving">46%</td></tr>
+              <tr class="key"><td>40%</td><td class="num" data-label="always answer">17.43</td><td class="num" data-label="cheapest">4.00</td><td data-label="which is">answer 35%</td><td class="num" data-label="saving">77%</td></tr>
+              <tr class="key"><td>20%</td><td class="num" data-label="always answer">60.15</td><td class="num" data-label="cheapest"><strong>5.00</strong></td><td data-label="which is"><strong>answer none of it</strong></td><td class="num" data-label="saving">92%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>That is a setting, not a slogan.</strong> Answer 98% of complete records, 35% at two
+        fifths, and none at all once the record is thin enough that referring everyone is cheaper than
+        any coverage the grid contains. <span class="dim">Our grid had no zero column until a review
+        pointed out that 5.24 is not the cheapest number when blanket referral costs 5.00.</span></p>
+        <p class="dim">Seven price ratios at 20% evidence: 28% to 98% cheaper. Even when a referral costs
+        half a wrong answer it is 28% cheaper. The direction does not depend on flattering prices.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">20% evidence present</span>
+        <span class="huge">92%</span>
+        <p class="metric-caption">saving</p>
+        <div class="metric-rule"></div>
+        <p><strong>Answer none of it.</strong></p>
+      </aside>
+    </div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">The hole in that, and the fix · 30,000 held-out records</div>
-  <h2>A setting is no use if it has to be set by the one person who cannot know it.</h2>
-  <p class="lede">The scorer's confidence is <span class="cool">honest on a full record</span> and
-  <span class="bad">forty points underconfident at 40% evidence</span>. A cut-off chosen on
-  complete records promises 95% and delivers <span class="bad">48%</span> on a tenth of one.</p>
-  <p>Two pieces, because one measured insufficient. Calibrate against <strong>findings in
-  hand</strong> — observable, where the fraction is not. Then <strong>estimate how much of the
-  record is missing</strong> (mean absolute error 0.057) and refuse below a floor whatever the confidence says.</p>
-  <table>
-    <tr><th>30,000 records, completeness undeclared</th><th>right</th><th>wrong</th><th>answered</th></tr>
-    <tr><td>answer everything</td><td>81.8%</td><td class="bad">5,460</td><td>100%</td></tr>
-    <tr class="key"><td>this rule</td><td>99.96%</td><td>5</td><td>45.8%</td></tr>
-  </table>
-  <p class="dim">It now says what it thinks instead of asking: <em>"only about 23% of a record —
-  too little to judge the answer by, whatever the confidence says."</em> Tested against seven ways
-  a record goes short, not just the convenient one: the promise is tested in 26 of the 35 cells — the other 9 go silent, which is the floor working rather than a promise kept — and <strong>24 of 26 clear it</strong>. The two that do not answered 19 cases and 1 case, so neither carries weight.</p>
-  <div class="src">docs/results/2026-10-13-the-page-stops-asking.md</div>
+<section aria-labelledby="slide-title-6" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">The hole in that, and the fix · 30,000 held-out records</div>
+    <h2 id="slide-title-6">A setting is no use if it has to be set by the one person who cannot know it.</h2>
+    <div class="split">
+      <div class="copy">
+        <p class="lede">The scorer's confidence is <span class="cool">honest on a full record</span> and
+        <span class="bad">forty points underconfident at 40% evidence</span>. A cut-off chosen on
+        complete records promises 95% and delivers <span class="bad">48%</span> on a tenth of one.</p>
+        <p>Two pieces, because one measured insufficient. Calibrate against <strong>findings in
+        hand</strong> — observable, where the fraction is not. Then <strong>estimate how much of the
+        record is missing</strong> (mean absolute error 0.057) and refuse below a floor whatever the confidence says.</p>
+        <div class="table-wrap">
+          <table aria-label="Refusal rule on records with undeclared completeness">
+            <thead>
+              <tr><th scope="col">30,000 records, completeness undeclared</th><th scope="col">right</th><th scope="col">wrong</th><th scope="col">answered</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>answer everything</td><td class="num" data-label="right">81.8%</td><td class="num" data-label="wrong">5,460</td><td class="num" data-label="answered">100%</td></tr>
+              <tr class="key"><td>this rule</td><td class="num" data-label="right">99.96%</td><td class="num" data-label="wrong">5</td><td class="num" data-label="answered">45.8%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="dim">It now says what it thinks instead of asking: <em>"only about 23% of a record —
+        too little to judge the answer by, whatever the confidence says."</em> Tested against seven ways
+        a record goes short, not just the convenient one: the promise is tested in 26 of the 35 cells — the other 9 go silent, which is the floor working rather than a promise kept — and <strong>24 of 26 clear it</strong>. The two that do not answered 19 cases and 1 case, so neither carries weight.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">This rule · 30,000 records</span>
+        <span class="huge">5</span>
+        <p class="metric-caption">wrong</p>
+        <div class="metric-rule"></div>
+        <span class="figure">99.96%</span>
+        <p>right · 45.8% answered</p>
+      </aside>
+    </div>
+    <div class="src">docs/results/2026-10-13-the-page-stops-asking.md</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">The job the open model actually wins · 100 held-out records</div>
-  <h2>Prose in, findings out — and what it misses turns into caution, not mistakes.</h2>
-  <p>The engine scores structured findings. The world produces prose. An open model reads one
-  into the other: <strong>72% of findings recovered, 87% of what it returns really there</strong>,
-  100 notes in 70 seconds. It is wrong often enough to matter — which is the point.</p>
-  <table>
-    <tr><th>scored twice, same gate, same 95% bar</th><th>top-1</th><th>answers</th><th>wrong</th></tr>
-    <tr><td>from the real record</td><td>95.0%</td><td>41.0%</td><td>0</td></tr>
-    <tr class="key"><td>from a prose note it read</td><td>74.0%</td><td>34.0%</td><td><strong>0</strong></td></tr>
-  </table>
-  <p class="lede">Ten cases stopped being answered. Three started. <strong>No wrong answer was
-  introduced.</strong> What the reader misses makes the record look thinner, and a thinner record
-  is exactly what the gate refuses.</p>
-  <p class="dim">It works because the gate reads the record, not the scorer's mood. The note was
-  written by the same model that read it back, so both numbers are upper bounds.</p>
-  <div class="src">docs/results/2026-10-13-prose-in-findings-out.md — three notes are on the live
-  page with what the model missed shown beside what it found</div>
+<section aria-labelledby="slide-title-7" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">The job the open model actually wins · 100 held-out records</div>
+    <h2 id="slide-title-7">Prose in, findings out — and what it misses turns into caution, not mistakes.</h2>
+    <div class="split">
+      <div class="copy">
+        <p>The engine scores structured findings. The world produces prose. An open model reads one
+        into the other: <strong>72% of findings recovered, 87% of what it returns really there</strong>,
+        100 notes in 70 seconds. It is wrong often enough to matter — which is the point.</p>
+        <div class="table-wrap">
+          <table aria-label="Structured records compared with findings read from prose">
+            <thead>
+              <tr><th scope="col">scored twice, same gate, same 95% bar</th><th scope="col">top-1</th><th scope="col">answers</th><th scope="col">wrong</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>from the real record</td><td class="num" data-label="top-1">95.0%</td><td class="num" data-label="answers">41.0%</td><td class="num" data-label="wrong">0</td></tr>
+              <tr class="key"><td>from a prose note it read</td><td class="num" data-label="top-1">74.0%</td><td class="num" data-label="answers">34.0%</td><td class="num" data-label="wrong"><strong>0</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lede">Ten cases stopped being answered. Three started. <strong>No wrong answer was
+        introduced.</strong> What the reader misses makes the record look thinner, and a thinner record
+        is exactly what the gate refuses.</p>
+        <p class="dim">It works because the gate reads the record, not the scorer's mood. The note was
+        written by the same model that read it back, so both numbers are upper bounds.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">From a prose note it read</span>
+        <span class="huge">0</span>
+        <p class="metric-caption">wrong</p>
+        <div class="metric-rule"></div>
+        <div class="metric-pair">
+          <div><span class="metric-value">72%</span><p>of findings recovered</p></div>
+          <div><span class="metric-value">87%</span><p>of what it returns really there</p></div>
+        </div>
+      </aside>
+    </div>
+    <div class="src">docs/results/2026-10-13-prose-in-findings-out.md — three notes are on the live
+    page with what the model missed shown beside what it found</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">Why this needs an open model, on AMD</div>
-  <h2>The product is built on the distribution. A closed API returns text.</h2>
-  <p>Entropy, information gain and a calibrated threshold are all functions of the full posterior.
-  No version of this works behind an API that hands back a sentence. <span class="dim">Nothing is
-  attached today — everything on this page was measured on CPU.</span></p>
-  <blockquote>We tested the obvious claim — that a bigger model makes more cases answerable — and
-  it is false here.</blockquote>
-  <p>300 patients, 44,100 scored prompts on a rented GPU: a 3B open model gets
-  <span class="bad">35.3%</span> on a complete record against our linear model's 99.6%. Take four
-  fifths of the record away and <strong>its confidence barely moves</strong> — margin down 12%,
-  ours down 83%. It still ranks its own answers well; what it cannot do is notice the batch got
-  harder. A cut-off set on complete records to deliver 80% delivers <span class="bad">54.7%</span>
-  at 40% evidence.</p>
-  <p class="lede">What survives is measured: <strong>ESM-2 650M changes the safety conclusion</strong>
-  the laptop-sized model gets wrong — 4 of 28 calls move at supporting strength, not 0 of 11.</p>
-  <div class="src">src/askfirst/model.py — exact label scoring via text_offset, mean-normalised,
-  tested against the documented response shape before any GPU hour was spent</div>
+<section aria-labelledby="slide-title-8" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">Why this needs an open model, on AMD</div>
+    <h2 id="slide-title-8">The product is built on the distribution. A closed API returns text.</h2>
+    <div class="split">
+      <div class="copy">
+        <p>Entropy, information gain and a calibrated threshold are all functions of the full posterior.
+        No version of this works behind an API that hands back a sentence. <span class="dim">Nothing is
+        attached today — everything on this page was measured on CPU.</span></p>
+        <blockquote>We tested the obvious claim — that a bigger model makes more cases answerable — and
+        it is false here.</blockquote>
+        <p>300 patients, 44,100 scored prompts on a rented GPU: a 3B open model gets
+        <span class="bad">35.3%</span> on a complete record against our linear model's 99.6%. Take four
+        fifths of the record away and <strong>its confidence barely moves</strong> — margin down 12%,
+        ours down 83%. It still ranks its own answers well; what it cannot do is notice the batch got
+        harder. A cut-off set on complete records to deliver 80% delivers <span class="bad">54.7%</span>
+        at 40% evidence.</p>
+        <p class="lede">What survives is measured: <strong>ESM-2 650M changes the safety conclusion</strong>
+        the laptop-sized model gets wrong — 4 of 28 calls move at supporting strength, not 0 of 11.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">ESM-2 650M · supporting strength</span>
+        <span class="huge">4</span>
+        <p class="metric-caption">of 28 calls move</p>
+        <div class="metric-rule"></div>
+        <p>not <strong>0 of 11</strong></p>
+      </aside>
+    </div>
+    <div class="src">src/askfirst/model.py — exact label scoring via text_offset, mean-normalised,
+    tested against the documented response shape before any GPU hour was spent</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">What we got wrong, with dates on it · 1 of 2</div>
-  <h2>The biggest thing we got wrong, we found ourselves.</h2>
-  <ul>
-    <li><strong>We published a headline that measured our own baseline, then killed it.</strong>
-    "21% to 85.3% by refusing" came from a naive Bayes at 22.6% top-1. A linear model gets 99.6% in
-    31 seconds on a laptop, so the lift was about our classifier, not about medicine. Found by two
-    of our own files disagreeing, re-run end to end, old notes kept with a notice on them.</li>
-    <li><strong>A French-to-English label join was broken</strong> — the conditions file is keyed in
-    French, the patient labels are English, overlap 1 of 42. Caught before the GPU run, which would
-    have scored French predictions against English truth at $1.99 an hour.</li>
-    <li><strong>Three bugs in our own ranking measurement, every one in our favour.</strong> A
-    negative answer was switching the evidence feature <em>on</em>; the ranker assumed every
-    question gets answered; and <code>max()</code> was breaking a three-way tie using the engine's
-    own sort order, worth seven points to us. Fixing the first two made the published method we
-    beat <span class="bad">worse</span>, not better.</li>
-    <li><strong>The word "calibrated" was doing work it had not earned</strong>, so we checked it.
-    The confidence is honest on a full record and forty points underconfident at 40% evidence.</li>
-  </ul>
-  <div class="src">Every failure is dated and committed in docs/results/, in the order it happened.
-  Nothing here was found by a judge.</div>
+<section aria-labelledby="slide-title-9" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">What we got wrong, with dates on it · 1 of 2</div>
+    <h2 id="slide-title-9">The biggest thing we got wrong, we found ourselves.</h2>
+    <div class="split">
+      <ul class="audit-list">
+        <li class="note-card"><strong>We published a headline that measured our own baseline, then killed it.</strong>
+        "21% to 85.3% by refusing" came from a naive Bayes at 22.6% top-1. A linear model gets 99.6% in
+        31 seconds on a laptop, so the lift was about our classifier, not about medicine. Found by two
+        of our own files disagreeing, re-run end to end, old notes kept with a notice on them.</li>
+        <li class="note-card"><strong>A French-to-English label join was broken</strong> — the conditions file is keyed in
+        French, the patient labels are English, overlap 1 of 42. Caught before the GPU run, which would
+        have scored French predictions against English truth at $1.99 an hour.</li>
+        <li class="note-card"><strong>Three bugs in our own ranking measurement, every one in our favour.</strong> A
+        negative answer was switching the evidence feature <em>on</em>; the ranker assumed every
+        question gets answered; and <code>max()</code> was breaking a three-way tie using the engine's
+        own sort order, worth seven points to us. Fixing the first two made the published method we
+        beat <span class="bad">worse</span>, not better.</li>
+        <li class="note-card"><strong>The word "calibrated" was doing work it had not earned</strong>, so we checked it.
+        The confidence is honest on a full record and forty points underconfident at 40% evidence.</li>
+      </ul>
+      <aside class="metric-card">
+        <span class="eyebrow">A linear model</span>
+        <span class="huge compact">99.6%</span>
+        <p class="metric-caption">in 31 seconds on a laptop</p>
+        <div class="metric-rule"></div>
+        <p>The lift was about our classifier, not about medicine.</p>
+      </aside>
+    </div>
+    <div class="src">Every failure is dated and committed in docs/results/, in the order it happened.
+    Nothing here was found by a judge.</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">What we got wrong, with dates on it · 2 of 2</div>
-  <h2>A cheap property of the question beats the principled objective — by three points, not thirty.</h2>
-  <table>
-    <tr><th>what we ranked questions by</th><th>score</th><th>against</th></tr>
-    <tr><td>asking nothing at all</td><td>77.8%</td><td>78.5% random</td></tr>
-    <tr><td><strong>expected information gain</strong> — the literature's, implemented faithfully</td><td>85.5%</td><td>77.8% silence</td></tr>
-    <tr class="key"><td>breadth &times; answer rate — what we ship</td><td>88.8%</td><td>90.1% oracle</td></tr>
-  </table>
-  <p>We published this as <em>"information gain loses to a coin and then to silence"</em> — 41.3%
-  against 43.7%. <strong>That is retracted.</strong> It was an artifact of a scorer that had never
-  seen a thin record, so every entropy computed from its posterior was wrong on exactly the sparse
-  cases where advice matters. Refitting the scorer on records with holes moved information gain
-  from 41.3% to 85.5%. The measurement was broken, not the objective.</p>
-  <p><strong>And our central assumption was that records go missing at random. They do not.</strong>
-  Cut the same number of findings seven realistic ways and accuracy at a fifth of a record runs
-  from <span class="bad">8.9%</span> to <span class="hot">96.4%</span> depending only on which
-  fifth. Our refusal rule broke on the likeliest pattern of all and we
-  <span class="bad">could not fully fix it</span>: fitting against that pattern and adding a
-  feature for how unusual the findings are takes it from 91.5% to 93.6%, still short of the 95%
-  it promises. The first version of that ladder said we had fixed it — it came from a scratch
-  script, and when we made it reproducible the effect vanished.</p>
-  <div class="src">docs/results/2026-10-13-breadth-beats-information.md ·
-  2026-10-13-missing-not-at-random.md</div>
+<section aria-labelledby="slide-title-10" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">What we got wrong, with dates on it · 2 of 2</div>
+    <h2 id="slide-title-10">A cheap property of the question beats the principled objective — by three points, not thirty.</h2>
+    <div class="split">
+      <div class="copy">
+        <div class="table-wrap">
+          <table aria-label="Question ranking comparison">
+            <thead>
+              <tr><th scope="col">what we ranked questions by</th><th scope="col">score</th><th scope="col">against</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>asking nothing at all</td><td class="num" data-label="score">77.8%</td><td data-label="against">78.5% random</td></tr>
+              <tr><td><strong>expected information gain</strong> — the literature's, implemented faithfully</td><td class="num" data-label="score">85.5%</td><td data-label="against">77.8% silence</td></tr>
+              <tr class="key"><td>breadth &times; answer rate — what we ship</td><td class="num" data-label="score">88.8%</td><td data-label="against">90.1% oracle</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>We published this as <em>"information gain loses to a coin and then to silence"</em> — 41.3%
+        against 43.7%. <strong>That is retracted.</strong> It was an artifact of a scorer that had never
+        seen a thin record, so every entropy computed from its posterior was wrong on exactly the sparse
+        cases where advice matters. Refitting the scorer on records with holes moved information gain
+        from 41.3% to 85.5%. The measurement was broken, not the objective.</p>
+        <p><strong>And our central assumption was that records go missing at random. They do not.</strong>
+        Cut the same number of findings seven realistic ways and accuracy at a fifth of a record runs
+        from <span class="bad">8.9%</span> to <span class="hot">96.4%</span> depending only on which
+        fifth. Our refusal rule broke on the likeliest pattern of all and we
+        <span class="bad">could not fully fix it</span>: fitting against that pattern and adding a
+        feature for how unusual the findings are takes it from 91.5% to 93.6%, still short of the 95%
+        it promises. The first version of that ladder said we had fixed it — it came from a scratch
+        script, and when we made it reproducible the effect vanished.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">Breadth × answer rate</span>
+        <span class="huge compact">88.8%</span>
+        <p class="metric-caption">what we ship</p>
+        <div class="metric-rule"></div>
+        <span class="figure">85.5%</span>
+        <p>expected information gain</p>
+      </aside>
+    </div>
+    <div class="src">docs/results/2026-10-13-breadth-beats-information.md ·
+    2026-10-13-missing-not-at-random.md</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">Behaving badly, on purpose, as the track requires</div>
-  <h2>Five questions, five answers that point at code or at a number.</h2>
-  <table>
-    <tr><td><strong>Incorrect responses</strong></td><td>Measured: on thin records, 39.9% right
-    answering everything against 73.5% answering the confident quarter. The whole product is this
-    question.</td></tr>
-    <tr><td><strong>Sensitive information</strong></td><td>None enters. Synthetic and CC0 data only.
-    MIMIC-IV deliberately excluded — its DUA forbids redistribution.</td></tr>
-    <tr><td><strong>Uncertain results</strong></td><td>Uncertainty <em>is</em> the output: full
-    distribution, entropy in bits, the calibrated chance of being right, how complete the record looks, and what one more fact would do.</td></tr>
-    <tr><td><strong>High-risk decisions</strong></td><td>Never made. The only decision is
-    answer-or-hand-over, tuned pessimistic — at a 95% bar it answers 35% and hands over the
-    rest.</td></tr>
-    <tr><td><strong>Human review</strong></td><td>Refusal <em>is</em> the handoff, and it carries a
-    ranked, costed work list rather than a shrug.</td></tr>
-  </table>
-  <p class="small dim">Not clinically validated. No clinician has reviewed any output. Not medical advice.</p>
-  <div class="src">docs/SAFETY.md</div>
+<section aria-labelledby="slide-title-11" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">Behaving badly, on purpose, as the track requires</div>
+    <h2 id="slide-title-11">Five questions, five answers that point at code or at a number.</h2>
+    <div class="split">
+      <div class="copy">
+        <div class="table-wrap">
+          <table class="safety-table" aria-label="Safety questions and answers">
+            <tbody>
+              <tr><td><strong>Incorrect responses</strong></td><td>Measured: on thin records, 39.9% right
+              answering everything against 73.5% answering the confident quarter. The whole product is this
+              question.</td></tr>
+              <tr><td><strong>Sensitive information</strong></td><td>None enters. Synthetic and CC0 data only.
+              MIMIC-IV deliberately excluded — its DUA forbids redistribution.</td></tr>
+              <tr><td><strong>Uncertain results</strong></td><td>Uncertainty <em>is</em> the output: full
+              distribution, entropy in bits, the calibrated chance of being right, how complete the record looks, and what one more fact would do.</td></tr>
+              <tr><td><strong>High-risk decisions</strong></td><td>Never made. The only decision is
+              answer-or-hand-over, tuned pessimistic — at a 95% bar it answers 35% and hands over the
+              rest.</td></tr>
+              <tr><td><strong>Human review</strong></td><td>Refusal <em>is</em> the handoff, and it carries a
+              ranked, costed work list rather than a shrug.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small dim">Not clinically validated. No clinician has reviewed any output. Not medical advice.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">At a 95% bar</span>
+        <span class="huge">35%</span>
+        <p class="metric-caption">answered</p>
+        <div class="metric-rule"></div>
+        <h3>Refusal <em>is</em> the handoff.</h3>
+        <p>A ranked, costed work list.</p>
+      </aside>
+    </div>
+    <div class="src">docs/SAFETY.md</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">Prior work — said by us, before it is said to us</div>
-  <h2>MediQ posed the interactive version of this first. We are not claiming the idea.</h2>
-  <ul>
-    <li><strong>MediQ</strong>, NeurIPS 2024, arXiv 2406.00922 — naive prompting to ask questions
-    <strong class="bad">lowered</strong> accuracy by 11.3%. Their self-consistency fix gave
-    <strong>+22.3%</strong>, leaving a 10.3% gap against full information. <span class="dim">That is
-    the number to beat, and it is a real target rather than a vague one.</span></li>
-    <li><strong>Q4Dx</strong>, Nature Scientific Reports 2026 — an evaluation built by systematically
-    removing information from cases. That is our evaluation design, already published.</li>
-    <li><strong>ALFA</strong> (arXiv 2502.14860), <strong>BALAR / MedClarify</strong> — expected
-    information gain over a fixed question set.</li>
-  </ul>
-  <p>What we have not found occupied: ranking the <strong>absent</strong> fields by counterfactual
-  influence over an open model's own logprobs. Absence of search evidence is not proof, and we say
-  so rather than claiming a gap.</p>
+<section aria-labelledby="slide-title-12" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">Prior work — said by us, before it is said to us</div>
+    <h2 id="slide-title-12">MediQ posed the interactive version of this first. We are not claiming the idea.</h2>
+    <div class="split">
+      <div class="copy">
+        <div class="panel">
+          <ul class="prior-list">
+            <li><strong>MediQ</strong>, NeurIPS 2024, arXiv 2406.00922 — naive prompting to ask questions
+            <strong class="bad">lowered</strong> accuracy by 11.3%. Their self-consistency fix gave
+            <strong>+22.3%</strong>, leaving a 10.3% gap against full information. <span class="dim">That is
+            the number to beat, and it is a real target rather than a vague one.</span></li>
+            <li><strong>Q4Dx</strong>, Nature Scientific Reports 2026 — an evaluation built by systematically
+            removing information from cases. That is our evaluation design, already published.</li>
+            <li><strong>ALFA</strong> (arXiv 2502.14860), <strong>BALAR / MedClarify</strong> — expected
+            information gain over a fixed question set.</li>
+          </ul>
+        </div>
+        <div class="statement">
+          <p>What we have not found occupied: ranking the <strong>absent</strong> fields by counterfactual
+          influence over an open model's own logprobs. Absence of search evidence is not proof, and we say
+          so rather than claiming a gap.</p>
+        </div>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">MediQ</span>
+        <span class="huge compact">10.3%</span>
+        <p class="metric-caption">gap against full information</p>
+        <div class="metric-rule"></div>
+        <p>That is the number to beat.</p>
+      </aside>
+    </div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">The same engine, a second domain</div>
-  <h2>Variant interpretation, where the evidence contradicts itself.</h2>
-  <p>CIViC, CC0, 4,940 evidence rows. <strong>182 contested groups</strong> where the same
-  knowledge base both supports and does not support the conclusion.</p>
-  <p class="lede">An ESM-2 score enters as one removable item, strength on a dial. At
-  <strong>supporting</strong>, <strong>0 of 11</strong> calls change; at <strong>clinical</strong>,
-  <span class="bad">5 of 11</span> — <strong>EGFR S768I on erlotinib</strong> goes from documented
-  <em>Sensitivity/Response</em> to "predicted damaging".</p>
-  <p><strong>What that is and is not.</strong> The vote is ours, and "Resistance" and "predicted
-  damaging" are not answers to the same question. This is <em>an aggregation rule failing when an
-  over-weighted predictor enters it</em> — not clinical calls being overturned.</p>
-  <p><span class="hot">And it is model-dependent: with ESM-2 650M, supporting strength moves 4 of
-  28, not 0 of 11.</span> The cap held because the small model was unsure, not because the cap was
-  sufficient.</p>
-  <p class="dim">Eleven groups is a demonstration, not a headline, and all eleven are on the page.
-  <strong>171 of 182 contested groups cannot take a computational vote at all</strong> with the
-  35M model — a number that itself shrinks as the model gets better.</p>
-  <div class="src">askfirst.kgbnetwork.com/#level=B — docs/results/2026-10-13-computational-line-ablation.md</div>
+<section aria-labelledby="slide-title-13" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">The same engine, a second domain</div>
+    <h2 id="slide-title-13">Variant interpretation, where the evidence contradicts itself.</h2>
+    <div class="split">
+      <div class="copy">
+        <p>CIViC, CC0, 4,940 evidence rows. <strong>182 contested groups</strong> where the same
+        knowledge base both supports and does not support the conclusion.</p>
+        <p class="lede">An ESM-2 score enters as one removable item, strength on a dial. At
+        <strong>supporting</strong>, <strong>0 of 11</strong> calls change; at <strong>clinical</strong>,
+        <span class="bad">5 of 11</span> — <strong>EGFR S768I on erlotinib</strong> goes from documented
+        <em>Sensitivity/Response</em> to "predicted damaging".</p>
+        <p><strong>What that is and is not.</strong> The vote is ours, and "Resistance" and "predicted
+        damaging" are not answers to the same question. This is <em>an aggregation rule failing when an
+        over-weighted predictor enters it</em> — not clinical calls being overturned.</p>
+        <p><span class="hot">And it is model-dependent: with ESM-2 650M, supporting strength moves 4 of
+        28, not 0 of 11.</span> The cap held because the small model was unsure, not because the cap was
+        sufficient.</p>
+        <p class="dim">Eleven groups is a demonstration, not a headline, and all eleven are on the page.
+        <strong>171 of 182 contested groups cannot take a computational vote at all</strong> with the
+        35M model — a number that itself shrinks as the model gets better.</p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">Supporting strength · ESM-2 650M</span>
+        <span class="huge">4</span>
+        <p class="metric-caption">of 28 calls move</p>
+        <div class="metric-rule"></div>
+        <span class="figure">0 of 11</span>
+        <p>with the small model</p>
+      </aside>
+    </div>
+    <div class="src">askfirst.kgbnetwork.com/#level=B — docs/results/2026-10-13-computational-line-ablation.md</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">Who pays · prices from the literature, not from us</div>
-  <h2>We had been pricing a wrong answer at twenty handovers. It is nearer two hundred.</h2>
-  <p>A triage call costs <strong>C$10–27</strong> (CCOHTA 2003). A wrong answer costs
-  <em>P(harm) × what a harm costs</em>: <strong>4.4% against 11.1%</strong> error on dangerous
-  presentations (Newman-Toker, <em>BMJ Qual Saf</em> 2024) × <strong>$422,000</strong> average paid
-  claim (CRICO). Ratio: <span class="hot">211:1 to 8,356:1</span>. Every saving in this deck was
-  computed at 20:1, so all of them are conservative.</p>
-  <p class="lede">Carried honestly, cost minimisation says switch the product off — above 4,000:1
-  the cheapest policy answers nothing. <strong>That is a flaw in the objective</strong>: clinicians
-  are finite and the queue has to go somewhere.</p>
-  <table>
-    <tr><th>per 1,000 records</th><th>precision</th><th>queue it takes</th><th>wrong</th></tr>
-    <tr><td>answer everything</td><td>82.4%</td><td>100%</td><td class="bad">176</td></tr>
-    <tr class="key"><td>hold a 95% bar</td><td>99.97%</td><td>45.5%</td><td>0.13</td></tr>
-  </table>
-  <div class="src">docs/results/2026-10-13-what-it-is-worth.md — the throughput table is DDXPlus,
-  which is synthetic; the price band is the literature and does not depend on our data</div>
+<section aria-labelledby="slide-title-14" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">Who pays · prices from the literature, not from us</div>
+    <h2 id="slide-title-14">We had been pricing a wrong answer at twenty handovers. It is nearer two hundred.</h2>
+    <div class="split">
+      <div class="copy">
+        <p>A triage call costs <strong>C$10–27</strong> (CCOHTA 2003). A wrong answer costs
+        <em>P(harm) × what a harm costs</em>: <strong>4.4% against 11.1%</strong> error on dangerous
+        presentations (Newman-Toker, <em>BMJ Qual Saf</em> 2024) × <strong>$422,000</strong> average paid
+        claim (CRICO). Ratio: <span class="hot">211:1 to 8,356:1</span>. Every saving in this deck was
+        computed at 20:1, so all of them are conservative.</p>
+        <p class="lede">Carried honestly, cost minimisation says switch the product off — above 4,000:1
+        the cheapest policy answers nothing. <strong>That is a flaw in the objective</strong>: clinicians
+        are finite and the queue has to go somewhere.</p>
+        <div class="table-wrap">
+          <table aria-label="Throughput per thousand records">
+            <thead>
+              <tr><th scope="col">per 1,000 records</th><th scope="col">precision</th><th scope="col">queue it takes</th><th scope="col">wrong</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>answer everything</td><td class="num" data-label="precision">82.4%</td><td class="num" data-label="queue it takes">100%</td><td class="num" data-label="wrong">176</td></tr>
+              <tr class="key"><td>hold a 95% bar</td><td class="num" data-label="precision">99.97%</td><td class="num" data-label="queue it takes">45.5%</td><td class="num" data-label="wrong">0.13</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">Hold a 95% bar</span>
+        <span class="huge compact">45.5%</span>
+        <p class="metric-caption">queue it takes</p>
+        <div class="metric-rule"></div>
+        <span class="figure">0.13</span>
+        <p>wrong per 1,000 records</p>
+      </aside>
+    </div>
+    <div class="src">docs/results/2026-10-13-what-it-is-worth.md — the throughput table is DDXPlus,
+    which is synthetic; the price band is the literature and does not depend on our data</div>
+  </div>
 </section>
 
-<section>
-  <div class="tag">The business, in numbers we measured ourselves</div>
-  <h2>Thousands of dollars of clinician time returned per thousand records. $0.0004 to run.</h2>
-  <p>The buyer is an operator whose cost line is <strong>clinician-minutes</strong>: a nurse
-  triage line, a teleconsultation platform, the symptom-checker vendors selling into them. They
-  already have the cost, already have a person for a refusal to reach, and already carry the
-  liability.</p>
-  <table>
-    <tr><th>per 1,000 records, at a 95% bar</th><th></th></tr>
-    <tr><td>never reach a person</td><td><strong>455</strong></td></tr>
-    <tr><td>review capacity returned, at C$10–27 a call</td><td><strong>C$4,546 – C$12,274</strong></td></tr>
-    <tr class="key"><td>cost to serve — 44.5 ms of CPU, no GPU, no model call</td><td><strong>$0.0004</strong></td></tr>
-  </table>
-  <p class="lede">Price it at C$500 per thousand: a 7–19× return for them, and a gross margin a
-  rounding error away from 100% at every volume.</p>
-  <p><strong>And they cannot take it with them.</strong> The calibration has to be fitted to
-  <em>their</em> missingness — measured at 1.1 points, intervals overlapping. The moat came out of a
-  limitation rather than a roadmap. <span class="dim">Nobody has bought it, there is no pilot, and
-  the throughput is measured on synthetic patients. That is the gap.</span></p>
-  <div class="src">docs/BUSINESS.md — including what would have to be true and is not yet ·
-  <em>It knows when it doesn't know. That's the product.</em></div>
+<section aria-labelledby="slide-title-15" tabindex="-1">
+  <div class="slide-inner reveal">
+    <div class="tag">The business, in numbers we measured ourselves</div>
+    <h2 id="slide-title-15">Thousands of dollars of clinician time returned per thousand records. $0.0004 to run.</h2>
+    <div class="split wide-aside">
+      <div class="copy">
+        <p>The buyer is an operator whose cost line is <strong>clinician-minutes</strong>: a nurse
+        triage line, a teleconsultation platform, the symptom-checker vendors selling into them. They
+        already have the cost, already have a person for a refusal to reach, and already carry the
+        liability.</p>
+        <div class="table-wrap">
+          <table aria-label="Business measurements per thousand records">
+            <thead>
+              <tr><th scope="col">per 1,000 records, at a 95% bar</th><th scope="col"><span class="sr-only">Measured value</span></th></tr>
+            </thead>
+            <tbody>
+              <tr><td>never reach a person</td><td class="num" data-label="records"><strong>455</strong></td></tr>
+              <tr><td>review capacity returned, at C$10–27 a call</td><td class="num" data-label="capacity returned"><strong>C$4,546 – C$12,274</strong></td></tr>
+              <tr class="key"><td>cost to serve — 44.5 ms of CPU, no GPU, no model call</td><td class="num" data-label="cost to serve"><strong>$0.0004</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lede">Price it at C$500 per thousand: a 7–19× return for them, and a gross margin a
+        rounding error away from 100% at every volume.</p>
+        <p><strong>And they cannot take it with them.</strong> The calibration has to be fitted to
+        <em>their</em> missingness — measured at 1.1 points, intervals overlapping. The moat came out of a
+        limitation rather than a roadmap. <span class="dim">Nobody has bought it, there is no pilot, and
+        the throughput is measured on synthetic patients. That is the gap.</span></p>
+      </div>
+      <aside class="metric-card">
+        <span class="eyebrow">Cost to serve · per 1,000 records</span>
+        <span class="huge money">$0.0004</span>
+        <p class="metric-caption">to run</p>
+        <div class="metric-rule"></div>
+        <span class="figure">7–19×</span>
+        <p>return at C$500 per thousand</p>
+      </aside>
+    </div>
+    <div class="src">docs/BUSINESS.md — including what would have to be true and is not yet ·
+    <em>It knows when it doesn't know. That's the product.</em></div>
+  </div>
 </section>
+</main>
 
-</div>
-<nav id="nav"></nav>
+<footer class="deck-footer">
+  <p class="footer-hint" id="navigation-help">Arrow keys to navigate · Scroll to read</p>
+  <div class="slide-controls" role="group" aria-label="Slide controls">
+    <button class="control previous" id="previous" type="button" aria-label="Previous slide" aria-controls="deck">
+      <span class="button-arrow" aria-hidden="true">←</span>
+      <span class="button-label">Previous</span>
+    </button>
+    <nav id="nav" aria-label="Slide position" aria-live="polite" aria-atomic="true"></nav>
+    <button class="control next" id="next" type="button" aria-label="Next slide" aria-controls="deck">
+      <span class="button-label">Next</span>
+      <span class="button-arrow" aria-hidden="true">→</span>
+    </button>
+  </div>
+</footer>
 
 <script>
   const slides = [...document.querySelectorAll('section')];
+  const nav = document.getElementById('nav');
+  const bar = document.getElementById('bar');
+  const deck = document.getElementById('deck');
+  const previous = document.getElementById('previous');
+  const next = document.getElementById('next');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let i = 0;
-  function show(n){
-    i = Math.max(0, Math.min(slides.length - 1, n));
-    slides.forEach((s, k) => s.classList.toggle('on', k === i));
+
+  function show(n, moveFocus = false){
+    const candidate = Number.isFinite(n) ? Math.trunc(n) : 0;
+    const nextIndex = Math.max(0, Math.min(slides.length - 1, candidate));
+    const changed = nextIndex !== i;
+    const activeElement = document.activeElement;
+    const focusInOldSlide = slides[i].contains(activeElement);
+
+    i = nextIndex;
+    slides.forEach((s, k) => {
+      const active = k === i;
+      s.classList.toggle('on', active);
+      s.setAttribute('aria-hidden', String(!active));
+    });
+
+    if (changed) slides[i].scrollTop = 0;
+
     nav.textContent = (i + 1) + ' / ' + slides.length;
     bar.style.width = ((i + 1) / slides.length * 100) + '%';
-    location.hash = i ? '#' + (i + 1) : '';
+    previous.disabled = i === 0;
+    next.disabled = i === slides.length - 1;
+
+    const hash = i ? '#' + (i + 1) : '';
+    if (location.hash !== hash) location.hash = hash;
+
+    if (moveFocus || focusInOldSlide ||
+        (activeElement === next && next.disabled) ||
+        (activeElement === previous && previous.disabled)){
+      slides[i].focus({preventScroll:true});
+    }
   }
+
+  function showFromHash(){
+    const value = location.hash.slice(1);
+    if (value === 'deck'){
+      slides[i].focus({preventScroll:true});
+      return;
+    }
+    const n = /^\d+$/.test(value) ? Number(value) - 1 : 0;
+    show(n);
+  }
+
+  previous.addEventListener('click', () => show(i - 1));
+  next.addEventListener('click', () => show(i + 1));
+
   addEventListener('keydown', e => {
-    if (['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)) { show(i + 1); e.preventDefault(); }
-    if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { show(i - 1); e.preventDefault(); }
-    if (e.key === 'Home') show(0);
-    if (e.key === 'End') show(slides.length - 1);
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.target.closest('input,textarea,select,[contenteditable]:not([contenteditable="false"])')) return;
+    if ([' ', 'Enter'].includes(e.key) && e.target.closest('a,button,summary')) return;
+
+    if (['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){
+      show(i + 1, true);
+      e.preventDefault();
+    }
+    if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){
+      show(i - 1, true);
+      e.preventDefault();
+    }
+    if (e.key === 'Home'){
+      show(0, true);
+      e.preventDefault();
+    }
+    if (e.key === 'End'){
+      show(slides.length - 1, true);
+      e.preventDefault();
+    }
   });
-  addEventListener('click', e => { if (!e.target.closest('a')) show(i + 1); });
-  show(parseInt(location.hash.slice(1) || '1') - 1);
+
+  addEventListener('click', e => {
+    if (!deck.contains(e.target)) return;
+    if (e.target.closest('a,button,input,textarea,select,summary,[contenteditable]')) return;
+    if (e.pointerType === 'touch' || e.pointerType === 'pen') return;
+    if (window.getSelection()?.toString()) return;
+    show(i + 1, true);
+  });
+
+  addEventListener('hashchange', showFromHash);
+
+  if ('IntersectionObserver' in window && !reducedMotion.matches){
+    document.documentElement.classList.add('motion-ready');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0});
+    document.querySelectorAll('.reveal').forEach(element => observer.observe(element));
+  }
+
+  showFromHash();
 </script>
+</body>
+</html>
