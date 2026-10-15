@@ -2,8 +2,35 @@
 
 ## Resume here
 
-Everything is built except **the AMD run, the video and the demo**. 78 commits, 75 tests, 27 dated
+Everything is built except **the AMD run, the video and the demo**. 82 commits, 75 tests, 27 dated
 write-ups in `results/`, clean tree, all endpoints live.
+
+**15 Oct, evening — all three pages rebuilt in the house design, and the pitch rebalanced.**
+
+- **`ui/index.html`, `ui/evidence.html` and `ui/deck.html` now share one design language** —
+  paper `#f4f4f1`, Bricolage Grotesque for display, Public Sans for body, JetBrains Mono for
+  labels and figures only, blue `#1f43d6`, pill buttons, pill nav across the three pages, motion
+  on `cubic-bezier(.16,1,.3,1)` that switches off under `prefers-reduced-motion`. The tokens came
+  from kgbnetwork.com's own live stylesheets. **Both copies in `~/Documents` are wrong** —
+  `kgbnetwork-site/` is the old olive site and `rebuild kgb/` is a brief. That mistake has now
+  cost two rebuilds; do not go there.
+- **The landing page scores a real record on arrival.** `runExample()` fires on load, so the
+  first paint is a decision the deployed model actually returned. An intermediate draft filled
+  that panel with an *illustrated* verdict and an invented question labelled "not scored" — the
+  label was honest and it was still wrong for this product. If the scorer cannot be reached the
+  page says so and shows nothing else.
+- **The pitch was rebalanced on instruction: brag about the value, keep the weakness small but
+  present.** The landing page leads with what a thousand records gives back — 455 never reaching
+  a person, C$4,546-12,274 of review capacity, 176 → 0.13 wrong answers, $0.0004 to run — then
+  9×-25× return, two API calls to integrate, and why the fit does not travel. The NHAMCS failure
+  is now one line above the footer, still linked. **It is not to be removed.**
+- **A generated sample note ships at `ui/assets/sample-note.jpg`** so the photo path has
+  something to try. No letterhead, no name, no identifiers. It loads through the same in-browser
+  recognition a real photo would.
+- **Numbers were diffed, not trusted.** For both restyled pages the figure sets were extracted
+  from old and new markup and diffed in both directions; both came back empty.
+- **The deck still wants a content pass, not a restyle**: three slides are given to things we got
+  wrong. Compress to one and give the space to the business case, which the deck barely touches.
 
 **14 Oct, evening — the product grew a way in, and the clinician review went out.**
 
